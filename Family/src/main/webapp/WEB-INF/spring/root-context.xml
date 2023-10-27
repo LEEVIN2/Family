@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<!-- 여기서 MemberService memberService = new MemberService(); 객체생성 할거임 -->
+	<!-- memberService를 memberController에 전달하면 memberService로 전달하게 할거임 -->
+	
+	<!-- id = memberService, class = new MemberService(); -->
+	<!-- 멤버변수 = memberService, 객체 = new MemberService(); -->
+	
+	<!-- 1) 생성자 호출 : constructor-arg => 객체생성값을 전달 -->
+	<!-- 2) set메서드 호출 : property => 객체생성값을 전달 -->
+	
+	<!-- <property name="set메서드호출" ref="memberService의 주소값(객체생성 주소값, 밑의 id)"></property> -->
+	
+	<!-- 이제 자동화 할거라서 -->
+<!-- 	<bean id="memberController" class="com.itwillbs.controller.MemberController"> -->
+<!-- 		<constructor-arg name="memberService" ref="memberService"></constructor-arg> -->
+<!-- 		<property name="memberService" ref="memberService"></property> -->
+<!-- 	</bean> -->
+	
+<!-- 	<bean id="memberService" class="com.itwillbs.service.MemberService"> -->
+<!-- 		<property name="memberDAO" ref="memberDAO"></property> -->
+<!-- 	</bean> -->
+	
+<!-- 	<bean id="memberDAO" class="com.itwillbs.dao.MemberDAO"> -->
+<!-- 		<property name="dataSource" ref="dataSource"></property> -->
+<!-- 	</bean> -->
+	
+	
+	<!-- DB연결을 위해 할일 -->
+	<!-- 1) 프로그램 설치 : JDBC, spring JDBC (자동으로 프로그램 설치할건데, 자동으로 하기위해선 Maven이라는 프로그램이 필요하고, 스프링에선 자동으로 설치되어있음)
+	 	  	Maven에서 코드 검색 후 pom.xml에 코드 넣으면 자동으로 프로그램이 다운받아짐 (pom.xml참고하기) -->
+	 	  	
+	<!-- 2)디비연결 객체생성 -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://127.0.0.1:3306/family?serverTimezone=Asia/Seoul"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="1234"></property>
+	</bean>
+	
+
+	<!-- MyBatis 환경설정 -->
+	<!-- https://mybatis.org/mybatis-3/ko/getting-started.html -->
+	<!-- value="환경설정 파일위치/sql파일위치" -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation" value="classpath:/mybatis-config.xml"></property>
+		<property name="mapperLocations" value="classpath:mappers/**/*Mapper.xml"></property>
+	</bean>
+	
+	<!-- MyBatis 연결해서 세션만들기 -->
+	<!-- MemberDAO 자동객체생성 : @Injsect private SqlSession sqlSession; -->
+	<!-- destroy-method="clearCache" : 자동으로 가억장소 삭제 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+	</bean>
+	
+</beans>
