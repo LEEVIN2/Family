@@ -60,6 +60,7 @@ public class Controller {
 		}
 		if(isValid) {
 			session.setAttribute("email", DTO.getEmail());
+			session.setAttribute("nickname", DTO2.getNickname());
 			return "redirect:/member/home";
 		}else {
 			response.setContentType("text/html;charset=UTF-8");

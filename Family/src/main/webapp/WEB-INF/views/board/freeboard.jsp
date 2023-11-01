@@ -1,3 +1,5 @@
+<%@page import="java.time.LocalDateTime"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -11,24 +13,29 @@
 
 <!-- body -->
 <body>
-작성한 글
-작성한 댓글
-북마크
 
-BEST 게시글
-인기 게시글
+<a href="javascript:history.back()">뒤로가기</a>
+자유게시판
+<a href="${pageContext.request.contextPath}/board/freesearch">검색</a><br>
 
-<a href="${pageContext.request.contextPath}/board/freeboard">자유게시판</a>
-추억게시판
-질문게시판
-정보게시판
-후기게시판
 
-외출도장 찍기
-웃긴사진 뽐내기
-반려동물 자랑하기
+<!-- table -->
+<table>
+<c:forEach var="boardDTO" items="${boardList}">
+<tr>
+<td>${boardDTO.nickname}</td>
 
-실종/목격
-홍보
+<td>
+${boardDTO.submitTime}
+</td>
+
+<td>${boardDTO.title}</td>
+<td>${boardDTO.content}</td>
+</tr>
+</c:forEach>
+</table>
+
+<input type="button" value="글쓰기" onclick="location.href='${pageContext.request.contextPath}/board/write'">
+
 </body>
 </html>

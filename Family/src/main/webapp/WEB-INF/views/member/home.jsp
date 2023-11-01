@@ -9,6 +9,10 @@
 <body>
 <h3>'${sessionId}' 님 환영합니다! </h3>
 <span>${sessionScope.email}님</span>
-<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
+<span>${sessionScope.nickname}님</span>
+<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a><br>
+
+<a href="${pageContext.request.contextPath}/board/board">게시판</a>
+
 </body>
 </html>

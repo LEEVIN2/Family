@@ -11,5 +11,6 @@ public class DTO {
 	
 	private String email;
 	private String pass;
+	private String nickname;
 
 }
