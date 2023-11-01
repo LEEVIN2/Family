@@ -9,6 +9,7 @@ import lombok.ToString;
 @ToString
 public class DTO {
 	
-	private int idnew_table;
+	private String email;
+	private String pass;
 
 }

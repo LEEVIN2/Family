@@ -6,9 +6,22 @@
   
 <mapper namespace="com.animal.mappers.Mapper"> 
 	<insert id="insert">
-	insert into new_table(idnew_table)
-	values(#{idnew_table})
+	insert into member(email,pass)
+	values(#{email},#{pass})
 	</insert>
+	
+	<select id="checklogin" resultType="com.animal.domain.DTO">
+	select * from member where email = #{email}
+	</select>
+	
+	<insert id="insert2">
+	insert into member(email,name,nickname,mobile)
+	values(#{email},#{name},#{nickname},#{mobile})
+	</insert>
+	
+	<select id="isUserExist" parameterType="string" resultType="int">
+    SELECT COUNT(*) FROM member WHERE nickname = #{nickname}
+	</select>
 
 
 
