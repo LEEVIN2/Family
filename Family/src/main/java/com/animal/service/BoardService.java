@@ -1,10 +1,10 @@
 package com.animal.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.inject.Inject;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 import org.springframework.stereotype.Service;
 
@@ -20,9 +20,10 @@ public class BoardService {
 	private BoardDAO boardDAO;
 
 	public void writePro(BoardDTO boardDTO) {
-//		작성시간표시
+		// 작성시간표시
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		LocalDateTime submitTime = timestamp.toLocalDateTime();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String submitTime = sdf.format(timestamp);
 		boardDTO.setSubmitTime(submitTime);
 
         

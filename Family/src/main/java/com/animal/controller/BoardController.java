@@ -1,5 +1,8 @@
 package com.animal.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,6 +31,20 @@ public class BoardController {
 	@GetMapping("/freeboard")
 	public String freeboard(Model model) {
 		List<BoardDTO> boardList= boardService.getBoardList();
+		
+		for (BoardDTO boardDTO : boardList) {
+            String submitTime = boardDTO.getSubmitTime();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime submitDateTime = LocalDateTime.parse(submitTime, formatter);
+            LocalDateTime now = LocalDateTime.now();
+            long minutesBetween = ChronoUnit.MINUTES.between(submitDateTime, now);
+            if (minutesBetween < 1) {
+                boardDTO.setSubmitTime("방금전");
+            } else {
+                boardDTO.setSubmitTime("한참전");
+            }
+        }
+		
 		model.addAttribute("boardList", boardList);
 		return "board/freeboard";
 	}
