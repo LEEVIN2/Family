@@ -33,4 +33,17 @@ public class BoardService {
 		return boardDAO.getBoardList();
 	}
 
+	public BoardDTO getDetail(String boardNum) {
+	    return boardDAO.getDetail(boardNum);
+	}
+
+	public List<String> getFilePaths(String boardNum) {
+	    return boardDAO.getFilePaths(boardNum);
+	}
+
+	public void addFilePath(String boardNum, String filePath) {
+		boardDAO.addFilePath(boardNum, filePath);
+		
+	}
+
 }

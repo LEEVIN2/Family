@@ -7,13 +7,30 @@
 <mapper namespace="com.animal.mappers.BoardMapper"> 
 
 	<insert id="writePro">
-		insert into board(title,content,nickname,submitTime,filePath)
-		values(#{title},#{content},#{nickname},#{submitTime},#{filePath})
+		insert into board(boardNum,title,content,nickname,submitTime)
+		values(#{boardNum},#{title},#{content},#{nickname},#{submitTime})
+	</insert>
+	
+	<insert id="addFilePath">
+    	insert into board_file(boardNum, filePath)
+    	values(#{boardNum}, #{filePath})
 	</insert>
 	
 	<select id="getBoardList" resultType="com.animal.domain.BoardDTO">
 		select *
 		from board
 	</select>
+	
+	 <select id="getDetail" resultType="com.animal.domain.BoardDTO">
+    SELECT *
+    FROM board
+    WHERE board.boardNum = #{boardNum};
+</select>
+
+<select id="getFilePaths" resultType="string">
+    SELECT filePath
+    FROM board_file
+    WHERE board_file.boardNum = #{boardNum};
+</select>
 	
 </mapper>

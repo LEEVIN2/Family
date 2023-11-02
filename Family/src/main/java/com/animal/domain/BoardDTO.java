@@ -9,10 +9,11 @@ import lombok.ToString;
 @ToString
 public class BoardDTO {
 	
+	private String boardNum;
 	private String title;
 	private String content;
 	private String nickname;
 	private String submitTime;
-	private String filePath; // 새로운 필드
+	private String filePath;
 
 }

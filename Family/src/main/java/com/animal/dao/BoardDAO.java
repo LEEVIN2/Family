@@ -1,6 +1,8 @@
 package com.animal.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -22,6 +24,23 @@ public class BoardDAO {
 
 	public List<BoardDTO> getBoardList() {
 		return sqlSession.selectList(namespace+".getBoardList");
+	}
+	
+	public BoardDTO getDetail(String boardNum) {
+	    return sqlSession.selectOne(namespace+".getDetail", boardNum);
+	}
+
+	public List<String> getFilePaths(String boardNum) {
+	    return sqlSession.selectList(namespace+".getFilePaths", boardNum);
+	}
+
+
+	public void addFilePath(String boardNum, String filePath) {
+		Map<String, Object> params = new HashMap<>();
+        params.put("boardNum", boardNum);
+        params.put("filePath", filePath);
+        sqlSession.insert(namespace+".addFilePath", params);
+		
 	}
 	
 }

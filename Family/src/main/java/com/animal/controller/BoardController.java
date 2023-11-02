@@ -2,12 +2,15 @@ package com.animal.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,6 +61,17 @@ public class BoardController {
 		return "board/freesearch";
 	}
 	
+	@GetMapping("/detail")
+	public String detail(HttpServletRequest request, Model model) {
+		String boardNum = request.getParameter("boardNum");
+	    BoardDTO boardDTO = boardService.getDetail(boardNum);
+	    List<String> filePaths = boardService.getFilePaths(boardNum);
+	    model.addAttribute("boardDTO", boardDTO);
+	    model.addAttribute("filePaths", filePaths);
+	    
+	    return "board/detail";
+	}
+	
 	@GetMapping("/write")
 	public String write() {
 		return "board/write";
@@ -65,9 +79,23 @@ public class BoardController {
 	
 	@PostMapping("/writePro")
 	public String writePro(BoardDTO boardDTO, MultipartHttpServletRequest mtfRequest) {
+		
+		// boardNum 자동생성
+				// = FR + yyMMddHHmmss
+				Date now = new Date();
+			    SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss");
+			    String formattedDate = dateFormat.format(now);
+			    String boardNum = "FR" + formattedDate;
+			    System.out.println("boardNum : " + boardNum);
+			    boardDTO.setBoardNum(boardNum);
+		
 	    // 파일 업로드 로직
 	    List<MultipartFile> fileList = mtfRequest.getFiles("file");
 	    String path = "C:\\Users\\sonmi\\git\\Family\\Family\\Family\\src\\main\\webapp\\resources\\img\\";
+	    
+	    // 게시글 작성 로직
+	    boardService.writePro(boardDTO);
+	    
 	    for (MultipartFile mf : fileList) {
 	        String originFileName = mf.getOriginalFilename(); // 원본 파일 명
 	        long fileSize = mf.getSize(); // 파일 사이즈
@@ -78,18 +106,17 @@ public class BoardController {
 	        String safeFile = path + originFileName;
 	        try {
 	            mf.transferTo(new File(safeFile));
-	            boardDTO.setFilePath(originFileName); // 파일 경로 설정
-	            System.out.println(boardDTO.getFilePath());
+	            String filePath = originFileName;
+	            boardService.addFilePath(boardNum, filePath); // 파일 경로 추가
+	            System.out.println(originFileName);
+//	            boardDTO.setFilePath(originFileName); // 파일 경로 설정
+//	            System.out.println(boardDTO.getFilePath());
 	        } catch (IllegalStateException e) {
 	            e.printStackTrace();
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	        }
 	    }
-
-	    // 게시글 작성 로직
-	    boardService.writePro(boardDTO);
-
 	    return "redirect:/board/freeboard";
 	}
 	
