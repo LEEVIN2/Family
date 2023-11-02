@@ -7,8 +7,8 @@
 <mapper namespace="com.animal.mappers.BoardMapper"> 
 
 	<insert id="writePro">
-		insert into board(title,content,nickname,submitTime)
-		values(#{title},#{content},#{nickname},#{submitTime})
+		insert into board(title,content,nickname,submitTime,filePath)
+		values(#{title},#{content},#{nickname},#{submitTime},#{filePath})
 	</insert>
 	
 	<select id="getBoardList" resultType="com.animal.domain.BoardDTO">

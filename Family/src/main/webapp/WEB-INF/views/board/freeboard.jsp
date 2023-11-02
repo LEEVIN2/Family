@@ -29,6 +29,7 @@
 <td>${boardDTO.submitTime}</td>
 <td>${boardDTO.title}</td>
 <td>${boardDTO.content}</td>
+<td><img src="${pageContext.request.contextPath}/resources/img/${boardDTO.filePath}" alt="Image" width="100" height="100"></td>
 </tr>
 </c:forEach>
 </table>

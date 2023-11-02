@@ -38,9 +38,9 @@
 	<!-- 2)디비연결 객체생성 -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"></property>
-		<property name="url" value="jdbc:mysql://127.0.0.1:3306/family?serverTimezone=Asia/Seoul"></property>
-		<property name="username" value="root"></property>
-		<property name="password" value="1234"></property>
+		<property name="url" value="jdbc:mysql://211.184.173.183:3306/family?serverTimezone=Asia/Seoul"></property>
+		<property name="username" value="dlqls47"></property>
+		<property name="password" value="aksdnr12!"></property>
 	</bean>
 	
 
@@ -77,6 +77,18 @@
       <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
       </props>
      </property>
+    </bean>
+    
+    <!-- 다중파일 업로드 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- max upload size in bytes -->
+<!--         한 번에 업로드할 수 있는 파일의 최대 크기 -->
+        <property name="maxUploadSize" value="5242880" /> <!-- 5MB -->
+        <!-- max size of file in memory (in bytes) -->
+<!--         파일이 서버의 메모리에 저장될 때 사용할 수 있는 최대 메모리 크기를 지정 -->
+<!--         maxInMemorySize가 maxUploadSize보다 작은 경우, 파일은 메모리에 일부만 저장되고 나머지는 임시 디스크 공간에 저장됩니다. 이렇게 하면 메모리 사용량을 줄일 수 있습니다. 그러나 이 경우, 디스크 I/O가 증가하여 성능이 저하될 수 있습니다. -->
+        <property name="maxInMemorySize" value="1048576" /> <!-- 1MB -->
+        <property name="defaultEncoding" value="UTF-8"></property>
     </bean>
 	
 </beans>

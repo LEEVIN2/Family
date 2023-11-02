@@ -1,5 +1,7 @@
 package com.animal.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -11,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.animal.domain.BoardDTO;
 import com.animal.service.BoardService;
@@ -60,9 +64,70 @@ public class BoardController {
 	}
 	
 	@PostMapping("/writePro")
-	public String writePro(BoardDTO boardDTO) {
-		boardService.writePro(boardDTO);
-		return "redirect:/board/freeboard";
+	public String writePro(BoardDTO boardDTO, MultipartHttpServletRequest mtfRequest) {
+	    // 파일 업로드 로직
+	    List<MultipartFile> fileList = mtfRequest.getFiles("file");
+	    String path = "C:\\Users\\sonmi\\git\\Family\\Family\\Family\\src\\main\\webapp\\resources\\img\\";
+	    for (MultipartFile mf : fileList) {
+	        String originFileName = mf.getOriginalFilename(); // 원본 파일 명
+	        long fileSize = mf.getSize(); // 파일 사이즈
+
+	        System.out.println("originFileName : " + originFileName);
+	        System.out.println("fileSize : " + fileSize);
+
+	        String safeFile = path + originFileName;
+	        try {
+	            mf.transferTo(new File(safeFile));
+	            boardDTO.setFilePath(originFileName); // 파일 경로 설정
+	            System.out.println(boardDTO.getFilePath());
+	        } catch (IllegalStateException e) {
+	            e.printStackTrace();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    // 게시글 작성 로직
+	    boardService.writePro(boardDTO);
+
+	    return "redirect:/board/freeboard";
 	}
+	
+//	@PostMapping("/writePro")
+//	public String writePro(BoardDTO boardDTO, MultipartHttpServletRequest mtfRequest) {
+//		boardService.writePro(boardDTO);
+//		return "redirect:/board/freeboard";
+//	}
+//	
+////	다중파일업로드
+//	@RequestMapping(value = "requestupload2")
+//    public String requestupload2(MultipartHttpServletRequest mtfRequest) {
+//        List<MultipartFile> fileList = mtfRequest.getFiles("file");
+//        String src = mtfRequest.getParameter("src");
+//        System.out.println("src value : " + src);
+//
+//        String path = "C:\\image\\";
+//
+//        for (MultipartFile mf : fileList) {
+//            String originFileName = mf.getOriginalFilename(); // 원본 파일 명
+//            long fileSize = mf.getSize(); // 파일 사이즈
+//
+//            System.out.println("originFileName : " + originFileName);
+//            System.out.println("fileSize : " + fileSize);
+//
+//            String safeFile = path + System.currentTimeMillis() + originFileName;
+//            try {
+//                mf.transferTo(new File(safeFile));
+//            } catch (IllegalStateException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        return "redirect:/board/freeboard";
+//    }
 		
 }

@@ -25,7 +25,6 @@ public class BoardService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String submitTime = sdf.format(timestamp);
 		boardDTO.setSubmitTime(submitTime);
-
         
 		boardDAO.writePro(boardDTO);
 	}

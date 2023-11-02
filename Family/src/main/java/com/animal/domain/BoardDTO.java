@@ -13,6 +13,6 @@ public class BoardDTO {
 	private String content;
 	private String nickname;
 	private String submitTime;
-	
+	private String filePath; // 새로운 필드
 
 }
