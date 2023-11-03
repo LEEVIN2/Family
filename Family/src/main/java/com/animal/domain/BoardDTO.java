@@ -15,5 +15,7 @@ public class BoardDTO {
 	private String nickname;
 	private String submitTime;
 	private String filePath;
-
+	private int viewCnt;
+	private int commentCnt;
+	
 }

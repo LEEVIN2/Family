@@ -16,7 +16,7 @@
 <!-- body -->
 <body>
 
-<a href="javascript:history.back()">뒤로가기</a>
+<a href="${pageContext.request.contextPath}/board/board">뒤로가기</a><br>
 자유게시판
 <a href="${pageContext.request.contextPath}/board/freesearch">검색</a><br>
 
@@ -31,6 +31,8 @@
 <td>${boardDTO.title}</td>
 <td>${boardDTO.content}</td>
 <td><img src="${pageContext.request.contextPath}/resources/img/${boardDTO.filePath}" alt="Image" width="100" height="100"></td>
+<td>${boardDTO.viewCnt}</td>
+<td>${boardDTO.commentCnt}</td>
 </tr>
 </c:forEach>
 </table>

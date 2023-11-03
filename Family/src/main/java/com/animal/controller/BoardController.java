@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +38,8 @@ public class BoardController {
 	
 	@GetMapping("/freeboard")
 	public String freeboard(Model model) {
-		List<BoardDTO> boardList= boardService.getBoardList();
+		List<BoardDTO> boardList = boardService.getBoardList();
+		
 		
 		for (BoardDTO boardDTO : boardList) {
             String submitTime = boardDTO.getSubmitTime();
@@ -62,12 +64,32 @@ public class BoardController {
 	}
 	
 	@GetMapping("/detail")
-	public String detail(HttpServletRequest request, Model model) {
+	public String detail(HttpServletRequest request, HttpSession session, Model model) {
+		//boardNum에 해당하는 board + board_file 내용 가져오기
 		String boardNum = request.getParameter("boardNum");
 	    BoardDTO boardDTO = boardService.getDetail(boardNum);
 	    List<String> filePaths = boardService.getFilePaths(boardNum);
+	    
+	    // 댓글 내용 뿌려주기
+	    List<BoardDTO> commentList = boardService.getCommentList();
+	    
+	    // 조회수 증가 로직
+	    // 게시글 작성자 닉네임
+	    String currentBoardNum = boardDTO.getBoardNum();
+	    String currentNickname = boardDTO.getNickname();
+	    // 세션에서 이전에 클릭한 닉네임 가져오기
+	    String sessionBoardNum = (String) session.getAttribute("boardNum");
+	    String sessionNickname = (String) session.getAttribute("nickname");
+
+	    // 세션에 저장된 닉네임이 없거나, 현재 닉네임과 세션에 저장된 닉네임이 다르면 조회수 증가
+	    if (sessionBoardNum == null || !sessionBoardNum.equals(currentBoardNum) && !sessionNickname.equals(currentNickname)) {
+	        boardService.increaseViewCnt(boardNum);
+	        session.setAttribute("boardNum", currentBoardNum);
+	    }
+	    
 	    model.addAttribute("boardDTO", boardDTO);
 	    model.addAttribute("filePaths", filePaths);
+	    model.addAttribute("commentList", commentList);
 	    
 	    return "board/detail";
 	}
@@ -120,41 +142,10 @@ public class BoardController {
 	    return "redirect:/board/freeboard";
 	}
 	
-//	@PostMapping("/writePro")
-//	public String writePro(BoardDTO boardDTO, MultipartHttpServletRequest mtfRequest) {
-//		boardService.writePro(boardDTO);
-//		return "redirect:/board/freeboard";
-//	}
-//	
-////	다중파일업로드
-//	@RequestMapping(value = "requestupload2")
-//    public String requestupload2(MultipartHttpServletRequest mtfRequest) {
-//        List<MultipartFile> fileList = mtfRequest.getFiles("file");
-//        String src = mtfRequest.getParameter("src");
-//        System.out.println("src value : " + src);
-//
-//        String path = "C:\\image\\";
-//
-//        for (MultipartFile mf : fileList) {
-//            String originFileName = mf.getOriginalFilename(); // 원본 파일 명
-//            long fileSize = mf.getSize(); // 파일 사이즈
-//
-//            System.out.println("originFileName : " + originFileName);
-//            System.out.println("fileSize : " + fileSize);
-//
-//            String safeFile = path + System.currentTimeMillis() + originFileName;
-//            try {
-//                mf.transferTo(new File(safeFile));
-//            } catch (IllegalStateException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        return "redirect:/board/freeboard";
-//    }
+	@PostMapping("/writePro2")
+	public String writePro2(BoardDTO boardDTO2) {
+	    boardService.writePro2(boardDTO2);
+	    return "redirect:/board/detail?boardNum=" + boardDTO2.getBoardNum();
+	}
 		
 }

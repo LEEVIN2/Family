@@ -11,14 +11,34 @@
 		values(#{boardNum},#{title},#{content},#{nickname},#{submitTime})
 	</insert>
 	
+	<insert id="writePro2">
+		insert into comment(boardNum,nickname,content,submitTime)
+		values(#{boardNum},#{nickname},#{content},#{submitTime})
+	</insert>
+	
 	<insert id="addFilePath">
     	insert into board_file(boardNum, filePath)
     	values(#{boardNum}, #{filePath})
 	</insert>
 	
 	<select id="getBoardList" resultType="com.animal.domain.BoardDTO">
-		select *
-		from board
+		SELECT b.boardNum, b.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, count(c.boardNum) as commentCnt
+FROM board b
+LEFT JOIN (
+	SELECT boardNum, filePath
+	FROM board_file
+	WHERE (boardNum, fileNum) IN (
+		SELECT boardNum, MAX(fileNum)
+		FROM board_file
+		GROUP BY boardNum)
+) as f ON b.boardNum = f.boardNum
+LEFT JOIN comment c ON b.boardNum = c.boardNum
+GROUP BY b.boardNum, b.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt;
+	</select>
+	
+	<select id="getCommentList" resultType="com.animal.domain.BoardDTO">
+	SELECT *
+    FROM comment
 	</select>
 	
 	 <select id="getDetail" resultType="com.animal.domain.BoardDTO">
@@ -30,7 +50,14 @@
 <select id="getFilePaths" resultType="string">
     SELECT filePath
     FROM board_file
-    WHERE board_file.boardNum = #{boardNum};
+    WHERE board_file.boardNum = #{boardNum}
+    order by fileNum desc
 </select>
+
+<update id="increaseViewCnt">
+    UPDATE board
+	SET viewCnt = IFNULL(viewCnt, 0) + 1
+	WHERE boardNum = #{boardNum};
+</update>
 	
 </mapper>

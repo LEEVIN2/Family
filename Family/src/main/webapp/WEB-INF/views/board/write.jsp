@@ -27,11 +27,5 @@
 <input type="submit" value="작성">
 </form>
 
-<!--  <form name="fileForm" action="requestupload2" method="post" enctype="multipart/form-data"> -->
-<!--         <input multiple="multiple" type="file" name="file" /> -->
-<!--         <input type="text" name="src" /> -->
-<!--         <input type="submit" value="전송" /> -->
-<!--     </form> -->
-
 </body>
 </html>

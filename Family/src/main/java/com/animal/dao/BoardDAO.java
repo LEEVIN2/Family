@@ -26,6 +26,10 @@ public class BoardDAO {
 		return sqlSession.selectList(namespace+".getBoardList");
 	}
 	
+	public List<BoardDTO> getCommentList() {
+		return sqlSession.selectList(namespace+".getCommentList");
+	}
+	
 	public BoardDTO getDetail(String boardNum) {
 	    return sqlSession.selectOne(namespace+".getDetail", boardNum);
 	}
@@ -42,5 +46,15 @@ public class BoardDAO {
         sqlSession.insert(namespace+".addFilePath", params);
 		
 	}
+
+	public void writePro2(BoardDTO boardDTO2) {
+		sqlSession.insert(namespace+".writePro2", boardDTO2);
+	}
+
+	public void increaseViewCnt(String boardNum) {
+		 sqlSession.update(namespace+".increaseViewCnt", boardNum);
+	}
+
+	
 	
 }
