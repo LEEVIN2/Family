@@ -18,5 +18,8 @@ public class BoardDTO {
 	private int viewCnt;
 	private int commentCnt;
 	private int board_like;
+	private int board_likeCnt;
+	
+	private String search;
 	
 }

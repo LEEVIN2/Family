@@ -21,8 +21,19 @@
     	values(#{boardNum}, #{filePath})
 	</insert>
 	
+	<select id="getFreesearchList" resultType="com.animal.domain.BoardDTO">
+		select *
+		from board
+		where 1=1
+  		<if test="search != null and search != ''">
+            and (nickname like concat('%', #{search}, '%')
+            or title like concat('%', #{search}, '%')
+            or content like concat('%', #{search}, '%'))
+        </if>
+	</select>
+	
 	<select id="getBoardList" resultType="com.animal.domain.BoardDTO">
-		SELECT b.boardNum, b.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, count(c.boardNum) as commentCnt
+		SELECT b.boardNum, b.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
 FROM board b
 LEFT JOIN (
 	SELECT boardNum, filePath
@@ -32,8 +43,16 @@ LEFT JOIN (
 		FROM board_file
 		GROUP BY boardNum)
 ) as f ON b.boardNum = f.boardNum
-LEFT JOIN comment c ON b.boardNum = c.boardNum
-GROUP BY b.boardNum, b.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt;
+LEFT JOIN (
+	SELECT boardNum, COUNT(*) as commentCnt
+	FROM comment
+	GROUP BY boardNum
+) as co ON b.boardNum = co.boardNum
+LEFT JOIN (
+	SELECT boardNum, COUNT(*) as board_likeCnt
+	FROM board_like
+	GROUP BY boardNum
+) as li ON b.boardNum = li.boardNum;
 	</select>
 	
 	<select id="getCommentList" resultType="com.animal.domain.BoardDTO">
@@ -54,8 +73,14 @@ GROUP BY b.boardNum, b.nickname, b.submitTime, b.title, b.content, f.filePath, b
 		where boardNum = #{boardNum} and nickname = #{nickname};
 	</select>
 	
+	<select id="findLikeCnt" resultType="int">
+		select count(*)
+		from board_like
+		where boardNum = #{boardNum};
+	</select>
+	
 	<insert id="likeUp">
-		insert into board_like (boardNum, nickname)
+		insert into board_like(boardNum, nickname)
 		values (#{boardNum}, #{nickname});
 	</insert>
 	
@@ -77,5 +102,6 @@ GROUP BY b.boardNum, b.nickname, b.submitTime, b.title, b.content, f.filePath, b
 	SET viewCnt = IFNULL(viewCnt, 0) + 1
 	WHERE boardNum = #{boardNum};
 </update>
+
 	
 </mapper>

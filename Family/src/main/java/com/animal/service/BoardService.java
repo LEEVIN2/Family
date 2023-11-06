@@ -66,14 +66,26 @@ public class BoardService {
 	public Object findLike(String boardNum, String nickname) {
 		return  boardDAO.findLike(boardNum, nickname);
 	}
-
-	public void likeUp(String boardNum, String nickname) {
-		boardDAO.likeUp(boardNum, nickname);
+	
+	public int findLikeCnt(String boardNum) {
+		return  boardDAO.findLikeCnt(boardNum);
 	}
 
-	public void likeDown(String boardNum, String nickname) {
-		boardDAO.likeDown(boardNum, nickname);
+
+	public void likeUp(BoardDTO boardDTO) {
+		boardDAO.likeUp(boardDTO);
 	}
+
+	public void likeDown(BoardDTO boardDTO) {
+		boardDAO.likeDown(boardDTO);
+	}
+
+	public List<BoardDTO> getFreesearchList(BoardDTO boardDTO) {
+		System.out.println("getFreesearchList 서비스");
+		return boardDAO.getFreesearchList(boardDTO);
+	}
+
+	
 
 	
 

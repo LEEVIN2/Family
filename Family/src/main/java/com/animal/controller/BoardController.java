@@ -13,12 +13,13 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -61,7 +62,20 @@ public class BoardController {
 	}
 	
 	@GetMapping("/freesearch")
-	public String freesearch() {
+	public String freesearch(HttpServletRequest request,Model model) {
+		
+		String search = request.getParameter("search");
+		System.out.println("search : " + search);
+		
+		BoardDTO boardDTO =new BoardDTO();
+		boardDTO.setSearch(search); // 검색어저장
+		
+		// 품목추가한 내용 뿌려주기
+	    List<BoardDTO> boardList= boardService.getFreesearchList(boardDTO);
+		
+	 // 품목추가한 내용 뿌려주기
+	    model.addAttribute("boardList", boardList);
+		
 		return "board/freesearch";
 	}
 	
@@ -89,14 +103,17 @@ public class BoardController {
 	        session.setAttribute("boardNum", currentBoardNum);
 	    }
 	    
-	    // 좋아요 로직
+	    // 내 좋아요 로직
 	    // 이건 작성자 닉네임이고
 //	    String nickname = request.getParameter("nickname");
 	    // 이게 내 닉네임
 	    String nickname = (String) session.getAttribute("nickname");
 	    int board_like = (int) boardService.findLike(boardNum, nickname);
 	    model.addAttribute("board_like", board_like);
-	    System.out.println(board_like);
+	    
+	    // 전체 좋아요 로직
+	    int board_likeCnt = (int) boardService.findLikeCnt(boardNum);
+	    model.addAttribute("board_likeCnt", board_likeCnt);
 	    
 	    
 	    model.addAttribute("boardDTO", boardDTO);
@@ -106,21 +123,40 @@ public class BoardController {
 	    return "board/detail";
 	}
 	
-	// 좋아요
-	@PostMapping("/likeUp")
-	public void likeUp(BoardDTO boardDTO) {
-		System.out.println("컨트롤러 연결 성공");
-		System.out.println(boardDTO.getBoardNum());
-		System.out.println(boardDTO.getNickname());
-		boardService.likeUp(boardDTO.getBoardNum(), boardDTO.getNickname());
 	
+	@PostMapping("/likeUp")
+	public ResponseEntity<String> likeUp(@RequestParam String boardNum, @RequestParam String nickname) {
+	    BoardDTO boardDTO = new BoardDTO();
+	    boardDTO.setBoardNum(boardNum);
+	    boardDTO.setNickname(nickname);
+
+	    ResponseEntity<String> entity = null;
+	    try {
+	        boardService.likeUp(boardDTO);
+	        entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	    }
+	    return entity;
 	}
 	
-	@ResponseBody
+	
 	@PostMapping("/likeDown")
-	public void likeDown(@RequestBody BoardDTO boardDTO) {
-		System.out.println("좋아요 취소");
-		boardService.likeDown(boardDTO.getBoardNum(), boardDTO.getNickname());
+	public ResponseEntity<String> likeDown(@RequestParam String boardNum, @RequestParam String nickname) {
+	    BoardDTO boardDTO = new BoardDTO();
+	    boardDTO.setBoardNum(boardNum);
+	    boardDTO.setNickname(nickname);
+
+	    ResponseEntity<String> entity = null;
+	    try {
+	        boardService.likeDown(boardDTO);
+	        entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	    }
+	    return entity;
 	}
 	
 	@GetMapping("/write")
@@ -137,7 +173,6 @@ public class BoardController {
 			    SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss");
 			    String formattedDate = dateFormat.format(now);
 			    String boardNum = "FR" + formattedDate;
-			    System.out.println("boardNum : " + boardNum);
 			    boardDTO.setBoardNum(boardNum);
 		
 	    // 파일 업로드 로직

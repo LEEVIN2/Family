@@ -10,34 +10,60 @@
 <title>Insert title here</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript">
+<script>
 $(document).ready(function() {
-	var board_like = $('.LikeBtn').data('like'); // HTML 태그에서 '좋아요' 상태 읽기
-    var boardNum = '${boardDTO.boardNum}';
-    var nickname = "${sessionScope.nickname}";
-    
-    if(board_like == 1) {
-        $('.LikeBtn').text('좋아요 취소');
-    } else {
-        $('.LikeBtn').text('좋아요');
-    }
+    $("button").click(function() {
+        var board_like = ${board_like}; // 여기에 실제 값을 할당해야 합니다.
+        var boardNum = '${boardDTO.boardNum}';
+        var nickname = "${sessionScope.nickname}";
 
-    $('.LikeBtn').click(function() {
-    	console.log(nickname);
-        console.log(boardNum);
-        $.ajax({
-            url: "/board/likeDown",
-            type: "POST",
-            data: { boardNum: boardNum, nickname: nickname },
-            success: function() {
-                console.log("좋아요 취소");
-            }
-        });
+        var boardDTO = {
+            boardNum: boardNum,
+            nickname: nickname
+        };
+
+        if(board_like == 0) {
+            $.ajax({
+                type: "POST",
+                url: "${pageContext.request.contextPath}/board/likeUp",
+                data: boardDTO,
+                success: function() {
+                    console.log("컨트롤러 연결 성공");
+                    console.log(boardDTO.boardNum);
+                    console.log(boardDTO.nickname);
+                    location.reload();  // 페이지 새로 고침
+                },
+                error: function() {
+                	console.log(board_like);
+                	console.log(boardDTO.boardNum);
+                    console.log(boardDTO.nickname);
+                    console.log("컨트롤러 연결 실패");
+                }
+            });
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "${pageContext.request.contextPath}/board/likeDown",
+                data: boardDTO,
+                success: function() {
+                    console.log("컨트롤러 연결 성공");
+                    console.log(boardDTO.boardNum);
+                    console.log(boardDTO.nickname);
+                    location.reload();  // 페이지 새로 고침
+                },
+                error: function() {
+                	console.log(board_like);
+                	console.log(boardDTO.boardNum);
+                    console.log(boardDTO.nickname);
+                    console.log("컨트롤러 연결 실패");
+                }
+            });
+        }
     });
 });
+
+
 </script>
-
-
 </head>
 
 
@@ -57,7 +83,17 @@ $(document).ready(function() {
 ${sessionScope.nickname}
 
 <!-- table -->
+
+<button type="button"  style="width: 100px; height: 50px; text-align: center;">
+    <c:choose>
+        <c:when test='${board_like == 0}'>좋아요</c:when>
+        <c:otherwise>좋아요취소</c:otherwise>
+    </c:choose>
+</button>
+
 <table>
+<tr><td>나의 좋아요</td>		<td>${board_like}</td></tr>
+<tr><td>전체 좋아요</td>		<td>${board_likeCnt}</td></tr>
 <tr><td>글번호</td>		<td>${boardDTO.boardNum}</td></tr>
 <tr><td>닉네임</td>		<td>${boardDTO.nickname}</td></tr>
 <tr><td>시간</td>			<td>${boardDTO.submitTime}</td></tr>
@@ -65,7 +101,6 @@ ${sessionScope.nickname}
 <tr><td>내용</td>			<td>${boardDTO.content}</td></tr>
 <tr><td>조회수</td>			<td>${boardDTO.viewCnt}</td></tr>
 <tr><td>댓글수</td>			<td>${count}</td></tr>
-<tr><td><button class="LikeBtn" data-like="${board_like}">좋아요</button></td> <td>${board_like}</td>
 <c:forEach var="filePath" items="${filePaths}">
 <tr><td>사진</td>			<td><img src="${pageContext.request.contextPath}/resources/img/${filePath}" alt="Image" width="100" height="100"></td></tr>
 </c:forEach>

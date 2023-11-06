@@ -61,21 +61,23 @@ public class BoardDAO {
 	    params.put("nickname", nickname);
 	    return sqlSession.selectOne(namespace+".findLike", params);
 	}
-
-	public void likeUp(String boardNum, String nickname) {
-		Map<String, String> params = new HashMap<String, String>();
-	    params.put("boardNum", boardNum);
-	    params.put("nickname", nickname);
-		sqlSession.insert(namespace+".likeUp", params);
-	}
-
-	public void likeDown(String boardNum, String nickname) {
-		Map<String, String> params = new HashMap<String, String>();
-	    params.put("boardNum", boardNum);
-	    params.put("nickname", nickname);
-		sqlSession.delete(namespace+".likeDown", params);
-	}
-
 	
+	public int findLikeCnt(String boardNum) {
+		return sqlSession.selectOne(namespace+".findLikeCnt", boardNum);
+	}
+
+	public void likeUp(BoardDTO boardDTO) {
+		sqlSession.insert(namespace+".likeUp", boardDTO);
+	}
+
+	public void likeDown(BoardDTO boardDTO) {
+		sqlSession.delete(namespace+".likeDown", boardDTO);
+	}
+
+	public List<BoardDTO> getFreesearchList(BoardDTO boardDTO) {
+		System.out.println("getFreesearchList dao");
+		return sqlSession.selectList(namespace+".getFreesearchList", boardDTO);
+	}
+
 	
 }
