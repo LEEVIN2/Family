@@ -13,6 +13,7 @@
 <a href="${pageContext.request.contextPath}/member/logout">로그아웃</a><br>
 
 <a href="${pageContext.request.contextPath}/board/board">게시판</a>
+<a href="${pageContext.request.contextPath}/mypage/mypage">마이페이지</a>
 
 </body>
 </html>

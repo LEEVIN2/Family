@@ -6,20 +6,20 @@ import org.apache.ibatis.session.SqlSession;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Repository;
 
-import com.animal.domain.DTO;
+import com.animal.domain.MemberDTO;
 
 @Repository
-public class DAO {
+public class MemberDAO {
 	@Inject
 	private SqlSession sqlSession;
-	private static final String namespace="com.animal.mappers.Mapper";
+	private static final String namespace="com.animal.mappers.MemberMapper";
 	
-	public void insert(DTO DTO) {
-		sqlSession.insert(namespace+".insert", DTO);
+	public void insert(MemberDTO memberDTO) {
+		sqlSession.insert(namespace+".insert", memberDTO);
 	}
 
-	public DTO checklogin(DTO dTO) {
-		return sqlSession.selectOne(namespace+".checklogin", dTO);
+	public MemberDTO checklogin(MemberDTO memberDTO) {
+		return sqlSession.selectOne(namespace+".checklogin", memberDTO);
 	}
 
 	public void insert2(JSONObject response_obj) {

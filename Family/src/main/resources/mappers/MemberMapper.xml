@@ -4,13 +4,13 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-<mapper namespace="com.animal.mappers.Mapper"> 
+<mapper namespace="com.animal.mappers.MemberMapper"> 
 	<insert id="insert">
 	insert into member(email,pass)
 	values(#{email},#{pass})
 	</insert>
 	
-	<select id="checklogin" resultType="com.animal.domain.DTO">
+	<select id="checklogin" resultType="com.animal.domain.MemberDTO">
 	select * from member where email = #{email}
 	</select>
 	

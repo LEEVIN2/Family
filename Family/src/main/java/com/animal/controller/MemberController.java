@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,16 +25,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.animal.domain.DTO;
-import com.animal.service.Service;
+import com.animal.domain.MemberDTO;
+import com.animal.service.MemberService;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 
-@org.springframework.stereotype.Controller
+@Controller
 @RequestMapping("/member/*")
-public class Controller {
+public class MemberController {
 	
 	@Inject
-	private Service Service;
+	private MemberService memberService;
 	
 	@Autowired
 	private JavaMailSender mailSender;
@@ -52,14 +53,14 @@ public class Controller {
 //		return "member/login";
 //	}
 	@PostMapping("/loginPro")
-	public String loginPro(DTO DTO, HttpSession session,HttpServletResponse response) {
+	public String loginPro(MemberDTO MemberDTO, HttpSession session,HttpServletResponse response) {
 		boolean isValid = false;
-		DTO DTO2 = Service.checklogin(DTO);
+		MemberDTO DTO2 = memberService.checklogin(MemberDTO);
 		if (DTO2 != null && DTO2.getPass() != null) {
-		    isValid = BCrypt.checkpw(DTO.getPass(), DTO2.getPass());
+		    isValid = BCrypt.checkpw(MemberDTO.getPass(), DTO2.getPass());
 		}
 		if(isValid) {
-			session.setAttribute("email", DTO.getEmail());
+			session.setAttribute("email", MemberDTO.getEmail());
 			session.setAttribute("nickname", DTO2.getNickname());
 			return "redirect:/member/home";
 		}else {
@@ -84,9 +85,9 @@ public class Controller {
 	}
 	@PostMapping("/insertPro")
 	@ResponseBody
-	public String insertPro(DTO DTO, HttpSession session) {
-	    Service.insert(DTO);
-	    session.setAttribute("email", DTO.getEmail());
+	public String insertPro(MemberDTO MemberDTO, HttpSession session) {
+		memberService.insert(MemberDTO);
+	    session.setAttribute("email", MemberDTO.getEmail());
 	    return "Y";
 	}
 	
@@ -192,8 +193,8 @@ public class Controller {
 			String nickname = (String)response_obj.get("nickname");
 			
 			//DB에 사용자가 이미 존재하는지 확인
-			if (!Service.isUserExist(nickname)) {
-		        Service.insert2(response_obj);  // 전체 데이터를 insert2 메소드에 전달
+			if (!memberService.isUserExist(nickname)) {
+				memberService.insert2(response_obj);  // 전체 데이터를 insert2 메소드에 전달
 		    }
 			
 			//4.파싱 닉네임 세션으로 저장
@@ -217,7 +218,7 @@ public class Controller {
 		public String sendSMS(@RequestParam("mobile") String userPhoneNumber) { // 휴대폰 문자보내기
 			int randomNumber = (int)((Math.random()* (9999 - 1000 + 1)) + 1000);//난수 생성
 
-			Service.certifiedPhoneNumber(userPhoneNumber,randomNumber);
+			memberService.certifiedPhoneNumber(userPhoneNumber,randomNumber);
 			
 			return Integer.toString(randomNumber);
 		}
