@@ -55,6 +55,27 @@ public class BoardDAO {
 		 sqlSession.update(namespace+".increaseViewCnt", boardNum);
 	}
 
+	public Object findLike(String boardNum, String nickname) {
+	    Map<String, String> params = new HashMap<String, String>();
+	    params.put("boardNum", boardNum);
+	    params.put("nickname", nickname);
+	    return sqlSession.selectOne(namespace+".findLike", params);
+	}
+
+	public void likeUp(String boardNum, String nickname) {
+		Map<String, String> params = new HashMap<String, String>();
+	    params.put("boardNum", boardNum);
+	    params.put("nickname", nickname);
+		sqlSession.insert(namespace+".likeUp", params);
+	}
+
+	public void likeDown(String boardNum, String nickname) {
+		Map<String, String> params = new HashMap<String, String>();
+	    params.put("boardNum", boardNum);
+	    params.put("nickname", nickname);
+		sqlSession.delete(namespace+".likeDown", params);
+	}
+
 	
 	
 }

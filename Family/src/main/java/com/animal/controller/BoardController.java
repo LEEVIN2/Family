@@ -16,7 +16,9 @@ import javax.servlet.http.HttpSession;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -87,11 +89,38 @@ public class BoardController {
 	        session.setAttribute("boardNum", currentBoardNum);
 	    }
 	    
+	    // 좋아요 로직
+	    // 이건 작성자 닉네임이고
+//	    String nickname = request.getParameter("nickname");
+	    // 이게 내 닉네임
+	    String nickname = (String) session.getAttribute("nickname");
+	    int board_like = (int) boardService.findLike(boardNum, nickname);
+	    model.addAttribute("board_like", board_like);
+	    System.out.println(board_like);
+	    
+	    
 	    model.addAttribute("boardDTO", boardDTO);
 	    model.addAttribute("filePaths", filePaths);
 	    model.addAttribute("commentList", commentList);
 	    
 	    return "board/detail";
+	}
+	
+	// 좋아요
+	@PostMapping("/likeUp")
+	public void likeUp(BoardDTO boardDTO) {
+		System.out.println("컨트롤러 연결 성공");
+		System.out.println(boardDTO.getBoardNum());
+		System.out.println(boardDTO.getNickname());
+		boardService.likeUp(boardDTO.getBoardNum(), boardDTO.getNickname());
+	
+	}
+	
+	@ResponseBody
+	@PostMapping("/likeDown")
+	public void likeDown(@RequestBody BoardDTO boardDTO) {
+		System.out.println("좋아요 취소");
+		boardService.likeDown(boardDTO.getBoardNum(), boardDTO.getNickname());
 	}
 	
 	@GetMapping("/write")

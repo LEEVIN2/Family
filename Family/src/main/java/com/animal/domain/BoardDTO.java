@@ -17,5 +17,6 @@ public class BoardDTO {
 	private String filePath;
 	private int viewCnt;
 	private int commentCnt;
+	private int board_like;
 	
 }

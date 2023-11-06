@@ -63,6 +63,18 @@ public class BoardService {
 		 boardDAO.increaseViewCnt(boardNum);
 	}
 
+	public Object findLike(String boardNum, String nickname) {
+		return  boardDAO.findLike(boardNum, nickname);
+	}
+
+	public void likeUp(String boardNum, String nickname) {
+		boardDAO.likeUp(boardNum, nickname);
+	}
+
+	public void likeDown(String boardNum, String nickname) {
+		boardDAO.likeDown(boardNum, nickname);
+	}
+
 	
 
 }

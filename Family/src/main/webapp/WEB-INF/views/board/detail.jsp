@@ -8,6 +8,36 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	var board_like = $('.LikeBtn').data('like'); // HTML 태그에서 '좋아요' 상태 읽기
+    var boardNum = '${boardDTO.boardNum}';
+    var nickname = "${sessionScope.nickname}";
+    
+    if(board_like == 1) {
+        $('.LikeBtn').text('좋아요 취소');
+    } else {
+        $('.LikeBtn').text('좋아요');
+    }
+
+    $('.LikeBtn').click(function() {
+    	console.log(nickname);
+        console.log(boardNum);
+        $.ajax({
+            url: "/board/likeDown",
+            type: "POST",
+            data: { boardNum: boardNum, nickname: nickname },
+            success: function() {
+                console.log("좋아요 취소");
+            }
+        });
+    });
+});
+</script>
+
+
 </head>
 
 
@@ -16,12 +46,15 @@
 
 <a href="${pageContext.request.contextPath}/board/freeboard">뒤로가기</a><br>
 
+<!-- 조회수 -->
 <c:set var="count" value="0" scope="page" />
 <c:forEach var="boardDTO2" items="${commentList}">
   <c:if test="${boardDTO2.boardNum eq boardDTO.boardNum}">
     <c:set var="count" value="${count + 1}" scope="page" />
   </c:if>
 </c:forEach>
+
+${sessionScope.nickname}
 
 <!-- table -->
 <table>
@@ -32,6 +65,7 @@
 <tr><td>내용</td>			<td>${boardDTO.content}</td></tr>
 <tr><td>조회수</td>			<td>${boardDTO.viewCnt}</td></tr>
 <tr><td>댓글수</td>			<td>${count}</td></tr>
+<tr><td><button class="LikeBtn" data-like="${board_like}">좋아요</button></td> <td>${board_like}</td>
 <c:forEach var="filePath" items="${filePaths}">
 <tr><td>사진</td>			<td><img src="${pageContext.request.contextPath}/resources/img/${filePath}" alt="Image" width="100" height="100"></td></tr>
 </c:forEach>
