@@ -22,15 +22,19 @@
 	</insert>
 	
 	<select id="getFreesearchList" resultType="com.animal.domain.BoardDTO">
-		select *
-		from board
-		where 1=1
-  		<if test="search != null and search != ''">
-            and (nickname like concat('%', #{search}, '%')
-            or title like concat('%', #{search}, '%')
-            or content like concat('%', #{search}, '%'))
-        </if>
-	</select>
+    <if test="search == null or search == ''">
+        select *
+        from board
+        where 1 = 0
+    </if>
+    <if test="search != null and search != ''">
+        select *
+        from board
+        where nickname like concat('%', #{search}, '%')
+        or title like concat('%', #{search}, '%')
+        or content like concat('%', #{search}, '%')
+    </if>
+</select>
 	
 	<select id="getBoardList" resultType="com.animal.domain.BoardDTO">
 		SELECT b.boardNum, b.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
@@ -52,7 +56,8 @@ LEFT JOIN (
 	SELECT boardNum, COUNT(*) as board_likeCnt
 	FROM board_like
 	GROUP BY boardNum
-) as li ON b.boardNum = li.boardNum;
+) as li ON b.boardNum = li.boardNum
+order by boardNum desc limit #{startRow}, #{pageSize};
 	</select>
 	
 	<select id="getCommentList" resultType="com.animal.domain.BoardDTO">
@@ -102,6 +107,11 @@ LEFT JOIN (
 	SET viewCnt = IFNULL(viewCnt, 0) + 1
 	WHERE boardNum = #{boardNum};
 </update>
+
+<select id="getFreeboardCount" resultType="java.lang.Integer">
+		select count(*)
+      	from board
+    </select>
 
 	
 </mapper>

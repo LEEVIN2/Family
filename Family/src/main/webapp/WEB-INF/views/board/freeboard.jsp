@@ -11,6 +11,19 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<!-- 페이지를 처음 방문하거나 다른 페이지에서 돌아올 때마다 페이지가 새로 고침 -->
+<!-- 조회수가 바로 적용이 안돼서 추가한거임 -->
+<script type="text/javascript">
+    window.onload = function() {
+        if(!sessionStorage.getItem('reloaded')) {
+            sessionStorage.setItem('reloaded', true);
+            location.reload();
+        } else {
+            sessionStorage.removeItem('reloaded');
+        }
+    }
+</script>
+
 </head>
 
 <!-- body -->
@@ -24,7 +37,8 @@
 <!-- table -->
 <table>
 <c:forEach var="boardDTO" items="${boardList}">
-<tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}'">
+<tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}&pageNum=${sessionScope.currentPage}'">
+<%-- <tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}'"> --%>
 <td>${boardDTO.boardNum}</td>
 <td>${boardDTO.nickname}</td>
 <td>${boardDTO.submitTime}</td>
@@ -38,7 +52,13 @@
 </c:forEach>
 </table>
 
-<input type="button" value="글쓰기" onclick="location.href='${pageContext.request.contextPath}/board/write'">
+<input type="button" value="글쓰기" onclick="location.href='${pageContext.request.contextPath}/board/write'"><br>
+
+<!-- 페이징처리 -->
+<c:forEach var="i" begin="${boardDTO.startPage}" end="${boardDTO.endPage}" step="1">
+<a href="${pageContext.request.contextPath}/board/freeboard?pageNum=${i}">${i}</a> 
+</c:forEach>
+
 
 </body>
 </html>

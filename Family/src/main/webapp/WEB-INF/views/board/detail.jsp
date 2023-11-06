@@ -69,8 +69,8 @@ $(document).ready(function() {
 
 <!-- body -->
 <body>
+<a href="${pageContext.request.contextPath}/board/freeboard?pageNum=${currentPage}">뒤로가기</a><br>
 
-<a href="${pageContext.request.contextPath}/board/freeboard">뒤로가기</a><br>
 
 <!-- 조회수 -->
 <c:set var="count" value="0" scope="page" />

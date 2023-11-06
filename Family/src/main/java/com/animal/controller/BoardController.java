@@ -40,23 +40,64 @@ public class BoardController {
 	}
 	
 	@GetMapping("/freeboard")
-	public String freeboard(Model model) {
-		List<BoardDTO> boardList = boardService.getBoardList();
+	public String freeboard(HttpServletRequest request, HttpSession session, Model model) {
+
+//		페이징
+		int pageSize = 3; //한 페이지에 표시할 게시물의 수
+	    String pageNum=request.getParameter("pageNum");
+	    if(pageNum == null) {
+	    	pageNum = "1";
+	    }
+	    
+	    
+	    int currentPage = Integer.parseInt(pageNum); //현재 사용자가 보고 있는 페이지 번호
+	    BoardDTO boardDTO =new BoardDTO();
+	    boardDTO.setPageSize(pageSize);
+	    boardDTO.setPageNum(pageNum);
+	    boardDTO.setCurrentPage(currentPage);
+	    
+	    int count = boardService.getFreeboardCount(boardDTO);
+	    int pageBlock = 5; //네비게이션 바에 표시할 페이지 번호의 수 6페이지를 보고 있다면 네비게이션 바에는 6, 7, 8, 9, 10 페이지 번호가 표시됩니다.
+	    int startPage=(currentPage-1)/pageBlock*pageBlock+1;
+	    int endPage = startPage + pageBlock -1;
+	    int pageCount = count/pageSize+(count%pageSize==0?0:1);
+	    if(endPage > pageCount) {
+	    	endPage = pageCount;
+	    }
+	    
+	    boardDTO.setCount(count);
+	    boardDTO.setPageBlock(pageBlock);
+	    boardDTO.setStartPage(startPage);
+	    boardDTO.setEndPage(endPage);
+	    boardDTO.setPageCount(pageCount);
+	    model.addAttribute("boardDTO", boardDTO);
+	    
+	    // 현재 페이지 값 가져와서 detail에서 다시 freeboard 페이지로 올때 2페이지 유지하려고 만듬
+	    session.setAttribute("currentPage", currentPage);
+	    
+//	    표시
+List<BoardDTO> boardList = boardService.getBoardList(boardDTO);
 		
-		
-		for (BoardDTO boardDTO : boardList) {
-            String submitTime = boardDTO.getSubmitTime();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime submitDateTime = LocalDateTime.parse(submitTime, formatter);
-            LocalDateTime now = LocalDateTime.now();
-            long minutesBetween = ChronoUnit.MINUTES.between(submitDateTime, now);
-            if (minutesBetween < 1) {
-                boardDTO.setSubmitTime("방금전");
-            } else {
-                boardDTO.setSubmitTime("한참전");
-            }
-        }
-		
+for (BoardDTO boardDTO2 : boardList) {
+    String submitTime = boardDTO2.getSubmitTime();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    LocalDateTime submitDateTime = LocalDateTime.parse(submitTime, formatter);
+    LocalDateTime now = LocalDateTime.now();
+    long minutesBetween = ChronoUnit.MINUTES.between(submitDateTime, now);
+    long hoursBetween = ChronoUnit.HOURS.between(submitDateTime, now);
+    long daysBetween = ChronoUnit.DAYS.between(submitDateTime, now);
+
+    if (minutesBetween < 1) {
+        boardDTO2.setSubmitTime("방금전");
+    } else if (minutesBetween < 60) {
+        boardDTO2.setSubmitTime(minutesBetween + "분전");
+    } else if (hoursBetween < 24) {
+        boardDTO2.setSubmitTime(hoursBetween + "시간전");
+    } else {
+        boardDTO2.setSubmitTime(daysBetween + "일전");
+    }
+}
+
 		model.addAttribute("boardList", boardList);
 		return "board/freeboard";
 	}

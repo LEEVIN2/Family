@@ -22,8 +22,9 @@ public class BoardDAO {
 		sqlSession.insert(namespace+".writePro", boardDTO);
 	}
 
-	public List<BoardDTO> getBoardList() {
-		return sqlSession.selectList(namespace+".getBoardList");
+	public List<BoardDTO> getBoardList(BoardDTO boardDTO) {
+		System.out.println("getBoardList dao");
+		return sqlSession.selectList(namespace+".getBoardList", boardDTO);
 	}
 	
 	public List<BoardDTO> getCommentList() {
@@ -78,6 +79,11 @@ public class BoardDAO {
 		System.out.println("getFreesearchList dao");
 		return sqlSession.selectList(namespace+".getFreesearchList", boardDTO);
 	}
+
+	public int getFreeboardCount(BoardDTO boardDTO) {
+		System.out.println("getFreeboardCount dao");
+		return sqlSession.selectOne(namespace+".getFreeboardCount",boardDTO);
+    }
 
 	
 }
