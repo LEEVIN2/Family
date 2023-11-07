@@ -30,13 +30,16 @@ public class BoardService {
 	}
 
 	public List<BoardDTO> getBoardList(BoardDTO boardDTO) {
-		System.out.println("getBoardList 서비스");
 //		페이징
 		int startRow = (boardDTO.getCurrentPage()-1)*boardDTO.getPageSize() + 1;
         int endRow = startRow + boardDTO.getPageSize() - 1;
         boardDTO.setStartRow(startRow - 1);
         boardDTO.setEndRow(endRow);
 		return boardDAO.getBoardList(boardDTO);
+	}
+	
+	public List<BoardDTO> getBoardHotList(BoardDTO boardDTO) {
+		return boardDAO.getBoardHotList(boardDTO);
 	}
 
 	public BoardDTO getDetail(String boardNum) {
@@ -91,9 +94,10 @@ public class BoardService {
 	}
 
 	public int getFreeboardCount(BoardDTO boardDTO) {
-		System.out.println("getFreeboardCount 서비스");
 		return boardDAO.getFreeboardCount(boardDTO);
 	}
+
+	
 
 	
 

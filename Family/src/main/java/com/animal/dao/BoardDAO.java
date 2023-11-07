@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -23,8 +24,13 @@ public class BoardDAO {
 	}
 
 	public List<BoardDTO> getBoardList(BoardDTO boardDTO) {
-		System.out.println("getBoardList dao");
 		return sqlSession.selectList(namespace+".getBoardList", boardDTO);
+	}
+	
+//	스프링 메퍼에서는 LIMIT 1 구문이 직접적으로 적용되지 않습니다. 대신, 스프링 메퍼에서 제공하는 RowBounds 객체를 사용하여 특정 개수의 결과를 제한할 수 있습니다.
+//	SQL 쿼리가 변경되지 않으므로 데이터베이스에 따라 성능에 영향을 줄 수 있습니다. 따라서 대량의 데이터를 처리할 때는 적절한 방법을 고려해야 합니다.
+	public List<BoardDTO> getBoardHotList(BoardDTO boardDTO) {
+	    return sqlSession.selectList(namespace+".getBoardHotList", boardDTO, new RowBounds(0, 1));
 	}
 	
 	public List<BoardDTO> getCommentList() {
@@ -76,14 +82,14 @@ public class BoardDAO {
 	}
 
 	public List<BoardDTO> getFreesearchList(BoardDTO boardDTO) {
-		System.out.println("getFreesearchList dao");
 		return sqlSession.selectList(namespace+".getFreesearchList", boardDTO);
 	}
 
 	public int getFreeboardCount(BoardDTO boardDTO) {
-		System.out.println("getFreeboardCount dao");
 		return sqlSession.selectOne(namespace+".getFreeboardCount",boardDTO);
     }
+
+	
 
 	
 }

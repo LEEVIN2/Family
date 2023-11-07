@@ -21,7 +21,7 @@
 <!-- form -->
 <form id="writeForm" action="${pageContext.request.contextPath}/board/writePro" method="post"  enctype="multipart/form-data">
 제목				<input type="text" name="title" required><br>
-내용				<input type="text" name="content" required><br>
+내용				<textarea name="content" rows="4" cols="50" required></textarea><br>
 <input multiple="multiple" type="file" name="file" />
 <input type="hidden" name="nickname" value="${sessionScope.nickname}">
 <input type="submit" value="작성">

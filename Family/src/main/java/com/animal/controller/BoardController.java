@@ -77,42 +77,55 @@ public class BoardController {
 	    
 //	    표시
 List<BoardDTO> boardList = boardService.getBoardList(boardDTO);
-		
-for (BoardDTO boardDTO2 : boardList) {
-    String submitTime = boardDTO2.getSubmitTime();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    LocalDateTime submitDateTime = LocalDateTime.parse(submitTime, formatter);
-    LocalDateTime now = LocalDateTime.now();
-    long minutesBetween = ChronoUnit.MINUTES.between(submitDateTime, now);
-    long hoursBetween = ChronoUnit.HOURS.between(submitDateTime, now);
-    long daysBetween = ChronoUnit.DAYS.between(submitDateTime, now);
+List<BoardDTO> boardHotList = boardService.getBoardHotList(boardDTO);
 
-    if (minutesBetween < 1) {
-        boardDTO2.setSubmitTime("방금전");
-    } else if (minutesBetween < 60) {
-        boardDTO2.setSubmitTime(minutesBetween + "분전");
-    } else if (hoursBetween < 24) {
-        boardDTO2.setSubmitTime(hoursBetween + "시간전");
-    } else {
-        boardDTO2.setSubmitTime(daysBetween + "일전");
-    }
+for (BoardDTO boardDTO2 : boardList) {
+    updateSubmitTime(boardDTO2);
 }
 
+for (BoardDTO boardDTO2 : boardHotList) {
+    updateSubmitTime(boardDTO2);
+}
+		
 		model.addAttribute("boardList", boardList);
+		model.addAttribute("boardHotList", boardHotList);
 		return "board/freeboard";
+	}
+	
+	public void updateSubmitTime(BoardDTO boardDTO2) {
+	    String submitTime = boardDTO2.getSubmitTime();
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	    LocalDateTime submitDateTime = LocalDateTime.parse(submitTime, formatter);
+	    LocalDateTime now = LocalDateTime.now();
+	    long minutesBetween = ChronoUnit.MINUTES.between(submitDateTime, now);
+	    long hoursBetween = ChronoUnit.HOURS.between(submitDateTime, now);
+	    long daysBetween = ChronoUnit.DAYS.between(submitDateTime, now);
+
+	    if (minutesBetween < 1) {
+	        boardDTO2.setSubmitTime("방금");
+	    } else if (minutesBetween < 60) {
+	        boardDTO2.setSubmitTime(minutesBetween + "분");
+	    } else if (hoursBetween < 24) {
+	        boardDTO2.setSubmitTime(hoursBetween + "시간");
+	    } else {
+	        boardDTO2.setSubmitTime(daysBetween + "일");
+	    }
 	}
 	
 	@GetMapping("/freesearch")
 	public String freesearch(HttpServletRequest request,Model model) {
 		
 		String search = request.getParameter("search");
-		System.out.println("search : " + search);
 		
 		BoardDTO boardDTO =new BoardDTO();
 		boardDTO.setSearch(search); // 검색어저장
 		
 		// 품목추가한 내용 뿌려주기
 	    List<BoardDTO> boardList= boardService.getFreesearchList(boardDTO);
+	    
+	    for (BoardDTO boardDTO2 : boardList) {
+	        updateSubmitTime(boardDTO2);
+	    }
 		
 	 // 품목추가한 내용 뿌려주기
 	    model.addAttribute("boardList", boardList);
@@ -126,9 +139,14 @@ for (BoardDTO boardDTO2 : boardList) {
 		String boardNum = request.getParameter("boardNum");
 	    BoardDTO boardDTO = boardService.getDetail(boardNum);
 	    List<String> filePaths = boardService.getFilePaths(boardNum);
+	    updateSubmitTime(boardDTO);
 	    
 	    // 댓글 내용 뿌려주기
 	    List<BoardDTO> commentList = boardService.getCommentList();
+	    
+	    for (BoardDTO boardDTO2 : commentList) {
+	        updateSubmitTime(boardDTO2);
+	    }
 	    
 	    // 조회수 증가 로직
 	    // 게시글 작성자 닉네임
@@ -139,10 +157,13 @@ for (BoardDTO boardDTO2 : boardList) {
 	    String sessionNickname = (String) session.getAttribute("nickname");
 
 	    // 세션에 저장된 닉네임이 없거나, 현재 닉네임과 세션에 저장된 닉네임이 다르면 조회수 증가
-	    if (sessionBoardNum == null || !sessionBoardNum.equals(currentBoardNum) && !sessionNickname.equals(currentNickname)) {
+//	    if (sessionBoardNum == null || !sessionBoardNum.equals(currentBoardNum) && !sessionNickname.equals(currentNickname))
+	    // 조회수는 어떤 조건에서 올라가게 할건지 나중에 다시 상의...해보고
+	    if (sessionBoardNum == null || !sessionBoardNum.equals(currentBoardNum) || sessionNickname == null || !sessionNickname.equals(currentNickname)) {
 	        boardService.increaseViewCnt(boardNum);
 	        session.setAttribute("boardNum", currentBoardNum);
 	    }
+
 	    
 	    // 내 좋아요 로직
 	    // 이건 작성자 닉네임이고
@@ -218,7 +239,7 @@ for (BoardDTO boardDTO2 : boardList) {
 		
 	    // 파일 업로드 로직
 	    List<MultipartFile> fileList = mtfRequest.getFiles("file");
-	    String path = "C:\\Users\\sonmi\\git\\Family\\Family\\Family\\src\\main\\webapp\\resources\\img\\";
+//	    String path = "C:\\Users\\sonmi\\git\\Family\\Family\\Family\\src\\main\\webapp\\resources\\img\\";
 	    
 	    // 게시글 작성 로직
 	    boardService.writePro(boardDTO);
@@ -230,9 +251,9 @@ for (BoardDTO boardDTO2 : boardList) {
 	        System.out.println("originFileName : " + originFileName);
 	        System.out.println("fileSize : " + fileSize);
 
-	        String safeFile = path + originFileName;
+//	        String safeFile = path + originFileName;
 	        try {
-	            mf.transferTo(new File(safeFile));
+//	            mf.transferTo(new File(safeFile));
 	            String filePath = originFileName;
 	            boardService.addFilePath(boardNum, filePath); // 파일 경로 추가
 	            System.out.println(originFileName);
@@ -240,8 +261,8 @@ for (BoardDTO boardDTO2 : boardList) {
 //	            System.out.println(boardDTO.getFilePath());
 	        } catch (IllegalStateException e) {
 	            e.printStackTrace();
-	        } catch (IOException e) {
-	            e.printStackTrace();
+//	        } catch (IOException e) {
+//	            e.printStackTrace();
 	        }
 	    }
 	    return "redirect:/board/freeboard";

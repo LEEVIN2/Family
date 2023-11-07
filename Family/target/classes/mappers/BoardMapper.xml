@@ -60,6 +60,33 @@ LEFT JOIN (
 order by boardNum desc limit #{startRow}, #{pageSize};
 	</select>
 	
+	<select id="getBoardHotList" resultType="com.animal.domain.BoardDTO">
+		SELECT * FROM (
+    SELECT b.boardNum, b.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
+    FROM board b
+    LEFT JOIN (
+        SELECT boardNum, filePath
+        FROM board_file
+        WHERE (boardNum, fileNum) IN (
+            SELECT boardNum, MAX(fileNum)
+            FROM board_file
+            GROUP BY boardNum)
+    ) as f ON b.boardNum = f.boardNum
+    LEFT JOIN (
+        SELECT boardNum, COUNT(*) as commentCnt
+        FROM comment
+        GROUP BY boardNum
+    ) as co ON b.boardNum = co.boardNum
+    LEFT JOIN (
+        SELECT boardNum, COUNT(*) as board_likeCnt
+        FROM board_like
+        GROUP BY boardNum
+    ) as li ON b.boardNum = li.boardNum
+    WHERE co.commentCnt >= 3 OR li.board_likeCnt >= 3
+    ORDER BY b.submitTime DESC
+) AS result;
+	</select>
+	
 	<select id="getCommentList" resultType="com.animal.domain.BoardDTO">
 	SELECT *
     FROM comment

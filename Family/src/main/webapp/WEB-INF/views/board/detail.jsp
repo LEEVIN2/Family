@@ -62,7 +62,15 @@ $(document).ready(function() {
     });
 });
 
-
+// 댓글쓸때 닉네임값 있는지 확인
+function checkLogin() {
+    var nickname = document.getElementsByName('nickname')[0].value;
+    if (!nickname) {
+        alert('로그인이 필요합니다!');
+        return false;
+    }
+    return true;
+}
 </script>
 </head>
 
@@ -102,12 +110,14 @@ ${sessionScope.nickname}
 <tr><td>조회수</td>			<td>${boardDTO.viewCnt}</td></tr>
 <tr><td>댓글수</td>			<td>${count}</td></tr>
 <c:forEach var="filePath" items="${filePaths}">
-<tr><td>사진</td>			<td><img src="${pageContext.request.contextPath}/resources/img/${filePath}" alt="Image" width="100" height="100"></td></tr>
+<tr><td></td>			<td><img src="${pageContext.request.contextPath}/resources/img/${filePath}" alt="Image" width="100" height="100"></td></tr>
 </c:forEach>
 </table>
 
+<hr>
+
 <!-- table -->
-<table border="1">
+<table>
 <c:forEach var="boardDTO2" items="${commentList}">
   <c:if test="${boardDTO2.boardNum eq boardDTO.boardNum}">
     <tr><td>글번호</td>		<td>${boardDTO2.boardNum}</td></tr>
@@ -120,7 +130,7 @@ ${sessionScope.nickname}
 
 
 <!-- form (댓글)-->
-<form action="${pageContext.request.contextPath}/board/writePro2" method="post" >
+<form action="${pageContext.request.contextPath}/board/writePro2" method="post" onsubmit="return checkLogin();">
 댓글		<input type="text" name="content" required> 
 <input type="hidden" name="nickname" value="${sessionScope.nickname}">
 <input type="hidden" name="boardNum" value="${boardDTO.boardNum}">
