@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -34,9 +35,41 @@ public class BoardController {
 	@Inject
 	private BoardService boardService;
 	
+	// 사진파일경로 (서블릿에서 가져오는거임)
+	@Autowired
+    private String uploadPath;
+	
 	@GetMapping("/board")
 	public String board() {
 		return "board/board";
+	}
+	
+	@GetMapping("/written")
+	public String written(HttpSession session, Model model) {
+		
+		String nickname = (String) session.getAttribute("nickname");
+		
+		BoardDTO boardDTO =new BoardDTO();
+		boardDTO.setNickname(nickname);
+		
+		List<BoardDTO> writtenList = boardService.getWrittenList(boardDTO);
+		
+		model.addAttribute("writtenList", writtenList);
+		return "board/written";
+	}
+	
+	@GetMapping("/written2")
+	public String written2(HttpSession session, Model model) {
+		
+		String nickname = (String) session.getAttribute("nickname");
+		
+		BoardDTO boardDTO =new BoardDTO();
+		boardDTO.setNickname(nickname);
+		
+		List<BoardDTO> writtenList2 = boardService.getWrittenList2(boardDTO);
+		
+		model.addAttribute("writtenList2", writtenList2);
+		return "board/written2";
 	}
 	
 	@GetMapping("/freeboard")
@@ -239,7 +272,6 @@ for (BoardDTO boardDTO2 : boardHotList) {
 		
 	    // 파일 업로드 로직
 	    List<MultipartFile> fileList = mtfRequest.getFiles("file");
-//	    String path = "C:\\Users\\sonmi\\git\\Family\\Family\\Family\\src\\main\\webapp\\resources\\img\\";
 	    
 	    // 게시글 작성 로직
 	    boardService.writePro(boardDTO);
@@ -251,9 +283,9 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	        System.out.println("originFileName : " + originFileName);
 	        System.out.println("fileSize : " + fileSize);
 
-//	        String safeFile = path + originFileName;
+	        String safeFile = uploadPath + "\\" + originFileName;
 	        try {
-//	            mf.transferTo(new File(safeFile));
+	            mf.transferTo(new File(safeFile));
 	            String filePath = originFileName;
 	            boardService.addFilePath(boardNum, filePath); // 파일 경로 추가
 	            System.out.println(originFileName);
@@ -261,8 +293,8 @@ for (BoardDTO boardDTO2 : boardHotList) {
 //	            System.out.println(boardDTO.getFilePath());
 	        } catch (IllegalStateException e) {
 	            e.printStackTrace();
-//	        } catch (IOException e) {
-//	            e.printStackTrace();
+	        } catch (IOException e) {
+	            e.printStackTrace();
 	        }
 	    }
 	    return "redirect:/board/freeboard";

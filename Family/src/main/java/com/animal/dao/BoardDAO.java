@@ -89,6 +89,14 @@ public class BoardDAO {
 		return sqlSession.selectOne(namespace+".getFreeboardCount",boardDTO);
     }
 
+	public List<BoardDTO> getWrittenList(BoardDTO boardDTO) {
+		return sqlSession.selectList(namespace+".getWrittenList", boardDTO);
+	}
+
+	public List<BoardDTO> getWrittenList2(BoardDTO boardDTO) {
+		return sqlSession.selectList(namespace+".getWrittenList2", boardDTO);
+	}
+
 	
 
 	

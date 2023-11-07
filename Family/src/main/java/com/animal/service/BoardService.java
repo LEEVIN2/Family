@@ -97,6 +97,14 @@ public class BoardService {
 		return boardDAO.getFreeboardCount(boardDTO);
 	}
 
+	public List<BoardDTO> getWrittenList(BoardDTO boardDTO) {
+		return boardDAO.getWrittenList(boardDTO);
+	}
+
+	public List<BoardDTO> getWrittenList2(BoardDTO boardDTO) {
+		return boardDAO.getWrittenList2(boardDTO);
+	}
+
 	
 
 	

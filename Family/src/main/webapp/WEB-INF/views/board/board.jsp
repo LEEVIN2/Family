@@ -11,8 +11,8 @@
 
 <!-- body -->
 <body>
-작성한 글<br>
-작성한 댓글<br>
+<a href="${pageContext.request.contextPath}/board/written">작성한 글</a><br>
+<a href="${pageContext.request.contextPath}/board/written2">작성한 댓글</a><br>
 북마크<br>
 
 <br>
