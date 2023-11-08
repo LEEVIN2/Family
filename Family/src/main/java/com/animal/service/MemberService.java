@@ -31,6 +31,7 @@ public class MemberService {
 	    // dto에 다시 넣어준다.
 	    memberDTO.setPass(encodedPwd);
 	    // 암호화된 비밀번호가 들어 있는 dto를 dao에 전달해서 새로운 회원 정보를 추가한다.
+	    memberDTO.setNickname("익명");
 	    try {
 	        memberDAO.insert(memberDTO);
 	        return true;  // 회원 정보 추가가 성공하면 true를 반환

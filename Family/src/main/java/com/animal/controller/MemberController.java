@@ -61,6 +61,7 @@ public class MemberController {
 		}
 		if(isValid) {
 			session.setAttribute("id", MemberDTO.getId());
+			session.setAttribute("nickname", MemberDTO.getNickname());
 			return "redirect:/member/home";
 		}else {
 			response.setContentType("text/html;charset=UTF-8");
@@ -78,9 +79,9 @@ public class MemberController {
 		}
 	}
 	
-	@GetMapping("/insert")
+	@GetMapping("/join")
 	public String insert() {
-		return "member/insert";
+		return "member/join";
 	}
 	
 	@PostMapping("/insertPro")
@@ -89,12 +90,17 @@ public class MemberController {
 	    boolean isInserted = memberService.insert(MemberDTO);
 	    if (isInserted) {
 	        session.setAttribute("id", MemberDTO.getId());
+	        session.setAttribute("nickname", MemberDTO.getNickname());
 	        return "Y";
 	    } else {
 	        return "N";
 	    }
 	}
-
+	
+	@GetMapping("/main")
+	public String main() {
+		return "member/main";
+	}
 	
 //	@GetMapping("/home")
 //	public String home() {
@@ -106,11 +112,6 @@ public class MemberController {
 //		session.invalidate();
 //		return "redirect:/member/main";
 //	}
-	
-	@GetMapping("/join")
-	public String join() {
-		return "member/join";
-	}
 	
 	@ResponseBody
 	@PostMapping("/emailAuth")
@@ -199,6 +200,7 @@ public class MemberController {
 			//4.파싱 닉네임 세션으로 저장
 			String email = (String)response_obj.get("email");
 			session.setAttribute("id", email);
+			session.setAttribute("nickname", nickname);
 			model.addAttribute("result", apiResult);
 			}
 		     

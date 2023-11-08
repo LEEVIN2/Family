@@ -6,8 +6,8 @@
   
 <mapper namespace="com.animal.mappers.MemberMapper"> 
 	<insert id="insert">
-	insert into member(id,pass,email,mobile)
-	values(#{id},#{pass},#{email},#{mobile})
+	insert into member(id,pass,email,mobile,nickname)
+	values(#{id},#{pass},#{email},#{mobile},#{nickname})
 	</insert>
 	
 	<select id="checklogin" resultType="com.animal.domain.MemberDTO">

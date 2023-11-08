@@ -19,7 +19,7 @@ a {
 비밀번호<input type="password" name="pass">
 <button>로그인</button>
 </form>
-<a href="${pageContext.request.contextPath}/member/insert">회원가입</a>
+<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
 <a href="${url}"><img height="50" src="http://static.nid.naver.com/oauth/small_g_in.PNG"/></a>
 </body>
 </html>
