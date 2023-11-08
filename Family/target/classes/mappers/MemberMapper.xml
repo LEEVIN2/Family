@@ -6,17 +6,17 @@
   
 <mapper namespace="com.animal.mappers.MemberMapper"> 
 	<insert id="insert">
-	insert into member(email,pass)
-	values(#{email},#{pass})
+	insert into member(id,pass,email,mobile)
+	values(#{id},#{pass},#{email},#{mobile})
 	</insert>
 	
 	<select id="checklogin" resultType="com.animal.domain.MemberDTO">
-	select * from member where email = #{email}
+	select * from member where id = #{id}
 	</select>
 	
 	<insert id="insert2">
-	insert into member(email,name,nickname,mobile)
-	values(#{email},#{name},#{nickname},#{mobile})
+	insert into member(email,name,nickname,mobile,id)
+	values(#{email},#{name},#{nickname},#{mobile},#{email})
 	</insert>
 	
 	<select id="isUserExist" parameterType="string" resultType="int">

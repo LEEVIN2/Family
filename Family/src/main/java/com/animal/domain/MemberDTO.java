@@ -9,8 +9,10 @@ import lombok.ToString;
 @ToString
 public class MemberDTO {
 	
+	private String id;
 	private String email;
 	private String pass;
 	private String nickname;
+	private String mobile;
 
 }

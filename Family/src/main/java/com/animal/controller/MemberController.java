@@ -60,8 +60,7 @@ public class MemberController {
 		    isValid = BCrypt.checkpw(MemberDTO.getPass(), DTO2.getPass());
 		}
 		if(isValid) {
-			session.setAttribute("email", MemberDTO.getEmail());
-			session.setAttribute("nickname", DTO2.getNickname());
+			session.setAttribute("id", MemberDTO.getId());
 			return "redirect:/member/home";
 		}else {
 			response.setContentType("text/html;charset=UTF-8");
@@ -83,18 +82,19 @@ public class MemberController {
 	public String insert() {
 		return "member/insert";
 	}
+	
 	@PostMapping("/insertPro")
 	@ResponseBody
 	public String insertPro(MemberDTO MemberDTO, HttpSession session) {
-		memberService.insert(MemberDTO);
-	    session.setAttribute("email", MemberDTO.getEmail());
-	    return "Y";
+	    boolean isInserted = memberService.insert(MemberDTO);
+	    if (isInserted) {
+	        session.setAttribute("id", MemberDTO.getId());
+	        return "Y";
+	    } else {
+	        return "N";
+	    }
 	}
-	
-	@GetMapping("/main")
-	public String main() {
-		return "member/main";
-	}
+
 	
 //	@GetMapping("/home")
 //	public String home() {
@@ -167,7 +167,6 @@ public class MemberController {
 		//네이버 로그인 성공시 callback호출 메소드
 		@RequestMapping(value = "/home", method = { RequestMethod.GET, RequestMethod.POST })
 		public String callback(Model model, @RequestParam(required = false) String code, @RequestParam(required = false) String state, HttpSession session) throws IOException, ParseException {
-			
 			if (code != null && state != null) {
 			OAuth2AccessToken oauthToken;
 	        oauthToken = naverLoginBO.getAccessToken(session, code, state);
@@ -198,8 +197,8 @@ public class MemberController {
 		    }
 			
 			//4.파싱 닉네임 세션으로 저장
-			session.setAttribute("sessionId",nickname); //세션 생성
-			
+			String email = (String)response_obj.get("email");
+			session.setAttribute("id", email);
 			model.addAttribute("result", apiResult);
 			}
 		     
@@ -210,7 +209,7 @@ public class MemberController {
 		@RequestMapping(value = "/logout", method = { RequestMethod.GET, RequestMethod.POST })
 		public String logout(HttpSession session)throws IOException {
 				session.invalidate();
-				return "redirect:/member/main";
+				return "redirect:/member/login";
 			}
 		
 		@ResponseBody

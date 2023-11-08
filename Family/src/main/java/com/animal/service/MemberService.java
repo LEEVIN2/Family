@@ -21,18 +21,24 @@ public class MemberService {
 	private MemberDAO memberDAO;
 	
 	// 회원 한명의 정보를 추가하는 메소드
-		public void insert(MemberDTO memberDTO) {
-			// 가입시 입력한 비밀번호를 읽어와서
-			String pwd = memberDTO.getPass();
-			
-			// 암호화 한 후에
-			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-			String encodedPwd = encoder.encode(pwd);
-			// dto에 다시 넣어준다.
-			memberDTO.setPass(encodedPwd);
-			// 암호화된 비밀번호가 들어 있는 dto를 dao에 전달해서 새로운 회원 정보를 추가한다.
-			memberDAO.insert(memberDTO);
-		}
+	public boolean insert(MemberDTO memberDTO) {
+	    // 가입시 입력한 비밀번호를 읽어와서
+	    String pwd = memberDTO.getPass();
+	    
+	    // 암호화 한 후에
+	    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	    String encodedPwd = encoder.encode(pwd);
+	    // dto에 다시 넣어준다.
+	    memberDTO.setPass(encodedPwd);
+	    // 암호화된 비밀번호가 들어 있는 dto를 dao에 전달해서 새로운 회원 정보를 추가한다.
+	    try {
+	        memberDAO.insert(memberDTO);
+	        return true;  // 회원 정보 추가가 성공하면 true를 반환
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;  // 회원 정보 추가가 실패하면 false를 반환
+	    }
+	}
 
 		public MemberDTO checklogin(MemberDTO memberDTO) {
 			return memberDAO.checklogin(memberDTO);
