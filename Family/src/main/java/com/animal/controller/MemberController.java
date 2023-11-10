@@ -80,15 +80,15 @@ public class MemberController {
 	}
 	
 	@GetMapping("/join")
-	public String insert() {
+	public String join() {
 		return "member/join";
 	}
 	
-	@PostMapping("/insertPro")
+	@PostMapping("/joinPro")
 	@ResponseBody
-	public String insertPro(MemberDTO MemberDTO, HttpSession session) {
-	    boolean isInserted = memberService.insert(MemberDTO);
-	    if (isInserted) {
+	public String joinPro(MemberDTO MemberDTO, HttpSession session) {
+	    boolean isjoined = memberService.join(MemberDTO);
+	    if (isjoined) {
 	        session.setAttribute("id", MemberDTO.getId());
 	        session.setAttribute("nickname", MemberDTO.getNickname());
 	        return "Y";
@@ -100,6 +100,21 @@ public class MemberController {
 	@GetMapping("/main")
 	public String main() {
 		return "member/main";
+	}
+	
+	@GetMapping("/searchid")
+	public String searchid() {
+		return "member/searchid";
+	}
+	
+	@GetMapping("/searchide")
+	public String searchide() {
+		return "member/searchide";
+	}
+	
+	@GetMapping("/searchidm")
+	public String searchidm() {
+		return "member/searchidm";
 	}
 	
 //	@GetMapping("/home")
@@ -194,7 +209,7 @@ public class MemberController {
 			
 			//DB에 사용자가 이미 존재하는지 확인
 			if (!memberService.isUserExist(nickname)) {
-				memberService.insert2(response_obj);  // 전체 데이터를 insert2 메소드에 전달
+				memberService.join2(response_obj);  // 전체 데이터를 join2 메소드에 전달
 		    }
 			
 			//4.파싱 닉네임 세션으로 저장

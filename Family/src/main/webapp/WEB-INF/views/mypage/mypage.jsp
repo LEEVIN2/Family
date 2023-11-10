@@ -11,6 +11,8 @@
 
 <!-- body -->
 <body>
+<a>${sessionScope.nickname}</a>
+<a>${sessionScope.id}</a>
 <a href="${pageContext.request.contextPath}/mypage/profile">프로필 변경</a><br>
 닉네임 변경<br>
 이메일 변경<br>

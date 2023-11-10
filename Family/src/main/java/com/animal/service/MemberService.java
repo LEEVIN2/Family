@@ -21,7 +21,7 @@ public class MemberService {
 	private MemberDAO memberDAO;
 	
 	// 회원 한명의 정보를 추가하는 메소드
-	public boolean insert(MemberDTO memberDTO) {
+	public boolean join(MemberDTO memberDTO) {
 	    // 가입시 입력한 비밀번호를 읽어와서
 	    String pwd = memberDTO.getPass();
 	    
@@ -33,7 +33,7 @@ public class MemberService {
 	    // 암호화된 비밀번호가 들어 있는 dto를 dao에 전달해서 새로운 회원 정보를 추가한다.
 	    memberDTO.setNickname("익명");
 	    try {
-	        memberDAO.insert(memberDTO);
+	        memberDAO.join(memberDTO);
 	        return true;  // 회원 정보 추가가 성공하면 true를 반환
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -45,8 +45,8 @@ public class MemberService {
 			return memberDAO.checklogin(memberDTO);
 		}
 
-		public void insert2(JSONObject response_obj) {
-			memberDAO.insert2(response_obj);
+		public void join2(JSONObject response_obj) {
+			memberDAO.join2(response_obj);
 		}
 
 		public boolean isUserExist(String nickname) {

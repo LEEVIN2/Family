@@ -5,7 +5,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.animal.mappers.MemberMapper"> 
-	<insert id="insert">
+	<insert id="join">
 	insert into member(id,pass,email,mobile,nickname)
 	values(#{id},#{pass},#{email},#{mobile},#{nickname})
 	</insert>
@@ -14,7 +14,7 @@
 	select * from member where id = #{id}
 	</select>
 	
-	<insert id="insert2">
+	<insert id="join2">
 	insert into member(email,name,nickname,mobile,id)
 	values(#{email},#{name},#{nickname},#{mobile},#{email})
 	</insert>

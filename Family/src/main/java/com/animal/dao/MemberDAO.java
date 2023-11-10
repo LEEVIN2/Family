@@ -14,16 +14,16 @@ public class MemberDAO {
 	private SqlSession sqlSession;
 	private static final String namespace="com.animal.mappers.MemberMapper";
 	
-	public void insert(MemberDTO memberDTO) {
-		sqlSession.insert(namespace+".insert", memberDTO);
+	public void join(MemberDTO memberDTO) {
+		sqlSession.insert(namespace+".join", memberDTO);
 	}
 
 	public MemberDTO checklogin(MemberDTO memberDTO) {
 		return sqlSession.selectOne(namespace+".checklogin", memberDTO);
 	}
 
-	public void insert2(JSONObject response_obj) {
-		sqlSession.insert(namespace+".insert2", response_obj);
+	public void join2(JSONObject response_obj) {
+		sqlSession.insert(namespace+".join2", response_obj);
 	}
 
 	public boolean isUserExist(String nickname) {
