@@ -51,8 +51,8 @@ public class BoardService {
 	    return boardDAO.getFilePaths(boardNum);
 	}
 	
-	public List<BoardDTO> getCommentList() {
-		return boardDAO.getCommentList();
+	public List<BoardDTO> getCommentList(String boardNum) {
+		return boardDAO.getCommentList(boardNum);
 	}
 
 	public void addFilePath(String boardNum, String filePath) {
@@ -83,6 +83,11 @@ public class BoardService {
 
 
 	public void likeUp(BoardDTO boardDTO) {
+		// 작성시간표시
+				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String submitTime = sdf.format(timestamp);
+				boardDTO.setSubmitTime(submitTime);
 		boardDAO.likeUp(boardDTO);
 	}
 
@@ -106,10 +111,6 @@ public class BoardService {
 		return boardDAO.getWrittenList2(boardDTO);
 	}
 
-	
 
-	
-
-	
 
 }

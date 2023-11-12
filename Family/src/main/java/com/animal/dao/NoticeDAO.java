@@ -16,8 +16,12 @@ public class NoticeDAO {
 	private SqlSession sqlSession;
 	private static final String namespace="com.animal.mappers.NoticeMapper";
 	
-	public List<BoardDTO> getNoticeList(BoardDTO boardDTO) {
-		return sqlSession.selectList(namespace+".getNoticeList", boardDTO);
+	public List<BoardDTO> getCommentList(BoardDTO boardDTO) {
+		return sqlSession.selectList(namespace+".getCommentList", boardDTO);
+	}
+
+	public List<BoardDTO> getLikeList(BoardDTO boardDTO) {
+		return sqlSession.selectList(namespace+".getLikeList", boardDTO);
 	}
 
 }

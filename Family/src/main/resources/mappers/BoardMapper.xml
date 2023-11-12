@@ -186,6 +186,7 @@ order by boardNum desc limit #{startRow}, #{pageSize};
 FROM comment c
 LEFT JOIN member m
 ON c.id = m.id
+WHERE c.boardNum = #{boardNum}
 order by boardNum desc;
 	</select>
 	
@@ -211,8 +212,8 @@ ON b.id = m.id
 	</select>
 	
 	<insert id="likeUp">
-		insert into board_like(boardNum, id)
-		values (#{boardNum}, #{id});
+		insert into board_like(boardNum, id, submitTime)
+		values (#{boardNum}, #{id}, #{submitTime});
 	</insert>
 	
 	<delete id="likeDown">

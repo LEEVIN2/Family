@@ -16,10 +16,22 @@
 <!-- table -->
 <table>
 <c:forEach var="boardDTO" items="${noticeList}">
-    <tr><td>글번호</td>		<td>${boardDTO.boardNum}</td></tr>
-    <tr><td>닉네임</td>		<td>${boardDTO.nickname}</td></tr>
-    <tr><td>내용</td>			<td>${boardDTO.content}</td></tr>
-    <tr><td>시간</td>			<td>${boardDTO.submitTime}</td></tr>
+<tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}'">
+<%--     <td>${boardDTO.boardNum}</td> --%>
+    <td>
+        <c:choose>
+            <c:when test="${empty boardDTO.content}">
+                1개의 좋아요를 받았어요
+            </c:when>
+            <c:otherwise>
+                새로운 댓글이 달렸어요
+            </c:otherwise>
+        </c:choose>
+    </td>
+    <td>${boardDTO.id}</td>
+    <td>${boardDTO.content}</td>
+    <td>${boardDTO.submitTime}</td>
+    </tr>
 </c:forEach>
 </table>
 

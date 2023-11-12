@@ -37,4 +37,9 @@ public class BoardDTO {
 	private int startRow;
 	private int endRow;
 	
+	// 뒤로가기시 이전페이지 저장
+	private String prevPage;
+	private String fixedPrevPage;
+
+	
 }

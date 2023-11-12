@@ -15,8 +15,12 @@ public class NoticeService {
 	@Inject
 	private NoticeDAO noticeDAO;
 	
-	public List<BoardDTO> getNoticeList(BoardDTO boardDTO) {
-		return noticeDAO.getNoticeList(boardDTO);
+	public List<BoardDTO> getCommentList(BoardDTO boardDTO) {
+		return noticeDAO.getCommentList(boardDTO);
+	}
+
+	public List<BoardDTO> getLikeList(BoardDTO boardDTO) {
+		return noticeDAO.getLikeList(boardDTO);
 	}
 
 }

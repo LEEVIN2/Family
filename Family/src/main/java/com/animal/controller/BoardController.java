@@ -82,7 +82,6 @@ public class BoardController {
 	    	pageNum = "1";
 	    }
 	    
-	    
 	    int currentPage = Integer.parseInt(pageNum); //현재 사용자가 보고 있는 페이지 번호
 	    BoardDTO boardDTO =new BoardDTO();
 	    boardDTO.setPageSize(pageSize);
@@ -166,6 +165,8 @@ for (BoardDTO boardDTO2 : boardHotList) {
 		return "board/freesearch";
 	}
 	
+
+	
 	@GetMapping("/detail")
 	public String detail(HttpServletRequest request, HttpSession session, Model model) {
 		//boardNum에 해당하는 board + board_file 내용 가져오기
@@ -174,12 +175,12 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	    List<String> filePaths = boardService.getFilePaths(boardNum);
 	    updateSubmitTime(boardDTO);
 	    
-	    // 댓글 내용 뿌려주기
-	    List<BoardDTO> commentList = boardService.getCommentList();
+//	    // 댓글 내용 뿌려주기
+//	    List<BoardDTO> commentList = boardService.getCommentList();
 	    
-	    for (BoardDTO boardDTO2 : commentList) {
-	        updateSubmitTime(boardDTO2);
-	    }
+//	    for (BoardDTO boardDTO2 : commentList) {
+//	        updateSubmitTime(boardDTO2);
+//	    }
 	    
 	    // 조회수 증가 로직
 	    // 게시글 작성자 닉네임
@@ -194,7 +195,7 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	    // 조회수는 어떤 조건에서 올라가게 할건지 나중에 다시 상의...해보고
 	    if (sessionBoardNum == null || !sessionBoardNum.equals(currentBoardNum) || sessionId == null || !sessionId.equals(currentId)) {
 	        boardService.increaseViewCnt(boardNum);
-	        session.setAttribute("boardNum", currentBoardNum);
+	        session.setAttribute("boardNum", currentBoardNum);	        
 	    }
 
 	    
@@ -213,10 +214,19 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	    
 	    model.addAttribute("boardDTO", boardDTO);
 	    model.addAttribute("filePaths", filePaths);
-	    model.addAttribute("commentList", commentList);
+//	    model.addAttribute("commentList", commentList);
 	    
 	    return "board/detail";
 	}
+	
+
+	
+	
+	@GetMapping("/comments")
+    public ResponseEntity<List<BoardDTO>> comments(@RequestParam String boardNum) {
+        List<BoardDTO> commentList = boardService.getCommentList(boardNum);
+        return ResponseEntity.ok(commentList);
+    }
 	
 	
 	@PostMapping("/likeUp")

@@ -33,8 +33,8 @@ public class BoardDAO {
 	    return sqlSession.selectList(namespace+".getBoardHotList", boardDTO, new RowBounds(0, 1));
 	}
 	
-	public List<BoardDTO> getCommentList() {
-		return sqlSession.selectList(namespace+".getCommentList");
+	public List<BoardDTO> getCommentList(String boardNum) {
+		return sqlSession.selectList(namespace+".getCommentList", boardNum);
 	}
 	
 	public BoardDTO getDetail(String boardNum) {

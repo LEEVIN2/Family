@@ -84,7 +84,7 @@
 
  <tbody>
 <c:forEach var="boardDTO" items="${boardList}">
-<tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}&pageNum=${sessionScope.currentPage}'">
+<tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}'">
 <td>${boardDTO.boardNum}</td>
 <%-- <td>${boardDTO.id}</td> --%>
 <td>${boardDTO.nickname}</td>
