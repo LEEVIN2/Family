@@ -26,6 +26,10 @@
 	<select id="checkemail" resultType="com.animal.domain.MemberDTO">
 	select * from member where email = #{email}
 	</select>
+	
+	<select id="checkmobile" resultType="com.animal.domain.MemberDTO">
+	select * from member where mobile = #{mobile}
+	</select>
 
 
 

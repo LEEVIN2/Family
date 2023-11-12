@@ -42,6 +42,10 @@ public class MemberDAO {
 		return sqlSession.selectOne(namespace+".checkemail", memberDTO);
 	}
 
+	public MemberDTO checkmobile(MemberDTO memberDTO) {
+		return sqlSession.selectOne(namespace+".checkmobile", memberDTO);
+	}
+
 
 
 	

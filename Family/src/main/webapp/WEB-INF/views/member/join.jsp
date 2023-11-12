@@ -20,7 +20,7 @@ a {
 이메일<input type="text" name="email" id="email" maxlength="30"><br>
 <!-- <button type="button" id="email_auth_btn" class="email_auth_btn">인증번호 보내기</button><br> -->
 <!-- <input type="text" placeholder="인증번호 입력" id="email_auth_key"><br> -->
-휴대전화번호<input type="text" name="mobile" id="mobile" maxlength="11" pattern="\d*">
+전화번호<input type="text" name="mobile" id="mobile" maxlength="11" pattern="\d*">
 <button type="button" id="mobilebtn">인증번호 보내기</button><br>
 <input type="text" placeholder="인증번호 입력" id="mobilecheck">
 <button type="button" id="join">회원가입</button>
@@ -96,32 +96,32 @@ function fn_join(){
 		}
 		
 		if($('#mobile').val() == ""){
-			alert("휴대전화번호를 입력해주세요.");
+			alert("전화번호를 입력해주세요.");
 			return false;
 		}
 		
 		if(!phoneRegex.test($('#mobile').val())){
-		    alert("올바른 휴대전화번호를 입력해주세요.");
+		    alert("올바른 전화번호를 입력해주세요.");
 		    return false;
 		}
 		
 // 		if(email_auth_cd === null){
-//             alert("이메일 인증번호를 받아주세요.");
+//             alert("인증번호를 받아주세요.");
 //             return false;
 //         }
 		
 // 		if($('#email_auth_key').val() != email_auth_cd){
-// 			alert("이메일 인증번호가 일치하지 않습니다.");
+// 			alert("인증번호가 일치하지 않습니다.");
 // 			return false;
 // 		}
 		
 // 		if(code2 === null){
-//             alert("휴대전화 인증번호를 받아주세요.");
+//             alert("인증번호를 받아주세요.");
 //             return false;
 //         }
 		
 // 		if($('#mobilecheck').val() != code2){
-// 			alert("휴대전화번호 인증번호가 일치하지 않습니다.");
+// 			alert("인증번호가 일치하지 않습니다.");
 // 			return false;
 // 		}
 	
@@ -159,7 +159,7 @@ function fn_join(){
 // 	$("#mobilebtn").click(function(){
 // 		var mobile = $("#mobile").val();
 // 		if($('#mobile').val() == ""){
-// 			alert("휴대전화번호를 입력해주세요.");
+// 			alert("전화번호를 입력해주세요.");
 // 			return false;
 // 		}
 // 		$.ajax({
@@ -177,7 +177,7 @@ function fn_join(){
 // 		});
 // 	});
 	
-	//휴대전화번호 숫자만 입력 가능
+	//전화번호 숫자만 입력 가능
 	document.getElementById('mobile').addEventListener('input', function (e) {
 		  e.target.value = e.target.value.replace(/[^0-9]/g, '');
 		});

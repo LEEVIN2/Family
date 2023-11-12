@@ -114,12 +114,17 @@ public class MemberController {
 	
 	@PostMapping("/showidPro")
 	@ResponseBody
-	public String showidPro(MemberDTO memberDTO, HttpSession session) {
+	public String showidPro(MemberDTO memberDTO) {
+		memberDTO = memberService.checkemail(memberDTO);
 		System.out.println(memberDTO);
-		MemberDTO memberDTO2 = memberService.checkemail(memberDTO);
-		System.out.println(memberDTO2);
-		session.setAttribute("id", memberDTO2.getId());
-		return "Y";
+	    return memberDTO.getId();
+	}
+	
+	@PostMapping("/showidPro2")
+	public String showidPro2(MemberDTO memberDTO, Model model) {
+	    MemberDTO memberDTO2 = memberService.checkemail(memberDTO);
+	    model.addAttribute("id", memberDTO2.getId());
+	    return "Y";
 	}
 	
 	@GetMapping("/showid")
@@ -143,9 +148,20 @@ public class MemberController {
 //		return "redirect:/member/main";
 //	}
 	
+	//이메일 인증
 	@ResponseBody
 	@PostMapping("/emailAuth")
-	public String emailAuth(String email) {		
+	public String emailAuth(String email, MemberDTO memberDTO) {
+		MemberDTO memberDTO2 = memberService.checkemail(memberDTO);
+		System.out.println(memberDTO2);
+		//DB 이메일 없으면 에러
+		if (memberDTO2 == null) {
+	        throw new IllegalArgumentException("memberDTO cannot be null");
+	    }
+		//DB 비밀번호 없으면 에러
+		if (memberDTO2.getPass() == null) {
+			throw new IllegalArgumentException("pass cannot be null");
+		}
 		Random random = new Random();
 		int checkNum = random.nextInt(888888) + 111111;
 
@@ -173,8 +189,7 @@ public class MemberController {
         }catch(Exception e) {
             e.printStackTrace();
         }
-        
-        return Integer.toString(checkNum);
+        return memberDTO2.getEmail() + "," + Integer.toString(checkNum);
  
 	}
 	
@@ -246,7 +261,14 @@ public class MemberController {
 		
 		@ResponseBody
 		@GetMapping("/mobile")
-		public String sendSMS(@RequestParam("mobile") String userPhoneNumber) { // 휴대폰 문자보내기
+		public String sendSMS(MemberDTO memberDTO, @RequestParam("mobile") String userPhoneNumber) { // 휴대폰 문자보내기
+			MemberDTO memberDTO2 = memberService.checkmobile(memberDTO);
+			System.out.println(memberDTO2);
+			//DB 휴대전화 없으면 에러, 네이버 연동은 하이폰 있어서 안보내짐
+			if (memberDTO2 == null) {
+		        throw new IllegalArgumentException("memberDTO cannot be null");
+		    }
+			
 			int randomNumber = (int)((Math.random()* (9999 - 1000 + 1)) + 1000);//난수 생성
 
 			memberService.certifiedPhoneNumber(userPhoneNumber,randomNumber);

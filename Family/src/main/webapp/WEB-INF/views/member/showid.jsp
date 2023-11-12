@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h3>회원님의 아이디는:"${sessionScope.id}" 입니다.</h3>
+<h3>회원님의 아이디는: "${param.id}" 입니다.</h3>
 </body>
 </html>

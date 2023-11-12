@@ -80,6 +80,10 @@ public class MemberService {
 			return memberDAO.checkemail(memberDTO);
 		}
 
+		public MemberDTO checkmobile(MemberDTO memberDTO) {
+			return memberDAO.checkmobile(memberDTO);
+		}
+
 
 
 }

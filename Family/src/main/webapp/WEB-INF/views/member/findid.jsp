@@ -19,7 +19,7 @@
 </form>
 
 <form id="findmobile">
-휴대전화번호<input type="text" name="mobile" id="mobile" maxlength="11" pattern="\d*"><br>
+전화번호<input type="text" name="mobile" id="mobile" maxlength="11" pattern="\d*"><br>
 <button type="button" id="mobilebtn">인증번호 보내기</button><br>
 <input type="text" placeholder="인증번호 입력" id="mobilecheck"><br>
 <button type="button" id="join2">확인</button>
@@ -51,8 +51,31 @@ function fn_join(){
 	$.ajax({
 		type : "POST",
 		url : "${pageContext.request.contextPath}/member/showidPro",
-		data : formData,
+		data : {email: $('#email').val()},
 		success: function(data){
+			if(data){	
+				location.href="${pageContext.request.contextPath}/member/showid?id=" + data;
+			}else{
+				alert("에러 발생!");
+			}
+		},
+		error: function(data){
+			alert("에러 발생!");
+			console.log(data);
+		}
+	});
+
+ }
+ 
+function fn_join2(){
+	var f = $('#findmobile');
+	var formData = f.serialize();
+		
+	$.ajax({
+		type : "POST",
+		url : "${pageContext.request.contextPath}/member/showidPro2",
+		data : formData,
+		success: function(){
 			if(data == "Y"){	
 				location.href="${pageContext.request.contextPath}/member/showid"
 			}else{
@@ -63,21 +86,6 @@ function fn_join(){
 			alert("에러 발생!");
 			console.log(data);
 		}
-	});
- }
- 
-function fn_join2(){
-	var f = $('#findmobile');
-	var formData = f.serialize();
-		
-	$.ajax({
-		type : "POST",
-		url : "${pageContext.request.contextPath}/member/showidPro",
-		data : formData,
-		success: function(){
-			location.href="${pageContext.request.contextPath}/member/showid"
-		},
-		
 	});
  }
 
@@ -98,12 +106,12 @@ $(function() {
 		}
 		
 		if(email_auth_cd === null){
-           alert("이메일 인증번호를 받아주세요.");
+           alert("인증번호를 받아주세요.");
            return false;
        }
 		
-		if($('#email_auth_key').val() != email_auth_cd){
-			alert("이메일 인증번호가 일치하지 않습니다.");
+		if($('#email').val() + "," + $('#email_auth_key').val() != email_auth_cd){
+			alert("인증번호가 일치하지 않습니다.");
 			return false;
 		}
 		
@@ -139,41 +147,49 @@ $(function() {
 	
 });
 
+
 $(function() { 
 	 var phoneRegex = /^01([0|1]?)([0-9]{4})([0-9]{4})$/;
+	 var code2 = null;
 	 
 	$('#join2').click(function(){
 		
 		if($('#mobile').val() == ""){
-			alert("휴대전화번호를 입력해주세요.");
+			alert("전화번호를 입력해주세요.");
 			return false;
 		}
 		
 		if(!phoneRegex.test($('#mobile').val())){
-		    alert("올바른 휴대전화번호를 입력해주세요.");
+		    alert("올바른 전화번호를 입력해주세요.");
 		    return false;
 		}
 		
 		if(code2 === null){
-          alert("휴대전화 인증번호를 받아주세요.");
+          alert("인증번호를 받아주세요.");
           return false;
       }
 		
 		if($('#mobilecheck').val() != code2){
-			alert("휴대전화번호 인증번호가 일치하지 않습니다.");
+			alert("인증번호가 일치하지 않습니다.");
 			return false;
 		}
 	
 		fn_join2();
 	});
 	
-// 	휴대폰 번호 인증
+// 	전화번호 인증
 	$("#mobilebtn").click(function(){
 		var mobile = $("#mobile").val();
+		var phoneRegex = /^01([0|1]?)([0-9]{4})([0-9]{4})$/;
 		if($('#mobile').val() == ""){
-			alert("휴대전화번호를 입력해주세요.");
+			alert("전화번호를 입력해주세요.");
 			return false;
 		}
+		if(!phoneRegex.test($('#mobile').val())){
+		    alert("올바른 전화번호를 입력해주세요.");
+		    return false;
+		}
+		
 		$.ajax({
 			type:"GET",
 			url:"${pageContext.request.contextPath}/member/mobile?mobile=" + mobile,
@@ -185,11 +201,14 @@ $(function() {
 	        		alert("인증번호가 발송되었습니다.")
 	        		code2 = data;
 	        	}
+			},
+			error: function(data){
+				alert("인증번호 발송에 실패했습니다.");
 			}
 		});
 	});
 	
-	//휴대전화번호 숫자만 입력 가능
+	//전화번호 숫자만 입력 가능
 	document.getElementById('mobile').addEventListener('input', function (e) {
 		  e.target.value = e.target.value.replace(/[^0-9]/g, '');
 		});
