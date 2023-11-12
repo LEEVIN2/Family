@@ -23,7 +23,7 @@
 제목				<input type="text" name="title" required><br>
 내용				<textarea name="content" rows="4" cols="50" required></textarea><br>
 <input multiple="multiple" type="file" name="file" />
-<input type="hidden" name="nickname" value="${sessionScope.nickname}">
+<input type="hidden" name="id" value="${sessionScope.id}">
 <input type="submit" value="작성">
 </form>
 

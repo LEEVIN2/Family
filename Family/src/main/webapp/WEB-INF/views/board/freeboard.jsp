@@ -43,6 +43,7 @@
 <tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}&pageNum=${sessionScope.currentPage}'">
 <td><span style="color:red;">HOT</span></td>
 <td>${boardDTO.boardNum}</td>
+<%-- <td>${boardDTO.id}</td> --%>
 <td>${boardDTO.nickname}</td>
 <td>${boardDTO.submitTime}</td>
 <%-- <td>${boardDTO.title}</td> --%>
@@ -85,6 +86,7 @@
 <c:forEach var="boardDTO" items="${boardList}">
 <tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}&pageNum=${sessionScope.currentPage}'">
 <td>${boardDTO.boardNum}</td>
+<%-- <td>${boardDTO.id}</td> --%>
 <td>${boardDTO.nickname}</td>
 <td>${boardDTO.submitTime}</td>
 <%-- <td>${boardDTO.title}</td> --%>

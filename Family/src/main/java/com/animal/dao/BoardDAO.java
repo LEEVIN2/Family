@@ -62,10 +62,10 @@ public class BoardDAO {
 		 sqlSession.update(namespace+".increaseViewCnt", boardNum);
 	}
 
-	public Object findLike(String boardNum, String nickname) {
+	public Object findLike(String boardNum, String id) {
 	    Map<String, String> params = new HashMap<String, String>();
 	    params.put("boardNum", boardNum);
-	    params.put("nickname", nickname);
+	    params.put("id", id);
 	    return sqlSession.selectOne(namespace+".findLike", params);
 	}
 	

@@ -11,6 +11,10 @@
 
 <!-- body -->
 <body>
+<a href="${pageContext.request.contextPath}/member/home">뒤로가기</a><br>
+
+<br>
+
 <a href="${pageContext.request.contextPath}/board/written">작성한 글</a><br>
 <a href="${pageContext.request.contextPath}/board/written2">작성한 댓글</a><br>
 북마크<br>

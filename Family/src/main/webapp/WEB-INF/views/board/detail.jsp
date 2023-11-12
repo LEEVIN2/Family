@@ -15,11 +15,11 @@ $(document).ready(function() {
     $("button").click(function() {
         var board_like = ${board_like}; // 여기에 실제 값을 할당해야 합니다.
         var boardNum = '${boardDTO.boardNum}';
-        var nickname = "${sessionScope.nickname}";
+        var id = "${sessionScope.id}";
 
         var boardDTO = {
             boardNum: boardNum,
-            nickname: nickname
+            id: id
         };
 
         if(board_like == 0) {
@@ -30,13 +30,13 @@ $(document).ready(function() {
                 success: function() {
                     console.log("컨트롤러 연결 성공");
                     console.log(boardDTO.boardNum);
-                    console.log(boardDTO.nickname);
+                    console.log(boardDTO.id);
                     location.reload();  // 페이지 새로 고침
                 },
                 error: function() {
                 	console.log(board_like);
                 	console.log(boardDTO.boardNum);
-                    console.log(boardDTO.nickname);
+                    console.log(boardDTO.id);
                     console.log("컨트롤러 연결 실패");
                 }
             });
@@ -48,13 +48,13 @@ $(document).ready(function() {
                 success: function() {
                     console.log("컨트롤러 연결 성공");
                     console.log(boardDTO.boardNum);
-                    console.log(boardDTO.nickname);
+                    console.log(boardDTO.id);
                     location.reload();  // 페이지 새로 고침
                 },
                 error: function() {
                 	console.log(board_like);
                 	console.log(boardDTO.boardNum);
-                    console.log(boardDTO.nickname);
+                    console.log(boardDTO.id);
                     console.log("컨트롤러 연결 실패");
                 }
             });
@@ -64,8 +64,8 @@ $(document).ready(function() {
 
 // 댓글쓸때 닉네임값 있는지 확인
 function checkLogin() {
-    var nickname = document.getElementsByName('nickname')[0].value;
-    if (!nickname) {
+    var id = document.getElementsByName('id')[0].value;
+    if (!id) {
         alert('로그인이 필요합니다!');
         return false;
     }
@@ -88,7 +88,7 @@ function checkLogin() {
   </c:if>
 </c:forEach>
 
-${sessionScope.nickname}
+${sessionScope.id}
 
 <!-- table -->
 
@@ -132,7 +132,7 @@ ${sessionScope.nickname}
 <!-- form (댓글)-->
 <form action="${pageContext.request.contextPath}/board/writePro2" method="post" onsubmit="return checkLogin();">
 댓글		<input type="text" name="content" required> 
-<input type="hidden" name="nickname" value="${sessionScope.nickname}">
+<input type="hidden" name="id" value="${sessionScope.id}">
 <input type="hidden" name="boardNum" value="${boardDTO.boardNum}">
 <input type="submit" value="작성">
 </form>

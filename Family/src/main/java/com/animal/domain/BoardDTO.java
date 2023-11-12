@@ -12,6 +12,7 @@ public class BoardDTO {
 	private String boardNum;
 	private String title;
 	private String content;
+	private String id;
 	private String nickname;
 	private String submitTime;
 	private String filePath;

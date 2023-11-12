@@ -6,10 +6,15 @@
   
 <mapper namespace="com.animal.mappers.NoticeMapper"> 
 	
-
-
-
-
-
+	<select id="getNoticeList" resultType="com.animal.domain.BoardDTO">
+	SELECT *
+FROM comment
+WHERE boardNum IN (
+    SELECT boardNum
+    FROM board
+    WHERE id = #{id}
+)
+ORDER BY submitTime DESC;
+	</select>
 
 </mapper>

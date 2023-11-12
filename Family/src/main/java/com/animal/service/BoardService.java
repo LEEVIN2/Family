@@ -3,6 +3,7 @@ package com.animal.service;
 import java.util.List;
 
 import javax.inject.Inject;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
@@ -72,8 +73,8 @@ public class BoardService {
 		 boardDAO.increaseViewCnt(boardNum);
 	}
 
-	public Object findLike(String boardNum, String nickname) {
-		return  boardDAO.findLike(boardNum, nickname);
+	public Object findLike(String boardNum, String id) {
+		return  boardDAO.findLike(boardNum, id);
 	}
 	
 	public int findLikeCnt(String boardNum) {
@@ -98,7 +99,7 @@ public class BoardService {
 	}
 
 	public List<BoardDTO> getWrittenList(BoardDTO boardDTO) {
-		return boardDAO.getWrittenList(boardDTO);
+	    return boardDAO.getWrittenList(boardDTO);
 	}
 
 	public List<BoardDTO> getWrittenList2(BoardDTO boardDTO) {

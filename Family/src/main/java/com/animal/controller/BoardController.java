@@ -47,10 +47,10 @@ public class BoardController {
 	@GetMapping("/written")
 	public String written(HttpSession session, Model model) {
 		
-		String nickname = (String) session.getAttribute("nickname");
+		String id = (String) session.getAttribute("id");
 		
 		BoardDTO boardDTO =new BoardDTO();
-		boardDTO.setNickname(nickname);
+		boardDTO.setId(id);
 		
 		List<BoardDTO> writtenList = boardService.getWrittenList(boardDTO);
 		
@@ -61,10 +61,10 @@ public class BoardController {
 	@GetMapping("/written2")
 	public String written2(HttpSession session, Model model) {
 		
-		String nickname = (String) session.getAttribute("nickname");
+		String id = (String) session.getAttribute("id");
 		
 		BoardDTO boardDTO =new BoardDTO();
-		boardDTO.setNickname(nickname);
+		boardDTO.setId(id);
 		
 		List<BoardDTO> writtenList2 = boardService.getWrittenList2(boardDTO);
 		
@@ -184,15 +184,15 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	    // 조회수 증가 로직
 	    // 게시글 작성자 닉네임
 	    String currentBoardNum = boardDTO.getBoardNum();
-	    String currentNickname = boardDTO.getNickname();
+	    String currentId = boardDTO.getId();
 	    // 세션에서 이전에 클릭한 닉네임 가져오기
 	    String sessionBoardNum = (String) session.getAttribute("boardNum");
-	    String sessionNickname = (String) session.getAttribute("nickname");
+	    String sessionId = (String) session.getAttribute("id");
 
 	    // 세션에 저장된 닉네임이 없거나, 현재 닉네임과 세션에 저장된 닉네임이 다르면 조회수 증가
-//	    if (sessionBoardNum == null || !sessionBoardNum.equals(currentBoardNum) && !sessionNickname.equals(currentNickname))
+//	    if (sessionBoardNum == null || !sessionBoardNum.equals(currentBoardNum) && !sessionId.equals(currentId))
 	    // 조회수는 어떤 조건에서 올라가게 할건지 나중에 다시 상의...해보고
-	    if (sessionBoardNum == null || !sessionBoardNum.equals(currentBoardNum) || sessionNickname == null || !sessionNickname.equals(currentNickname)) {
+	    if (sessionBoardNum == null || !sessionBoardNum.equals(currentBoardNum) || sessionId == null || !sessionId.equals(currentId)) {
 	        boardService.increaseViewCnt(boardNum);
 	        session.setAttribute("boardNum", currentBoardNum);
 	    }
@@ -200,10 +200,10 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	    
 	    // 내 좋아요 로직
 	    // 이건 작성자 닉네임이고
-//	    String nickname = request.getParameter("nickname");
+//	    String id = request.getParameter("id");
 	    // 이게 내 닉네임
-	    String nickname = (String) session.getAttribute("nickname");
-	    int board_like = (int) boardService.findLike(boardNum, nickname);
+	    String id = (String) session.getAttribute("id");
+	    int board_like = (int) boardService.findLike(boardNum, id);
 	    model.addAttribute("board_like", board_like);
 	    
 	    // 전체 좋아요 로직
@@ -220,10 +220,10 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	
 	
 	@PostMapping("/likeUp")
-	public ResponseEntity<String> likeUp(@RequestParam String boardNum, @RequestParam String nickname) {
+	public ResponseEntity<String> likeUp(@RequestParam String boardNum, @RequestParam String id) {
 	    BoardDTO boardDTO = new BoardDTO();
 	    boardDTO.setBoardNum(boardNum);
-	    boardDTO.setNickname(nickname);
+	    boardDTO.setId(id);
 
 	    ResponseEntity<String> entity = null;
 	    try {
@@ -238,10 +238,10 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	
 	
 	@PostMapping("/likeDown")
-	public ResponseEntity<String> likeDown(@RequestParam String boardNum, @RequestParam String nickname) {
+	public ResponseEntity<String> likeDown(@RequestParam String boardNum, @RequestParam String id) {
 	    BoardDTO boardDTO = new BoardDTO();
 	    boardDTO.setBoardNum(boardNum);
-	    boardDTO.setNickname(nickname);
+	    boardDTO.setId(id);
 
 	    ResponseEntity<String> entity = null;
 	    try {

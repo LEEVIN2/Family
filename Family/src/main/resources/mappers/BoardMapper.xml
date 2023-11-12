@@ -7,13 +7,13 @@
 <mapper namespace="com.animal.mappers.BoardMapper">
 
 	<insert id="writePro">
-		insert into board(boardNum,title,content,nickname,submitTime)
-		values(#{boardNum},#{title},#{content},#{nickname},#{submitTime})
+		insert into board(boardNum,title,content,id,submitTime)
+		values(#{boardNum},#{title},#{content},#{id},#{submitTime})
 	</insert>
 	
 	<insert id="writePro2">
-		insert into comment(boardNum,nickname,content,submitTime)
-		values(#{boardNum},#{nickname},#{content},#{submitTime})
+		insert into comment(boardNum,id,content,submitTime)
+		values(#{boardNum},#{id},#{content},#{submitTime})
 	</insert>
 	
 	<insert id="addFilePath">
@@ -22,7 +22,7 @@
 	</insert>
 	
 	<select id="getWrittenList" resultType="com.animal.domain.BoardDTO">
-	SELECT b.boardNum, b.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
+	SELECT b.boardNum, b.id, m.nickname, DATE_FORMAT(b.submitTime, '%Y-%m-%d') AS 'submitTime', b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
 FROM board b
 LEFT JOIN (
 	SELECT boardNum, filePath
@@ -42,12 +42,16 @@ LEFT JOIN (
 	FROM board_like
 	GROUP BY boardNum
 ) as li ON b.boardNum = li.boardNum
-where nickname = #{nickname}
+LEFT JOIN (
+	SELECT id, nickname
+	FROM member
+) as m ON b.id = m.id
+where b.id = #{id}
 order by boardNum desc;
 	</select>
 	
 	<select id="getWrittenList2" resultType="com.animal.domain.BoardDTO">
-	SELECT b.boardNum, b.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
+	SELECT b.boardNum, b.id, m.nickname, DATE_FORMAT(b.submitTime, '%Y-%m-%d') AS 'submitTime', b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
 FROM board b
 LEFT JOIN (
 	SELECT boardNum, filePath
@@ -67,12 +71,16 @@ LEFT JOIN (
 	FROM board_like
 	GROUP BY boardNum
 ) as li ON b.boardNum = li.boardNum
+LEFT JOIN (
+	SELECT id, nickname
+	FROM member
+) as m ON b.id = m.id
 WHERE b.boardNum IN (
 	SELECT boardNum
 	FROM comment
-	WHERE nickname = #{nickname}
+	WHERE id = #{id}
 )
-AND b.nickname != #{nickname}
+AND b.id != #{id}
 ORDER BY b.boardNum DESC;
 	</select>
 	
@@ -83,16 +91,7 @@ ORDER BY b.boardNum DESC;
         where 1 = 0
     </if>
     <if test="search != null and search != ''">
-        select *
-        from board
-        where nickname like concat('%', #{search}, '%')
-        or title like concat('%', #{search}, '%')
-        or content like concat('%', #{search}, '%')
-    </if>
-</select>
-	
-	<select id="getBoardList" resultType="com.animal.domain.BoardDTO">
-		SELECT b.boardNum, b.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
+        SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
 FROM board b
 LEFT JOIN (
 	SELECT boardNum, filePath
@@ -112,12 +111,48 @@ LEFT JOIN (
 	FROM board_like
 	GROUP BY boardNum
 ) as li ON b.boardNum = li.boardNum
+LEFT JOIN (
+	SELECT id, nickname
+	FROM member
+) as m ON b.id = m.id
+WHERE m.nickname LIKE CONCAT('%', #{search}, '%')
+OR b.title LIKE CONCAT('%', #{search}, '%')
+OR b.content LIKE CONCAT('%', #{search}, '%')
+ORDER BY b.boardNum DESC;
+    </if>
+</select>
+	
+	<select id="getBoardList" resultType="com.animal.domain.BoardDTO">
+		SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
+FROM board b
+LEFT JOIN (
+	SELECT boardNum, filePath
+	FROM board_file
+	WHERE (boardNum, fileNum) IN (
+		SELECT boardNum, MAX(fileNum)
+		FROM board_file
+		GROUP BY boardNum)
+) as f ON b.boardNum = f.boardNum
+LEFT JOIN (
+	SELECT boardNum, COUNT(*) as commentCnt
+	FROM comment
+	GROUP BY boardNum
+) as co ON b.boardNum = co.boardNum
+LEFT JOIN (
+	SELECT boardNum, COUNT(*) as board_likeCnt
+	FROM board_like
+	GROUP BY boardNum
+) as li ON b.boardNum = li.boardNum
+LEFT JOIN (
+	SELECT id, nickname
+	FROM member
+) as m ON b.id = m.id
 order by boardNum desc limit #{startRow}, #{pageSize};
 	</select>
 	
 	<select id="getBoardHotList" resultType="com.animal.domain.BoardDTO">
 		SELECT * FROM (
-    SELECT b.boardNum, b.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
+    SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
     FROM board b
     LEFT JOIN (
         SELECT boardNum, filePath
@@ -137,27 +172,36 @@ order by boardNum desc limit #{startRow}, #{pageSize};
         FROM board_like
         GROUP BY boardNum
     ) as li ON b.boardNum = li.boardNum
+    LEFT JOIN (
+	SELECT id, nickname
+	FROM member
+) as m ON b.id = m.id
     WHERE co.commentCnt >= 3 OR li.board_likeCnt >= 3
     ORDER BY b.submitTime DESC
 ) AS result;
 	</select>
 	
 	<select id="getCommentList" resultType="com.animal.domain.BoardDTO">
-	SELECT *
-    FROM comment
+	SELECT c.boardNum, c.id, m.nickname, c.content, c.submitTime
+FROM comment c
+LEFT JOIN member m
+ON c.id = m.id
+order by boardNum desc;
 	</select>
 	
 	 <select id="getDetail" resultType="com.animal.domain.BoardDTO">
-    SELECT *
-    FROM board
-    WHERE board.boardNum = #{boardNum};
+    SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, b.viewCnt
+FROM board b
+LEFT JOIN member m
+ON b.id = m.id
+    WHERE b.boardNum = #{boardNum};
 </select>
 
 <!-- 좋아요 눌럿는지 안눌럿는지 -->
 	<select id="findLike" resultType="int">
 		select count(*)
 		from board_like
-		where boardNum = #{boardNum} and nickname = #{nickname};
+		where boardNum = #{boardNum} and id = #{id};
 	</select>
 	
 	<select id="findLikeCnt" resultType="int">
@@ -167,13 +211,13 @@ order by boardNum desc limit #{startRow}, #{pageSize};
 	</select>
 	
 	<insert id="likeUp">
-		insert into board_like(boardNum, nickname)
-		values (#{boardNum}, #{nickname});
+		insert into board_like(boardNum, id)
+		values (#{boardNum}, #{id});
 	</insert>
 	
 	<delete id="likeDown">
 	  	delete from board_like
-	  	where boardNum = #{boardNum} and nickname = #{nickname};
+	  	where boardNum = #{boardNum} and id = #{id};
 	  </delete>
 	
 
