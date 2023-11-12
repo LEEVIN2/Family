@@ -76,6 +76,10 @@ public class MemberService {
 		    
 		}
 
+		public MemberDTO checkemail(MemberDTO memberDTO) {
+			return memberDAO.checkemail(memberDTO);
+		}
+
 
 
 }

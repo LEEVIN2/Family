@@ -38,6 +38,10 @@ public class MemberDAO {
 	    }
 	}
 
+	public MemberDTO checkemail(MemberDTO memberDTO) {
+		return sqlSession.selectOne(namespace+".checkemail", memberDTO);
+	}
+
 
 
 	

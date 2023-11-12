@@ -22,6 +22,10 @@
 	<select id="isUserExist" parameterType="string" resultType="int">
     SELECT COUNT(*) FROM member WHERE nickname = #{nickname}
 	</select>
+	
+	<select id="checkemail" resultType="com.animal.domain.MemberDTO">
+	select * from member where email = #{email}
+	</select>
 
 
 

@@ -61,7 +61,7 @@ public class MemberController {
 		}
 		if(isValid) {
 			session.setAttribute("id", MemberDTO.getId());
-			session.setAttribute("nickname", MemberDTO.getNickname());
+			session.setAttribute("nickname", DTO2.getNickname());
 			return "redirect:/member/home";
 		}else {
 			response.setContentType("text/html;charset=UTF-8");
@@ -102,19 +102,34 @@ public class MemberController {
 		return "member/main";
 	}
 	
-	@GetMapping("/searchid")
-	public String searchid() {
-		return "member/searchid";
+	@GetMapping("/find")
+	public String find() {
+		return "member/find";
 	}
 	
-	@GetMapping("/searchide")
-	public String searchide() {
-		return "member/searchide";
+	@GetMapping("/findid")
+	public String findid() {
+		return "member/findid";
 	}
 	
-	@GetMapping("/searchidm")
-	public String searchidm() {
-		return "member/searchidm";
+	@PostMapping("/showidPro")
+	@ResponseBody
+	public String showidPro(MemberDTO memberDTO, HttpSession session) {
+		System.out.println(memberDTO);
+		MemberDTO memberDTO2 = memberService.checkemail(memberDTO);
+		System.out.println(memberDTO2);
+		session.setAttribute("id", memberDTO2.getId());
+		return "Y";
+	}
+	
+	@GetMapping("/showid")
+	public String showid() {
+		return "member/showid";
+	}
+	
+	@GetMapping("/findpass")
+	public String findpass() {
+		return "member/findpass";
 	}
 	
 //	@GetMapping("/home")

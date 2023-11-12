@@ -33,7 +33,7 @@ function fn_join(){
 		
 	$.ajax({
 		type : "POST",
-		url : "${pageContext.request.contextPath}/member/insertPro",
+		url : "${pageContext.request.contextPath}/member/joinPro",
 		data : formData,
 		success: function(data){
 			if(data == "Y"){

@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<a href="${pageContext.request.contextPath}/member/searchide">이메일로 찾기</a>
-<a href="${pageContext.request.contextPath}/member/searchidm">휴대전화번호로 찾기</a>
+<a href="${pageContext.request.contextPath}/member/findid">아이디 찾기</a>
+<a href="${pageContext.request.contextPath}/member/findpass">비밀번호 찾기</a>
 </body>
 </html>
