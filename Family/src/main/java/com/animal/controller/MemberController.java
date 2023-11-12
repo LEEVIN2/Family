@@ -48,10 +48,6 @@ public class MemberController {
 		this.naverLoginBO = naverLoginBO;
 	}
 	
-//	@GetMapping("/login")
-//	public String login() {
-//		return "member/login";
-//	}
 	@PostMapping("/loginPro")
 	public String loginPro(MemberDTO MemberDTO, HttpSession session,HttpServletResponse response) {
 		boolean isValid = false;
@@ -116,15 +112,14 @@ public class MemberController {
 	@ResponseBody
 	public String showidPro(MemberDTO memberDTO) {
 		memberDTO = memberService.checkemail(memberDTO);
-		System.out.println(memberDTO);
 	    return memberDTO.getId();
 	}
 	
 	@PostMapping("/showidPro2")
-	public String showidPro2(MemberDTO memberDTO, Model model) {
-	    MemberDTO memberDTO2 = memberService.checkemail(memberDTO);
-	    model.addAttribute("id", memberDTO2.getId());
-	    return "Y";
+	@ResponseBody
+	public String showidPro2(MemberDTO memberDTO) {
+	    memberDTO = memberService.checkmobile(memberDTO);
+	    return memberDTO.getId();
 	}
 	
 	@GetMapping("/showid")
@@ -137,23 +132,34 @@ public class MemberController {
 		return "member/findpass";
 	}
 	
-//	@GetMapping("/home")
-//	public String home() {
-//		return "member/home";
-//	}
+	@PostMapping("/checkid")
+	@ResponseBody
+	public String checkid(MemberDTO memberDTO) {
+		memberDTO = memberService.checkid(memberDTO);
+	    return memberDTO.getId();
+	}
+
+	@GetMapping("/findpass2")
+	public String findpass2() {
+	    return "member/findpass2";
+	}
 	
-//	@GetMapping("/logout")
-//	public String logout(HttpSession session) {
-//		session.invalidate();
-//		return "redirect:/member/main";
-//	}
+	@PostMapping("/findpassPro")
+	@ResponseBody
+	public String findpassPro(MemberDTO MemberDTO, HttpSession session) {
+	    boolean isjoined = memberService.findpassPro(MemberDTO);
+	    if (isjoined) {
+	        return "Y";
+	    } else {
+	        return "N";
+	    }
+	}
 	
 	//이메일 인증
 	@ResponseBody
 	@PostMapping("/emailAuth")
 	public String emailAuth(String email, MemberDTO memberDTO) {
 		MemberDTO memberDTO2 = memberService.checkemail(memberDTO);
-		System.out.println(memberDTO2);
 		//DB 이메일 없으면 에러
 		if (memberDTO2 == null) {
 	        throw new IllegalArgumentException("memberDTO cannot be null");
@@ -192,6 +198,46 @@ public class MemberController {
         return memberDTO2.getEmail() + "," + Integer.toString(checkNum);
  
 	}
+	
+	//이메일 인증
+		@ResponseBody
+		@PostMapping("/emailAuth2")
+		public String emailAuth2(String email, MemberDTO memberDTO) {
+			MemberDTO memberDTO2 = memberService.checkeidmail(memberDTO);
+			//DB 아이디,이메일 없으면 에러
+			if (memberDTO2 == null) {
+		        throw new IllegalArgumentException("memberDTO cannot be null");
+		    }
+			Random random = new Random();
+			int checkNum = random.nextInt(888888) + 111111;
+
+			/* 이메일 보내기 */
+	        String setFrom = "sonminuk@naver.com";
+	        String toMail = email;
+	        String title = "회원가입 인증 이메일 입니다.";
+	        String content = 
+	                "홈페이지를 방문해주셔서 감사합니다." +
+	                "<br><br>" + 
+	                "인증 번호는 " + checkNum + "입니다." + 
+	                "<br>" + 
+	                "해당 인증번호를 인증번호 확인란에 기입하여 주세요.";
+	        
+	        try {
+	            
+	            MimeMessage message = mailSender.createMimeMessage();
+	            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+	            helper.setFrom(setFrom);
+	            helper.setTo(toMail);
+	            helper.setSubject(title);
+	            helper.setText(content,true);
+	            mailSender.send(message);
+	            
+	        }catch(Exception e) {
+	            e.printStackTrace();
+	        }
+	        return memberDTO2.getId() + "," + memberDTO2.getEmail() + "," + Integer.toString(checkNum);
+	 
+		}
 	
 	//로그인 첫 화면 요청 메소드
 		@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
@@ -263,7 +309,6 @@ public class MemberController {
 		@GetMapping("/mobile")
 		public String sendSMS(MemberDTO memberDTO, @RequestParam("mobile") String userPhoneNumber) { // 휴대폰 문자보내기
 			MemberDTO memberDTO2 = memberService.checkmobile(memberDTO);
-			System.out.println(memberDTO2);
 			//DB 휴대전화 없으면 에러, 네이버 연동은 하이폰 있어서 안보내짐
 			if (memberDTO2 == null) {
 		        throw new IllegalArgumentException("memberDTO cannot be null");
@@ -273,7 +318,24 @@ public class MemberController {
 
 			memberService.certifiedPhoneNumber(userPhoneNumber,randomNumber);
 			
-			return Integer.toString(randomNumber);
+			return memberDTO2.getMobile() + "," + Integer.toString(randomNumber);
+		}
+		
+		@ResponseBody
+		@PostMapping("/mobile2")
+		public String sendSMS2(MemberDTO memberDTO, @RequestParam("mobile") String userPhoneNumber) { // 휴대폰 문자보내기
+			System.out.println(memberDTO);
+			MemberDTO memberDTO2 = memberService.checkeidmobile(memberDTO);
+			//DB 아이디,휴대폰 없으면 에러
+			if (memberDTO2 == null) {
+		        throw new IllegalArgumentException("memberDTO cannot be null");
+		    }
+			
+			int randomNumber = (int)((Math.random()* (9999 - 1000 + 1)) + 1000);//난수 생성
+
+			memberService.certifiedPhoneNumber(userPhoneNumber,randomNumber);
+			
+			return memberDTO2.getId() + "," + memberDTO2.getMobile() + "," + Integer.toString(randomNumber);
 		}
 		
 

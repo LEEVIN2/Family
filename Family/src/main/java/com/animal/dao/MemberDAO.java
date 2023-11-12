@@ -46,6 +46,24 @@ public class MemberDAO {
 		return sqlSession.selectOne(namespace+".checkmobile", memberDTO);
 	}
 
+	public MemberDTO checkid(MemberDTO memberDTO) {
+		return sqlSession.selectOne(namespace+".checkid", memberDTO);
+	}
+
+	public MemberDTO checkeidmail(MemberDTO memberDTO) {
+		return sqlSession.selectOne(namespace+".checkeidmail", memberDTO);
+	}
+
+	public void findpassPro(MemberDTO memberDTO) {
+		sqlSession.update(namespace+".findpassPro", memberDTO);
+	}
+
+	public MemberDTO checkeidmobile(MemberDTO memberDTO) {
+		return sqlSession.selectOne(namespace+".checkeidmobile", memberDTO);
+	}
+
+
+
 
 
 	

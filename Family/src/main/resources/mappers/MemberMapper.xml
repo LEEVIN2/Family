@@ -30,6 +30,27 @@
 	<select id="checkmobile" resultType="com.animal.domain.MemberDTO">
 	select * from member where mobile = #{mobile}
 	</select>
+	
+	<select id="checkid" resultType="com.animal.domain.MemberDTO">
+	select * from member where id = #{id}
+	</select>
+	
+	<select id="checkeidmail" resultType="com.animal.domain.MemberDTO">
+	select * from member where id = #{id} and email = #{email}
+	</select>
+	
+	<update id="findpassPro">
+	UPDATE member
+	SET pass = #{pass}
+	WHERE id = #{id}
+	</update>
+	
+	<select id="checkeidmobile" resultType="com.animal.domain.MemberDTO">
+	select * from member where id = #{id} and mobile = #{mobile}
+	</select>
+
+	
+
 
 
 

@@ -12,17 +12,23 @@
 <a>전화번호로 찾기</a>
 
 <form id="findemail">
-이메일<input type="text" name="email" id="email" maxlength="30"><br>
-<button type="button" id="email_auth_btn" class="email_auth_btn">인증번호 보내기</button>
+<input type="hidden" name="id" id="id" value="${param.id}">
+이메일<input type="text" name="email" id="email" maxlength="30">
+<button type="button" id="email_auth_btn" class="email_auth_btn">인증</button><br>
 <input type="text" placeholder="인증번호 입력" id="email_auth_key"><br>
-<button type="button" id="join">확인</button>
+새로운 비밀번호<input type="password" name="pass" id="pass" maxlength="16"><br>
+비밀번호 확인<input type="password" id="pass2" maxlength="16"><br>
+<button type="button" id="join">비밀번호 재설정</button>
 </form>
 
 <form id="findmobile">
-전화번호<input type="text" name="mobile" id="mobile" maxlength="11" pattern="\d*"><br>
-<button type="button" id="mobilebtn">인증번호 보내기</button>
+<input type="hidden" name="id" id="id" value="${param.id}">
+전화번호<input type="text" name="mobile" id="mobile" maxlength="11" pattern="\d*">
+<button type="button" id="mobilebtn">인증</button><br>
 <input type="text" placeholder="인증번호 입력" id="mobilecheck"><br>
-<button type="button" id="join2">확인</button>
+새로운 비밀번호<input type="password" name="pass" id="pass3" maxlength="16"><br>
+비밀번호 확인<input type="password" id="pass4" maxlength="16"><br>
+<button type="button" id="join2">비밀번호 재설정</button>
 </form>
 
 <br><br><a href="${pageContext.request.contextPath}/member/find">아이디/비밀번호 찾기</a>
@@ -52,20 +58,20 @@ function fn_join(){
 		
 	$.ajax({
 		type : "POST",
-		url : "${pageContext.request.contextPath}/member/showidPro",
-		data : {email: $('#email').val()},
+		url : "${pageContext.request.contextPath}/member/findpassPro",
+		data : formData,
 		success: function(data){
-			if(data){	
-				location.href="${pageContext.request.contextPath}/member/showid?id=" + data;
+			if(data == "Y"){	
+				location.href="${pageContext.request.contextPath}/member/login"
 			}else{
 				alert("에러 발생!");
 			}
 		},
 		error: function(data){
 			alert("에러 발생!");
+			console.log(data);
 		}
 	});
-
  }
  
 function fn_join2(){
@@ -74,17 +80,18 @@ function fn_join2(){
 		
 	$.ajax({
 		type : "POST",
-		url : "${pageContext.request.contextPath}/member/showidPro2",
-		data : {mobile: $('#mobile').val()},
+		url : "${pageContext.request.contextPath}/member/findpassPro",
+		data : formData,
 		success: function(data){
-			if(data){	
-				location.href="${pageContext.request.contextPath}/member/showid?id=" + data;
+			if(data == "Y"){	
+				location.href="${pageContext.request.contextPath}/member/login"
 			}else{
 				alert("에러 발생!");
 			}
 		},
 		error: function(data){
 			alert("에러 발생!");
+			console.log(data);
 		}
 	});
  }
@@ -92,6 +99,7 @@ function fn_join2(){
 $(function() { 
 	 var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 	 var email_auth_cd = null;
+	 var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 	 
 	$('#join').click(function(){
 		
@@ -110,8 +118,23 @@ $(function() {
            return false;
        }
 		
-		if($('#email').val() + "," + $('#email_auth_key').val() != email_auth_cd){
+		if($('#id').val() + "," + $('#email').val() + "," + $('#email_auth_key').val() != email_auth_cd){
 			alert("인증번호가 일치하지 않습니다.");
+			return false;
+		}
+		
+		if($('#pass').val() == ""){
+			alert("비밀번호를 입력해주세요.");
+			return false;
+		}
+		
+		if(!passwordRegex.test($('#pass').val())){
+		    alert("8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요.");
+		    return false;
+		}
+		
+		if($('#pass').val() != $('#pass2').val()){
+			alert("비밀번호가 일치하지 않습니다.");
 			return false;
 		}
 		
@@ -132,17 +155,20 @@ $(function() {
  		}
     	 
     	 $.ajax({
-			type : "POST",
-			url : "${pageContext.request.contextPath}/member/emailAuth",
-			data : {email : email},
-			success: function(data){
-				alert("인증번호가 발송되었습니다.");
-				email_auth_cd = data;
-			},
-			error: function(data){
-				alert("메일 발송에 실패했습니다.");
-			}
-		}); 
+    			type : "POST",
+    			url : "${pageContext.request.contextPath}/member/emailAuth2",
+    			data : {
+    				email : email,
+    				id : "${param.id}" // id를 추가합니다.
+    			},
+    			success: function(data){
+    				alert("인증번호가 발송되었습니다.");
+    				email_auth_cd = data;
+    			},
+    			error: function(data){
+    				alert("메일 발송에 실패했습니다.");
+    			}
+    		}); 
 	});
 	
 });
@@ -151,6 +177,7 @@ $(function() {
 $(function() { 
 	 var phoneRegex = /^01([0|1])([0-9]{4})([0-9]{4})$/;
 	 var code2 = null;
+	 var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 	 
 	$('#join2').click(function(){
 		
@@ -169,8 +196,23 @@ $(function() {
           return false;
       }
 		
-		if($('#mobile').val() + "," + $('#mobilecheck').val() != code2){
+		if($('#id').val() + "," + $('#mobile').val() + "," + $('#mobilecheck').val() != code2){
 			alert("인증번호가 일치하지 않습니다.");
+			return false;
+		}
+		
+		if($('#pass3').val() == ""){
+			alert("비밀번호를 입력해주세요.");
+			return false;
+		}
+		
+		if(!passwordRegex.test($('#pass3').val())){
+		    alert("8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요.");
+		    return false;
+		}
+		
+		if($('#pass3').val() != $('#pass4').val()){
+			alert("비밀번호가 일치하지 않습니다.");
 			return false;
 		}
 	
@@ -181,6 +223,7 @@ $(function() {
 	$("#mobilebtn").click(function(){
 		var mobile = $("#mobile").val();
 		var phoneRegex = /^01([0|1])([0-9]{4})([0-9]{4})$/;
+		
 		if($('#mobile').val() == ""){
 			alert("전화번호를 입력해주세요.");
 			return false;
@@ -191,23 +234,22 @@ $(function() {
 		}
 		
 		$.ajax({
-			type:"GET",
-			url:"${pageContext.request.contextPath}/member/mobile?mobile=" + mobile,
-	        cache : false,
+			type:"POST",
+			url:"${pageContext.request.contextPath}/member/mobile2",
+			data : {
+				mobile : mobile,
+				id : "${param.id}" // id를 추가합니다.
+			},
 			success: function(data){
-				if(data == "error"){
-	        		alert("인증번호 발송에 실패했습니다.")
-	        	}else{
-	        		alert("인증번호가 발송되었습니다.")
-	        		code2 = data;
-	        	}
+				alert("인증번호가 발송되었습니다.");
+				code2 = data;
 			},
 			error: function(data){
-				alert("인증번호 발송에 실패했습니다.");
+				alert("에러 발생!");
 			}
-		});
+		}); 
 	});
-	
+
 	//전화번호 숫자만 입력 가능
 	document.getElementById('mobile').addEventListener('input', function (e) {
 		  e.target.value = e.target.value.replace(/[^0-9]/g, '');

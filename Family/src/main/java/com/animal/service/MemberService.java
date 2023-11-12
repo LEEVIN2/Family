@@ -84,6 +84,33 @@ public class MemberService {
 			return memberDAO.checkmobile(memberDTO);
 		}
 
+		public MemberDTO checkid(MemberDTO memberDTO) {
+			return memberDAO.checkid(memberDTO);
+		}
+
+		public MemberDTO checkeidmail(MemberDTO memberDTO) {
+			return memberDAO.checkeidmail(memberDTO);
+		}
+
+		public boolean findpassPro(MemberDTO memberDTO) {
+		    String pwd = memberDTO.getPass();
+		    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		    String encodedPwd = encoder.encode(pwd);
+		    memberDTO.setPass(encodedPwd);
+		    try {
+		        memberDAO.findpassPro(memberDTO);
+		        return true;  // 회원 정보 추가가 성공하면 true를 반환
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        return false;  // 회원 정보 추가가 실패하면 false를 반환
+		    }
+		}
+
+		public MemberDTO checkeidmobile(MemberDTO memberDTO) {
+			return memberDAO.checkeidmobile(memberDTO);
+		}
+
+
 
 
 }

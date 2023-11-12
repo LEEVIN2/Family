@@ -25,7 +25,7 @@ a {
 <input type="text" placeholder="인증번호 입력" id="mobilecheck">
 <button type="button" id="join">회원가입</button>
 </form>
-<a href="${pageContext.request.contextPath}/member/login">로그인</a>
+<a href="${pageContext.request.contextPath}/member/login">로그인하기</a>
 <script type="text/javascript">
 function fn_join(){
 	var f = $('#join_frm');
@@ -54,7 +54,7 @@ function fn_join(){
 	 var idRegex = /^[a-zA-Z0-9]{8,16}$/;
 	 var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 	 var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-	 var phoneRegex = /^01([0|1]?)([0-9]{4})([0-9]{4})$/;
+	 var phoneRegex = /^01([0|1])([0-9]{4})([0-9]{4})$/;
 // 	 var email_auth_cd = null;
 // 	 var code2 = null;
 	 
