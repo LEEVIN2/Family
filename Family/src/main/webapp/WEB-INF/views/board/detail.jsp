@@ -11,9 +11,12 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+
+var board_like = ${board_like}; // 전역 변수로 선언
+
 $(document).ready(function() {
     $("button").click(function() {
-        var board_like = ${board_like}; // 여기에 실제 값을 할당해야 합니다.
+        
         var boardNum = '${boardDTO.boardNum}';
         var id = "${sessionScope.id}";
 
@@ -38,6 +41,7 @@ $(document).ready(function() {
                     var myLike = parseInt($("td:contains('나의 좋아요')").next().text()) + 1;
                     $("td:contains('나의 좋아요')").next().text(myLike);
                     $("button").text('좋아요취소');
+                    board_like = 1; // 좋아요를 눌렀으므로 board_like 값을 1로 설정
                 },
                 error: function() {
                     console.log(board_like);
@@ -58,7 +62,11 @@ $(document).ready(function() {
                     // 좋아요 수를 감소시키고 버튼 텍스트를 업데이트
                     var likeCount = parseInt($("td:contains('전체 좋아요')").next().text()) - 1;
                     $("td:contains('전체 좋아요')").next().text(likeCount);
+                    // 나의 좋아요 값을 증가시키기
+                    var myLike = parseInt($("td:contains('나의 좋아요')").next().text()) - 1;
+                    $("td:contains('나의 좋아요')").next().text(myLike);
                     $("button").text('좋아요');
+                    board_like = 0; // 좋아요를 취소했으므로 board_like 값을 0으로 설정
                 },
                 error: function() {
                     console.log(board_like);
@@ -70,6 +78,7 @@ $(document).ready(function() {
         }
     });
 });
+
 
 // 댓글쓸때 닉네임값 있는지 확인
 function checkLogin() {
@@ -92,7 +101,7 @@ function loadComments() {
       var commentList = JSON.parse(xhr.responseText);
       commentList.forEach(function(comment) {
         var newComment = document.createElement('p');
-        newComment.textContent = comment.content;
+        newComment.textContent = comment.nickname + " / " + comment.content + " / " + comment.submitTime;
         document.getElementById('commentArea').appendChild(newComment);
       });
     }
@@ -177,6 +186,7 @@ ${sessionScope.id}
 <form id="commentForm" action="${pageContext.request.contextPath}/board/writePro2" method="post">
 댓글		<input type="text" name="content" required> 
 <input type="hidden" name="id" value="${sessionScope.id}">
+<input type="hidden" name="nickname" value="${sessionScope.nickname}">
 <input type="hidden" name="boardNum" value="${boardDTO.boardNum}">
 <input type="submit" value="작성">
 </form>
@@ -193,7 +203,7 @@ document.getElementById('commentForm').addEventListener('submit', function(event
 	    if (xhr.readyState === 4 && xhr.status === 200) {
 	      // 서버의 응답을 받아서 댓글을 페이지에 추가
 	      var newComment = document.createElement('p');
-	      newComment.textContent = formData.get('content');
+	      newComment.textContent = formData.get('nickname') + " / " + formData.get('content') + " / 방금전" ;
 	      document.getElementById('commentArea').appendChild(newComment);
 
 	      // 댓글 작성 후 입력 필드를 비움
