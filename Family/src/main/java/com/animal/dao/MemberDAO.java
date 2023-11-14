@@ -1,5 +1,7 @@
 package com.animal.dao;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 import org.apache.ibatis.session.SqlSession;
@@ -60,6 +62,10 @@ public class MemberDAO {
 
 	public MemberDTO checkeidmobile(MemberDTO memberDTO) {
 		return sqlSession.selectOne(namespace+".checkeidmobile", memberDTO);
+	}
+
+	public void join3(HashMap<String, Object> userInfo) {
+		sqlSession.insert(namespace+".join3", userInfo);
 	}
 
 

@@ -2,9 +2,9 @@ package com.animal.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Random;
 
-import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -33,7 +33,7 @@ import com.github.scribejava.core.model.OAuth2AccessToken;
 @RequestMapping("/member/*")
 public class MemberController {
 	
-	@Inject
+	@Autowired
 	private MemberService memberService;
 	
 	@Autowired
@@ -338,5 +338,14 @@ public class MemberController {
 			return memberDTO2.getId() + "," + memberDTO2.getMobile() + "," + Integer.toString(randomNumber);
 		}
 		
+		//카카오 로그인
+		@RequestMapping(value="/kakaoLogin", method=RequestMethod.GET)
+		public String kakaoLogin(@RequestParam(value = "code", required = false) String code, HttpSession session) throws Exception {
+			String access_Token = memberService.getAccessToken(code);
+			HashMap<String, Object> userInfo = memberService.getUserInfo(access_Token);
+			session.setAttribute("id", userInfo.get("email"));
+			session.setAttribute("nickname", userInfo.get("nickname"));
+			return "member/home";
+	    	}
 
 }

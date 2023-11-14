@@ -48,6 +48,11 @@
 	<select id="checkeidmobile" resultType="com.animal.domain.MemberDTO">
 	select * from member where id = #{id} and mobile = #{mobile}
 	</select>
+	
+	<insert id="join3">
+	insert into member(email,nickname,id)
+	values(#{email},#{nickname},#{email})
+	</insert>
 
 	
 
