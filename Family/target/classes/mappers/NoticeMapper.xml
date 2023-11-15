@@ -27,5 +27,29 @@ WHERE boardNum IN (
     WHERE id = #{id})
 AND id != #{id};
 	</select>
+	
+	<update id="updateReadComment">
+        UPDATE comment c
+SET c.read = 'Y'
+WHERE boardNum IN (
+    SELECT boardNum
+    FROM board
+    WHERE id = #{id}
+    AND boardNum = #{boardNum})
+AND id != #{id}
+AND submitTime = #{submitTime};
+</update>
+
+<update id="updateReadBoardLike">
+UPDATE board_like b
+SET b.read = 'Y'
+WHERE boardNum IN (
+    SELECT boardNum
+    FROM board
+    WHERE id = #{id}
+    AND boardNum = #{boardNum})
+AND id != #{id}
+AND submitTime = #{submitTime};
+    </update>
 
 </mapper>

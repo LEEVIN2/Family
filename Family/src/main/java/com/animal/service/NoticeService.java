@@ -23,4 +23,8 @@ public class NoticeService {
 		return noticeDAO.getLikeList(boardDTO);
 	}
 
+	public void updateRead(BoardDTO boardDTO) {
+		noticeDAO.updateRead(boardDTO);
+	}
+
 }

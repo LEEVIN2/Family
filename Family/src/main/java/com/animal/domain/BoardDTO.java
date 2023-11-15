@@ -40,6 +40,9 @@ public class BoardDTO {
 	// 뒤로가기시 이전페이지 저장
 	private String prevPage;
 	private String fixedPrevPage;
+	
+	// notice에서 읽었는지 안 읽었는지 판별하는 컬럼
+	private String read;
 
 	
 }

@@ -23,5 +23,11 @@ public class NoticeDAO {
 	public List<BoardDTO> getLikeList(BoardDTO boardDTO) {
 		return sqlSession.selectList(namespace+".getLikeList", boardDTO);
 	}
+	
+	public void updateRead(BoardDTO boardDTO) {
+	    sqlSession.update(namespace+".updateReadComment", boardDTO);
+	    sqlSession.update(namespace+".updateReadBoardLike", boardDTO);
+	}
+
 
 }
