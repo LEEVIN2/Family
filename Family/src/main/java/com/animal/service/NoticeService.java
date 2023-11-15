@@ -27,4 +27,16 @@ public class NoticeService {
 		noticeDAO.updateRead(boardDTO);
 	}
 
+	public List<BoardDTO> getPopularList() {
+		return noticeDAO.getPopularList();
+	}
+
+	public List<BoardDTO> getBestList() {
+		return noticeDAO.getBestList();
+	}
+
+	public void delete(BoardDTO boardDTO) {
+		noticeDAO.delete(boardDTO);
+	}
+
 }

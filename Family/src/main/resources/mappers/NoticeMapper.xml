@@ -28,6 +28,84 @@ WHERE boardNum IN (
 AND id != #{id};
 	</select>
 	
+<!-- 	댓글 또는 좋아요 개수 3이상인 게시물 중 날짜별 가장 댓글수가 많은 게시물 (나중에 좋아요 수로 바꾸기) -->
+	<select id="getPopularList" resultType="com.animal.domain.BoardDTO">
+SELECT a.*
+FROM (
+    SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, co.commentCnt, li.board_likeCnt
+    FROM board b
+    LEFT JOIN (
+        SELECT boardNum, filePath
+        FROM board_file
+        WHERE (boardNum, fileNum) IN (
+            SELECT boardNum, MAX(fileNum)
+            FROM board_file
+            GROUP BY boardNum)
+    ) as f ON b.boardNum = f.boardNum
+    LEFT JOIN (
+        SELECT boardNum, COUNT(*) as commentCnt
+        FROM comment
+        GROUP BY boardNum
+    ) as co ON b.boardNum = co.boardNum
+    LEFT JOIN (
+        SELECT boardNum, COUNT(*) as board_likeCnt
+        FROM board_like
+        GROUP BY boardNum
+    ) as li ON b.boardNum = li.boardNum
+    LEFT JOIN (
+    SELECT id, nickname
+    FROM member
+    ) as m ON b.id = m.id
+    WHERE co.commentCnt >= 3 OR li.board_likeCnt >= 3
+) as a
+JOIN (
+    SELECT DATE(date) as date, MAX(commentCnt) as maxComment
+    FROM (
+        SELECT b.submitTime as date, co.commentCnt
+        FROM board b
+        LEFT JOIN (
+            SELECT boardNum, COUNT(*) as commentCnt
+            FROM comment
+            GROUP BY boardNum
+        ) as co ON b.boardNum = co.boardNum
+    ) as b
+    GROUP BY DATE(date)
+) as b ON DATE(a.submitTime) = b.date AND a.commentCnt = b.maxComment
+ORDER BY a.submitTime DESC;
+	</select>
+	
+	<!-- 	best를 달성한 모든 글 -->
+	<select id="getBestList" resultType="com.animal.domain.BoardDTO">
+SELECT * FROM (
+    SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, co.commentCnt, li.board_likeCnt
+    FROM board b
+    LEFT JOIN (
+        SELECT boardNum, filePath
+        FROM board_file
+        WHERE (boardNum, fileNum) IN (
+            SELECT boardNum, MAX(fileNum)
+            FROM board_file
+            GROUP BY boardNum)
+    ) as f ON b.boardNum = f.boardNum
+    LEFT JOIN (
+        SELECT boardNum, COUNT(*) as commentCnt
+        FROM comment
+        GROUP BY boardNum
+    ) as co ON b.boardNum = co.boardNum
+    LEFT JOIN (
+        SELECT boardNum, COUNT(*) as board_likeCnt
+        FROM board_like
+        GROUP BY boardNum
+    ) as li ON b.boardNum = li.boardNum
+    LEFT JOIN (
+	SELECT id, nickname
+	FROM member
+) as m ON b.id = m.id
+    WHERE co.commentCnt >= 5 OR li.board_likeCnt >= 5
+    ORDER BY b.submitTime DESC
+) AS result;
+	</select>
+	
 	<update id="updateReadComment">
         UPDATE comment c
 SET c.read = 'Y'
@@ -51,5 +129,17 @@ WHERE boardNum IN (
 AND id != #{id}
 AND submitTime = #{submitTime};
     </update>
+    
+    <update id="delete">
+        UPDATE comment c
+SET c.read = 'D'
+WHERE boardNum IN (
+    SELECT boardNum
+    FROM board
+    WHERE id = #{id}
+    AND boardNum = #{boardNum})
+AND id != #{id}
+AND submitTime = #{submitTime};
+</update>
 
 </mapper>

@@ -29,5 +29,17 @@ public class NoticeDAO {
 	    sqlSession.update(namespace+".updateReadBoardLike", boardDTO);
 	}
 
+	public List<BoardDTO> getPopularList() {
+		return sqlSession.selectList(namespace+".getPopularList");
+	}
+
+	public List<BoardDTO> getBestList() {
+		return sqlSession.selectList(namespace+".getBestList");
+	}
+
+	public void delete(BoardDTO boardDTO) {
+		sqlSession.update(namespace+".delete", boardDTO);
+	}
+
 
 }

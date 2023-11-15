@@ -3,6 +3,7 @@ package com.animal.controller;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -53,9 +54,25 @@ public class NoticeController {
 	            return dto2.getSubmitTime().compareTo(dto1.getSubmitTime());
 	        }
 	    });
+	    
+	    
+//	    소식내용
+	    List<BoardDTO> popularList = noticeService.getPopularList();
+	    List<BoardDTO> bestList = noticeService.getBestList();
+	    
+	    List<BoardDTO> noticeNewsList2 = new ArrayList<BoardDTO>();
+	    noticeNewsList2.addAll(bestList);
+	    noticeNewsList2.addAll(popularList);
+
+//	    중복제거
+	    List<BoardDTO> noticeNewsList = noticeNewsList2.stream()
+	        .distinct()
+	        .collect(Collectors.toList());
+	    
 
 	    // Now you can add notificationList to your model and return it to your view
 	    model.addAttribute("noticeActiveList", noticeActiveList);
+	    model.addAttribute("noticeNewsList", noticeNewsList);
 		
 		return "notice/notice";
 	}
@@ -64,6 +81,13 @@ public class NoticeController {
 	public String updateRead(BoardDTO boardDTO) {
 		noticeService.updateRead(boardDTO);
 		return "redirect:/board/detail?boardNum=" + boardDTO.getBoardNum();
+	}
+	
+	@GetMapping("/delete")
+	public String delete(BoardDTO boardDTO) {
+		System.out.println(boardDTO);
+		noticeService.delete(boardDTO);
+		return "redirect:/notice/notice";
 	}
 	
 }

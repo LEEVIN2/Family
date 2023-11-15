@@ -14,6 +14,8 @@
 
 <!-- script -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <script>
 // read테이블 y로 업데이트 시키기
 function updateRead(boardNum, id, submitTime) {
@@ -54,6 +56,28 @@ function showContent(contentId) {
  document.getElementById(contentId).style.display = 'block';
 }
 
+// 스와이프 기능
+$(document).ready(function(){
+	var id = '${sessionScope.id}'; // 세션 ID 가져오기
+
+    $("tr").on("swipeleft",function(){
+        $(this).find(".delete-button").show();
+    });
+
+    $("tr").on("swiperight",function(){
+        $(this).find(".delete-button").hide();
+    });
+    
+    $(".delete-button").click(function(){
+        var tr = $(this).closest('tr');
+        var boardNum = tr.find('.boardNum').text();
+        var submitTime = tr.find('.submitTime').text();
+        window.location.href = '${pageContext.request.contextPath}/notice/delete?boardNum=' + boardNum + '&id=' + id + '&submitTime=' + submitTime; // 세션 ID 사용
+    });
+});
+
+
+
 </script>
 </head>
 
@@ -72,23 +96,16 @@ function showContent(contentId) {
 <div id="news" class="content" style="display:none;">
 <table>
 <c:forEach var="boardDTO" items="${noticeNewsList}">
-    <tr onclick="updateRead('${boardDTO.boardNum}', '${sessionScope.id}', '${boardDTO.submitTime}')" class="${boardDTO.read == 'Y' ? 'read' : 'unread'}">
-<%--         <td>${boardDTO.boardNum}</td> --%>
-        <td>
-            <c:choose>
-                <c:when test="${empty boardDTO.content}">
-                    1개의 좋아요를 받았어요
-                </c:when>
-                <c:otherwise>
-                    새로운 댓글이 달렸어요
-                </c:otherwise>
-            </c:choose>
-        </td>
-        <td>${boardDTO.id}</td>
+<c:if test="${boardDTO.read != 'D'}">
+<tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}'">
+        <td class="boardNum">${boardDTO.boardNum}</td>
+        <td class="id">${boardDTO.id}</td>
         <td>${boardDTO.content}</td>
-        <td>${boardDTO.submitTime}</td>
+        <td class="submitTime">${boardDTO.submitTime}</td>
 <%--         <td>${boardDTO.read}</td> --%>
+ <td><button class="delete-button" style="display: none;" onclick="event.stopPropagation();">삭제</button></td>
     </tr>
+    </c:if>
 </c:forEach>
 </table>
 </div>
@@ -97,8 +114,9 @@ function showContent(contentId) {
 <div id="active" class="content" style="display:none;">
 <table>
 <c:forEach var="boardDTO" items="${noticeActiveList}">
+<c:if test="${boardDTO.read != 'D'}">
     <tr onclick="updateRead('${boardDTO.boardNum}', '${sessionScope.id}', '${boardDTO.submitTime}')" class="${boardDTO.read == 'Y' ? 'read' : 'unread'}">
-<%--         <td>${boardDTO.boardNum}</td> --%>
+        <td class="boardNum">${boardDTO.boardNum}</td>
         <td>
             <c:choose>
                 <c:when test="${empty boardDTO.content}">
@@ -109,11 +127,13 @@ function showContent(contentId) {
                 </c:otherwise>
             </c:choose>
         </td>
-        <td>${boardDTO.id}</td>
+       <td>${boardDTO.id}</td>
         <td>${boardDTO.content}</td>
-        <td>${boardDTO.submitTime}</td>
+        <td class="submitTime">${boardDTO.submitTime}</td>
 <%--         <td>${boardDTO.read}</td> --%>
+ <td><button class="delete-button" style="display: none;" onclick="event.stopPropagation();">삭제</button></td>
     </tr>
+    </c:if>
 </c:forEach>
 </table>
 </div>

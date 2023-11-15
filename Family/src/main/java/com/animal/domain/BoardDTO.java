@@ -1,5 +1,7 @@
 package com.animal.domain;
 
+import com.google.inject.internal.util.Objects;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -43,6 +45,21 @@ public class BoardDTO {
 	
 	// notice에서 읽었는지 안 읽었는지 판별하는 컬럼
 	private String read;
+	
+	
+	// notice 컨트롤러에서 소식내용 중복제거에 쓰임 (아래두개)
+	@Override
+	public boolean equals(Object o) {
+	    if (this == o) return true;
+	    if (o == null || getClass() != o.getClass()) return false;
+	    BoardDTO boardDTO = (BoardDTO) o;
+	    return Objects.equal(boardNum, boardDTO.boardNum);
+	}
+
+	@Override
+	public int hashCode() {
+	    return Objects.hashCode(boardNum);
+	}
 
 	
 }
