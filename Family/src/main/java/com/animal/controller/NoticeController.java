@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,11 +85,12 @@ public class NoticeController {
 		return "redirect:/board/detail?boardNum=" + boardDTO.getBoardNum();
 	}
 	
-	@GetMapping("/delete")
-	public String delete(BoardDTO boardDTO) {
-		System.out.println(boardDTO);
-		noticeService.delete(boardDTO);
-		return "redirect:/notice/notice";
+	@PostMapping("/delete")
+	public ResponseEntity<String> delete(BoardDTO boardDTO) {
+	    System.out.println(boardDTO);
+	    noticeService.delete(boardDTO);
+	    return new ResponseEntity<>("Success", HttpStatus.OK);
 	}
+
 	
 }

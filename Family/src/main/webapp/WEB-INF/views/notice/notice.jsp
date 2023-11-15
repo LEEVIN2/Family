@@ -45,15 +45,14 @@ function updateRead(boardNum, id, submitTime) {
     form.submit();
 }
 
-
 //전체, 소식, 활동 누르면 각각의 내용 보여지게
 //이 함수는 웹 페이지에서 ‘content’ 클래스를 가진 모든 요소를 숨기고, contentId로 전달된 id를 가진 요소만 보여주는 역할
 function showContent(contentId) {
- var contents = document.getElementsByClassName('content');
- for (var i = 0; i < contents.length; i++) {
-     contents[i].style.display = 'none';
- }
- document.getElementById(contentId).style.display = 'block';
+var contents = document.getElementsByClassName('content');
+for (var i = 0; i < contents.length; i++) {
+   contents[i].style.display = 'none';
+}
+document.getElementById(contentId).style.display = 'block';
 }
 
 // 스와이프 기능
@@ -68,21 +67,27 @@ $(document).ready(function(){
         $(this).find(".delete-button").hide();
     });
     
-    $(".delete-button").click(function(){
+    $(".delete-button").click(function(event){
+        event.stopPropagation();
+        event.preventDefault(); // prevent the page from refreshing
         var tr = $(this).closest('tr');
         var boardNum = tr.find('.boardNum').text();
         var submitTime = tr.find('.submitTime').text();
-        window.location.href = '${pageContext.request.contextPath}/notice/delete?boardNum=' + boardNum + '&id=' + id + '&submitTime=' + submitTime; // 세션 ID 사용
+        $.ajax({
+            url: '${pageContext.request.contextPath}/notice/delete?boardNum=' + boardNum + '&id=' + id + '&submitTime=' + submitTime, // 세션 ID 사용
+            type: 'POST',
+            success: function(result) {
+                tr.remove();
+            }
+        });
     });
 });
-
-
-
 </script>
 </head>
 
 <!-- body -->
 <body>
+
 <a href="#" onclick="showContent('total'); return false;">전체</a>
 <a href="#" onclick="showContent('news'); return false;">소식</a>
 <a href="#" onclick="showContent('active'); return false;">활동</a>
