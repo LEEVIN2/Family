@@ -111,6 +111,14 @@ public class BoardService {
 		return boardDAO.getWrittenList2(boardDTO);
 	}
 
+	public List<BoardDTO> getBoardBestList(BoardDTO boardDTO) {
+		return boardDAO.getBoardBestList(boardDTO);
+	}
+
+	public List<BoardDTO> getBoardPopList(BoardDTO boardDTO) {
+		return boardDAO.getBoardPopList(boardDTO);
+	}
+
 
 
 }

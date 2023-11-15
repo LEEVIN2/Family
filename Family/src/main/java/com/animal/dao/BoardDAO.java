@@ -97,6 +97,14 @@ public class BoardDAO {
 		return sqlSession.selectList(namespace+".getWrittenList2", boardDTO);
 	}
 
+	public List<BoardDTO> getBoardBestList(BoardDTO boardDTO) {
+		return sqlSession.selectList(namespace+".getBoardBestList", boardDTO);
+	}
+
+	public List<BoardDTO> getBoardPopList(BoardDTO boardDTO) {
+		return sqlSession.selectList(namespace+".getBoardHotList", boardDTO);
+	}
+
 	
 
 	

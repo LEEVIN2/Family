@@ -181,6 +181,37 @@ order by boardNum desc limit #{startRow}, #{pageSize};
 ) AS result;
 	</select>
 	
+	<select id="getBoardBestList" resultType="com.animal.domain.BoardDTO">
+		SELECT * FROM (
+    SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
+    FROM board b
+    LEFT JOIN (
+        SELECT boardNum, filePath
+        FROM board_file
+        WHERE (boardNum, fileNum) IN (
+            SELECT boardNum, MAX(fileNum)
+            FROM board_file
+            GROUP BY boardNum)
+    ) as f ON b.boardNum = f.boardNum
+    LEFT JOIN (
+        SELECT boardNum, COUNT(*) as commentCnt
+        FROM comment
+        GROUP BY boardNum
+    ) as co ON b.boardNum = co.boardNum
+    LEFT JOIN (
+        SELECT boardNum, COUNT(*) as board_likeCnt
+        FROM board_like
+        GROUP BY boardNum
+    ) as li ON b.boardNum = li.boardNum
+    LEFT JOIN (
+	SELECT id, nickname
+	FROM member
+) as m ON b.id = m.id
+    WHERE co.commentCnt >= 5 OR li.board_likeCnt >= 5
+    ORDER BY b.submitTime DESC
+) AS result;
+	</select>
+	
 	<select id="getCommentList" resultType="com.animal.domain.BoardDTO">
 	SELECT c.boardNum, c.id, m.nickname, c.content, c.submitTime
 FROM comment c

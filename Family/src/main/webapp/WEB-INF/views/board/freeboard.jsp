@@ -82,7 +82,7 @@
  </c:if>
 
 
- <tbody>
+<tbody>
 <c:forEach var="boardDTO" items="${boardList}">
 <tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}'">
 <td>${boardDTO.boardNum}</td>

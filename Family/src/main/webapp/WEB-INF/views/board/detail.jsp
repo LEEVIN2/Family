@@ -153,8 +153,13 @@ ${sessionScope.id}
 <tr><td>내용</td>			<td>${boardDTO.content}</td></tr>
 <tr><td>조회수</td>			<td>${boardDTO.viewCnt}</td></tr>
 <tr><td>댓글수</td>			<td>${count}</td></tr>
+<%-- <c:forEach var="filePath" items="${filePaths}"> --%>
+<%-- <tr><td></td>			<td><img src="${pageContext.request.contextPath}/resources/img/${filePath}" alt="Image" width="100" height="100"></td></tr> --%>
+<%-- </c:forEach> --%>
 <c:forEach var="filePath" items="${filePaths}">
-<tr><td></td>			<td><img src="${pageContext.request.contextPath}/resources/img/${filePath}" alt="Image" width="100" height="100"></td></tr>
+    <c:if test="${not empty filePath}">
+        <tr><td></td>	<td><img src="${pageContext.request.contextPath}/resources/img/${filePath}" alt="Image" width="100" height="100"></td></tr>
+    </c:if>
 </c:forEach>
 </table>
 

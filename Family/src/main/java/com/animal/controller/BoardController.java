@@ -44,6 +44,22 @@ public class BoardController {
 		return "board/board";
 	}
 	
+	@GetMapping("/bestboard")
+	public String bestboard(Model model) {
+		BoardDTO boardDTO =new BoardDTO();
+		List<BoardDTO> boardBestList = boardService.getBoardBestList(boardDTO);
+		model.addAttribute("boardBestList", boardBestList);
+		return "board/bestboard";
+	}
+	
+	@GetMapping("/popularboard")
+	public String popularboard(Model model) {
+		BoardDTO boardDTO =new BoardDTO();
+		List<BoardDTO> boardPopList = boardService.getBoardPopList(boardDTO);
+		model.addAttribute("boardPopList", boardPopList);
+		return "board/popularboard";
+	}
+	
 	@GetMapping("/written")
 	public String written(HttpSession session, Model model) {
 		

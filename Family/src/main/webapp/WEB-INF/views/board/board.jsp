@@ -21,8 +21,8 @@
 
 <br>
 
-BEST 게시글<br>
-인기 게시글<br>
+<a href="${pageContext.request.contextPath}/board/bestboard">BEST게시글</a><br>
+<a href="${pageContext.request.contextPath}/board/popularboard">인기게시글</a><br>
 
 <br>
 
