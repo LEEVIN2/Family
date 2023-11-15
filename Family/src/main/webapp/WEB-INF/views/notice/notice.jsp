@@ -65,8 +65,13 @@ function showContent(contentId) {
 
 <!-- 전체 -->
 <div id="total" class="content" style="display:block;">
+전체
+</div>
+
+<!-- 소식 -->
+<div id="news" class="content" style="display:none;">
 <table>
-<c:forEach var="boardDTO" items="${noticeList}">
+<c:forEach var="boardDTO" items="${noticeNewsList}">
     <tr onclick="updateRead('${boardDTO.boardNum}', '${sessionScope.id}', '${boardDTO.submitTime}')" class="${boardDTO.read == 'Y' ? 'read' : 'unread'}">
 <%--         <td>${boardDTO.boardNum}</td> --%>
         <td>
@@ -88,14 +93,29 @@ function showContent(contentId) {
 </table>
 </div>
 
-<!-- 소식 -->
-<div id="news" class="content" style="display:none;">
-소식
-</div>
-
 <!-- 활동 -->
 <div id="active" class="content" style="display:none;">
-활동
+<table>
+<c:forEach var="boardDTO" items="${noticeActiveList}">
+    <tr onclick="updateRead('${boardDTO.boardNum}', '${sessionScope.id}', '${boardDTO.submitTime}')" class="${boardDTO.read == 'Y' ? 'read' : 'unread'}">
+<%--         <td>${boardDTO.boardNum}</td> --%>
+        <td>
+            <c:choose>
+                <c:when test="${empty boardDTO.content}">
+                    1개의 좋아요를 받았어요
+                </c:when>
+                <c:otherwise>
+                    새로운 댓글이 달렸어요
+                </c:otherwise>
+            </c:choose>
+        </td>
+        <td>${boardDTO.id}</td>
+        <td>${boardDTO.content}</td>
+        <td>${boardDTO.submitTime}</td>
+<%--         <td>${boardDTO.read}</td> --%>
+    </tr>
+</c:forEach>
+</table>
 </div>
 
 </body>

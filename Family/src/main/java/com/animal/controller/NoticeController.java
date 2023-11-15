@@ -43,19 +43,19 @@ public class NoticeController {
 		
 		// 빙 추가작성 코드 (댓글과 좋아요를 합쳐서 noticeList로 한번에 보여주기 (submitTime을 기준으로 내림차순정렬)
 		// Merge the two lists
-	    List<BoardDTO> noticeList = new ArrayList<BoardDTO>();
-	    noticeList.addAll(likeList);
-	    noticeList.addAll(commentList);
+	    List<BoardDTO> noticeActiveList = new ArrayList<BoardDTO>();
+	    noticeActiveList.addAll(likeList);
+	    noticeActiveList.addAll(commentList);
 
 	    // Sort the merged list in descending order of submitTime
-	    Collections.sort(noticeList, new Comparator<BoardDTO>() {
+	    Collections.sort(noticeActiveList, new Comparator<BoardDTO>() {
 	        public int compare(BoardDTO dto1, BoardDTO dto2) {
 	            return dto2.getSubmitTime().compareTo(dto1.getSubmitTime());
 	        }
 	    });
 
 	    // Now you can add notificationList to your model and return it to your view
-	    model.addAttribute("noticeList", noticeList);
+	    model.addAttribute("noticeActiveList", noticeActiveList);
 		
 		return "notice/notice";
 	}
