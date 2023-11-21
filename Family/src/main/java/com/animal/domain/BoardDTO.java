@@ -43,8 +43,11 @@ public class BoardDTO {
 	private String prevPage;
 	private String fixedPrevPage;
 	
-	// notice에서 읽었는지 안 읽었는지 판별하는 컬럼
+	// notice에서 사용
+	// 읽었는지 안 읽었는지 판별하는 컬럼
 	private String read;
+	// 업데이트와 삭제에 사용
+	private String sessionid;
 	
 	
 	// notice 컨트롤러에서 소식내용 중복제거에 쓰임 (아래두개)

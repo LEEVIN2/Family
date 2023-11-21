@@ -71,23 +71,42 @@ public class NoticeController {
 	        .distinct()
 	        .collect(Collectors.toList());
 	    
-
+	    Collections.sort(noticeNewsList, new Comparator<BoardDTO>() {
+	        public int compare(BoardDTO dto1, BoardDTO dto2) {
+	            return dto2.getSubmitTime().compareTo(dto1.getSubmitTime());
+	        }
+	    });
+	    
+	    ////////////////////////
+	    // 여기서부터 전체 보여주기 (noticeActiveList+noticeNewsList)
+	    List<BoardDTO> noticeList = new ArrayList<BoardDTO>();
+	    noticeList.addAll(noticeActiveList);
+	    noticeList.addAll(noticeNewsList);
+	    
+	    Collections.sort(noticeList, new Comparator<BoardDTO>() {
+	        public int compare(BoardDTO dto1, BoardDTO dto2) {
+	            return dto2.getSubmitTime().compareTo(dto1.getSubmitTime());
+	        }
+	    });
+	    
 	    // Now you can add notificationList to your model and return it to your view
 	    model.addAttribute("noticeActiveList", noticeActiveList);
 	    model.addAttribute("noticeNewsList", noticeNewsList);
+	    model.addAttribute("noticeList", noticeList);
 		
 		return "notice/notice";
 	}
 
 	@PostMapping("/updateRead")
 	public String updateRead(BoardDTO boardDTO) {
+		System.out.println(boardDTO);
 		noticeService.updateRead(boardDTO);
 		return "redirect:/board/detail?boardNum=" + boardDTO.getBoardNum();
 	}
 	
 	@PostMapping("/delete")
 	public ResponseEntity<String> delete(BoardDTO boardDTO) {
-	    System.out.println(boardDTO);
+//	    System.out.println(boardDTO);
 	    noticeService.delete(boardDTO);
 	    return new ResponseEntity<>("Success", HttpStatus.OK);
 	}

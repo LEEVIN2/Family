@@ -19,6 +19,9 @@
 <script>
 // read테이블 y로 업데이트 시키기
 function updateRead(boardNum, id, submitTime) {
+	
+	var sessionid = '${sessionScope.id}'; // 세션 ID 가져오기
+	
     var form = document.createElement('form');
     form.setAttribute('method', 'post');
     form.setAttribute('action', '${pageContext.request.contextPath}/notice/updateRead');
@@ -31,15 +34,21 @@ function updateRead(boardNum, id, submitTime) {
 
     var hiddenField2 = document.createElement('input');
     hiddenField2.setAttribute('type', 'hidden');
-    hiddenField2.setAttribute('name', 'id');
-    hiddenField2.setAttribute('value', id);
+    hiddenField2.setAttribute('name', 'sessionid');
+    hiddenField2.setAttribute('value', sessionid);
     form.appendChild(hiddenField2);
-
+    
     var hiddenField3 = document.createElement('input');
     hiddenField3.setAttribute('type', 'hidden');
-    hiddenField3.setAttribute('name', 'submitTime');
-    hiddenField3.setAttribute('value', submitTime);
+    hiddenField3.setAttribute('name', 'id');
+    hiddenField3.setAttribute('value', id);
     form.appendChild(hiddenField3);
+
+    var hiddenField4 = document.createElement('input');
+    hiddenField4.setAttribute('type', 'hidden');
+    hiddenField4.setAttribute('name', 'submitTime');
+    hiddenField4.setAttribute('value', submitTime);
+    form.appendChild(hiddenField4);
 
     document.body.appendChild(form);
     form.submit();
@@ -57,7 +66,7 @@ document.getElementById(contentId).style.display = 'block';
 
 // 스와이프 기능
 $(document).ready(function(){
-	var id = '${sessionScope.id}'; // 세션 ID 가져오기
+	var sessionid = '${sessionScope.id}'; // 세션 ID 가져오기
 
     $("tr").on("swipeleft",function(){
         $(this).find(".delete-button").show();
@@ -72,9 +81,10 @@ $(document).ready(function(){
         event.preventDefault(); // prevent the page from refreshing
         var tr = $(this).closest('tr');
         var boardNum = tr.find('.boardNum').text();
+        var id = tr.find('.id').text();
         var submitTime = tr.find('.submitTime').text();
         $.ajax({
-            url: '${pageContext.request.contextPath}/notice/delete?boardNum=' + boardNum + '&id=' + id + '&submitTime=' + submitTime, // 세션 ID 사용
+            url: '${pageContext.request.contextPath}/notice/delete?boardNum=' + boardNum + '&sessionid=' + sessionid + '&id=' + id + '&submitTime=' + submitTime,
             type: 'POST',
             success: function(result) {
                 tr.remove();
@@ -94,14 +104,26 @@ $(document).ready(function(){
 
 <!-- 전체 -->
 <div id="total" class="content" style="display:block;">
-전체
+<table>
+<c:forEach var="boardDTO" items="${noticeList}">
+<c:if test="${boardDTO.read != 'D'}">
+    <tr onclick="updateRead('${boardDTO.boardNum}', '${boardDTO.id}', '${boardDTO.submitTime}')" class="${boardDTO.read == 'Y' ? 'read' : 'unread'}">
+        <td class="boardNum">${boardDTO.boardNum}</td>
+        <td class="id">${boardDTO.id}</td>
+        <td>${boardDTO.content}</td>
+        <td class="submitTime">${boardDTO.submitTime}</td>
+<%--         <td>${boardDTO.read}</td> --%>
+ <td><button class="delete-button" style="display: none;" onclick="event.stopPropagation();">삭제</button></td>
+    </tr>
+        </c:if>
+</c:forEach>
+</table>
 </div>
 
 <!-- 소식 -->
 <div id="news" class="content" style="display:none;">
 <table>
 <c:forEach var="boardDTO" items="${noticeNewsList}">
-<c:if test="${boardDTO.read != 'D'}">
 <tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}'">
         <td class="boardNum">${boardDTO.boardNum}</td>
         <td class="id">${boardDTO.id}</td>
@@ -110,7 +132,6 @@ $(document).ready(function(){
 <%--         <td>${boardDTO.read}</td> --%>
  <td><button class="delete-button" style="display: none;" onclick="event.stopPropagation();">삭제</button></td>
     </tr>
-    </c:if>
 </c:forEach>
 </table>
 </div>
@@ -120,7 +141,7 @@ $(document).ready(function(){
 <table>
 <c:forEach var="boardDTO" items="${noticeActiveList}">
 <c:if test="${boardDTO.read != 'D'}">
-    <tr onclick="updateRead('${boardDTO.boardNum}', '${sessionScope.id}', '${boardDTO.submitTime}')" class="${boardDTO.read == 'Y' ? 'read' : 'unread'}">
+    <tr onclick="updateRead('${boardDTO.boardNum}', '${boardDTO.id}', '${boardDTO.submitTime}')" class="${boardDTO.read == 'Y' ? 'read' : 'unread'}">
         <td class="boardNum">${boardDTO.boardNum}</td>
         <td>
             <c:choose>
@@ -132,7 +153,7 @@ $(document).ready(function(){
                 </c:otherwise>
             </c:choose>
         </td>
-       <td>${boardDTO.id}</td>
+       <td class="id">${boardDTO.id}</td>
         <td>${boardDTO.content}</td>
         <td class="submitTime">${boardDTO.submitTime}</td>
 <%--         <td>${boardDTO.read}</td> --%>

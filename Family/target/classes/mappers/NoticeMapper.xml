@@ -32,7 +32,7 @@ AND id != #{id};
 	<select id="getPopularList" resultType="com.animal.domain.BoardDTO">
 SELECT a.*
 FROM (
-    SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, co.commentCnt, li.board_likeCnt
+    SELECT b.boardNum, b.id, m.nickname, DATE_FORMAT(b.submitTime, '%Y-%m-%d 23:59:59') as submitTime, b.title, b.content, f.filePath, co.commentCnt, li.board_likeCnt
     FROM board b
     LEFT JOIN (
         SELECT boardNum, filePath
@@ -77,7 +77,7 @@ ORDER BY a.submitTime DESC;
 	<!-- 	best를 달성한 모든 글 -->
 	<select id="getBestList" resultType="com.animal.domain.BoardDTO">
 SELECT * FROM (
-    SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, co.commentCnt, li.board_likeCnt
+    SELECT b.boardNum, b.id, m.nickname, DATE_FORMAT(b.submitTime, '%Y-%m-%d 23:59:59') as submitTime, b.title, b.content, f.filePath, co.commentCnt, li.board_likeCnt
     FROM board b
     LEFT JOIN (
         SELECT boardNum, filePath
@@ -112,9 +112,9 @@ SET c.read = 'Y'
 WHERE boardNum IN (
     SELECT boardNum
     FROM board
-    WHERE id = #{id}
+    WHERE id = #{sessionid}
     AND boardNum = #{boardNum})
-AND id != #{id}
+AND id = #{id}
 AND submitTime = #{submitTime};
 </update>
 
@@ -124,22 +124,35 @@ SET b.read = 'Y'
 WHERE boardNum IN (
     SELECT boardNum
     FROM board
-    WHERE id = #{id}
+    WHERE id = #{sessionid}
     AND boardNum = #{boardNum})
-AND id != #{id}
+AND id = #{id}
 AND submitTime = #{submitTime};
     </update>
     
-    <update id="delete">
+    <update id="deleteComment">
         UPDATE comment c
 SET c.read = 'D'
 WHERE boardNum IN (
     SELECT boardNum
     FROM board
-    WHERE id = #{id}
+    WHERE id = #{sessionid}
     AND boardNum = #{boardNum})
-AND id != #{id}
+AND id = #{id}
 AND submitTime = #{submitTime};
 </update>
+
+<update id="deleteBoardLike">
+        UPDATE board_like bl
+SET bl.read = 'D'
+WHERE boardNum IN (
+    SELECT boardNum
+    FROM board
+    WHERE id = #{sessionid}
+    AND boardNum = #{boardNum})
+AND id = #{id}
+AND submitTime = #{submitTime};
+</update>
+
 
 </mapper>

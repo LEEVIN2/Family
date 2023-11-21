@@ -38,8 +38,8 @@ public class NoticeDAO {
 	}
 
 	public void delete(BoardDTO boardDTO) {
-		sqlSession.update(namespace+".delete", boardDTO);
+		sqlSession.update(namespace+".deleteComment", boardDTO);
+		sqlSession.update(namespace+".deleteBoardLike", boardDTO);
 	}
-
 
 }
