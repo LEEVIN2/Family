@@ -2,30 +2,107 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
+
+<!-- head -->
 <head>
 <meta charset="UTF-8">
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <title>Insert title here</title>
-</head>
+
+<!-- style -->
 <style>
+.image-container {
+    text-align: center; /* 이미지를 가운데 정렬 */
+    padding-top: 7em; /* 이미지와 버튼 사이에 여백을 추가 */
+}
+
+.image-container img {
+    width: 522px; /* 이미지의 너비를 설정하세요 */
+    height: 179px; /* 이미지의 높이를 설정하세요 */
+}
+.join {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 70vh; /* 뷰포트 높이의 100% */
+}
+.input-large {
+    width: 350px;
+    height: 60px;
+    font-size: 20px; /* 글자 크기 지정 */
+    margin: 7px; /* margin 추가 */
+    border-radius: 20px; /* 모서리 둥글게 */
+    border: 3px solid black; /* 모서리 색상 검정으로 지정 */
+    text-align: center; /* 텍스트를 가로로 중앙 정렬 */
+    line-height: 60px; /* 텍스트를 세로로 중앙 정렬 */
+}
+.input-small {
+    width: 250px;
+    height: 60px;
+    font-size: 20px; /* 글자 크기 지정 */
+    margin: 7px; /* margin 추가 */
+    border-radius: 20px; /* 모서리 둥글게 */
+    border: 3px solid black; /* 모서리 색상 검정으로 지정 */
+    text-align: center; /* 텍스트를 가로로 중앙 정렬 */
+    line-height: 60px; /* 텍스트를 세로로 중앙 정렬, 높이와 동일하게 설정해야 텍스트가 수직 중앙에 배치*/
+}
+.button-acc {
+    width: 90px; /* 버튼의 너비 */
+    height: 65px; /* 버튼의 높이 */
+    background-color: black;
+    color: white;
+    font-size: 20px;
+    border-radius: 20px; /* 버튼의 모서리를 둥글게 */
+}
+.button-join {
+    width: 360px; /* 버튼의 너비 */
+    height: 65px; /* 버튼의 높이 */
+    background-color: black;
+    color: white;
+    font-size: 20px;
+    border-radius: 20px; /* 버튼의 모서리를 둥글게 */
+    margin: 7px; /* margin 추가 */
+}
+.login-link {
+    margin-top: 70px; /* 원하는 여백 크기로 조정하세요 */
+}
 a {
     text-decoration: none;
+    color: gray;
+	font-size: 20px;
 }
 </style>
+</head>
+
+<!-- body -->
 <body>
-<form id="join_frm">
-아이디<input type="text" name="id" id="id" maxlength="20"><br>
-비밀번호<input type="password" name="pass" id="pass" maxlength="16"><br>
-비밀번호 확인<input type="password" id="pass2" maxlength="16"><br>
-이메일<input type="text" name="email" id="email" maxlength="30"><br>
-<!-- <button type="button" id="email_auth_btn" class="email_auth_btn">인증번호 보내기</button><br> -->
-<!-- <input type="text" placeholder="인증번호 입력" id="email_auth_key"><br> -->
-전화번호<input type="text" name="mobile" id="mobile" maxlength="11" pattern="\d*">
-<button type="button" id="mobilebtn">인증번호 보내기</button><br>
-<input type="text" placeholder="인증번호 입력" id="mobilecheck">
-<button type="button" id="join">회원가입</button>
-</form>
-<a href="${pageContext.request.contextPath}/member/login">로그인하기</a>
+
+<!-- form -->
+<div class="image-container">
+	<img src="${pageContext.request.contextPath}/resources/img/member/logo.png" alt="logo">
+</div>
+
+<div class="join">
+    <div>
+        <form id="join_frm">
+        <input type="text" name="id" id="id" maxlength="20" placeholder="아이디" class="input-large"><br>
+        <input type="password" name="pass" id="pass" maxlength="16" placeholder="비밀번호" class="input-large"><br>
+        <input type="password" id="pass2" maxlength="16" placeholder="비밀번호 확인" class="input-large"><br>
+        <input type="text" name="email" id="email" maxlength="30" placeholder="이메일" class="input-large"><br>
+        <input type="text" name="mobile" id="mobile" maxlength="11" pattern="\d*" placeholder="전화번호" class="input-small">
+        <button type="button" id="mobilebtn" class="button-acc">인증</button><br>
+        <input type="text" id="mobilecheck" placeholder="인증번호" class="input-large"><br>
+        <button type="button" id="join" class="button-join">회원가입</button>
+        </form>
+    </div>
+
+    <div class="login-link">
+        <a href="${pageContext.request.contextPath}/member/login">로그인하기</a>
+    </div>
+</div>
+
+<!-- script -->
 <script type="text/javascript">
 function fn_join(){
 	var f = $('#join_frm');
