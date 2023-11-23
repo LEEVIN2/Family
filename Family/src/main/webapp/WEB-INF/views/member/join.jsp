@@ -13,7 +13,7 @@
 <style>
 .image-container {
     text-align: center; /* 이미지를 가운데 정렬 */
-    padding-top: 7em; /* 이미지와 버튼 사이에 여백을 추가 */
+    padding-top: 3.5em; /* 이미지와 버튼 사이에 여백을 추가 */
 }
 
 .image-container img {
@@ -29,7 +29,7 @@
 }
 .input-large {
     width: 350px;
-    height: 60px;
+    height: 55px;
     font-size: 20px; /* 글자 크기 지정 */
     margin: 7px; /* margin 추가 */
     border-radius: 20px; /* 모서리 둥글게 */
@@ -39,7 +39,7 @@
 }
 .input-small {
     width: 250px;
-    height: 60px;
+    height: 55px;
     font-size: 20px; /* 글자 크기 지정 */
     margin: 7px; /* margin 추가 */
     border-radius: 20px; /* 모서리 둥글게 */
@@ -48,8 +48,8 @@
     line-height: 60px; /* 텍스트를 세로로 중앙 정렬, 높이와 동일하게 설정해야 텍스트가 수직 중앙에 배치*/
 }
 .button-acc {
-    width: 90px; /* 버튼의 너비 */
-    height: 65px; /* 버튼의 높이 */
+    width: 85px; /* 버튼의 너비 */
+    height: 68px; /* 버튼의 높이 */
     background-color: black;
     color: white;
     font-size: 20px;
@@ -57,7 +57,7 @@
 }
 .button-join {
     width: 360px; /* 버튼의 너비 */
-    height: 65px; /* 버튼의 높이 */
+    height: 60px; /* 버튼의 높이 */
     background-color: black;
     color: white;
     font-size: 20px;
@@ -65,7 +65,7 @@
     margin: 7px; /* margin 추가 */
 }
 .login-link {
-    margin-top: 70px; /* 원하는 여백 크기로 조정하세요 */
+    margin-top: 50px;
 }
 a {
     text-decoration: none;
