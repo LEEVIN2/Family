@@ -105,6 +105,14 @@ public class BoardDAO {
 		return sqlSession.selectList(namespace+".getBoardHotList", boardDTO);
 	}
 
+	public List<BoardDTO> getBoardNewList(BoardDTO boardDTO) {
+		return sqlSession.selectList(namespace+".getBoardNewList", boardDTO);
+	}
+	
+	// 무한스크롤
+	public List<BoardDTO> getLoadMoreData(BoardDTO boardDTO) {
+	    return sqlSession.selectList(namespace+".getLoadMoreData", boardDTO);
+	}
 	
 
 	

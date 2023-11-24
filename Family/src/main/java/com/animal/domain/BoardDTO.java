@@ -49,6 +49,10 @@ public class BoardDTO {
 	// 업데이트와 삭제에 사용
 	private String sessionid;
 	
+	// home에서 사용 (무한스크롤)
+	private int start;
+	private int limit;
+	
 	
 	// notice 컨트롤러에서 소식내용 중복제거에 쓰임 (아래두개)
 	@Override

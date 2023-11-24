@@ -119,6 +119,14 @@ public class BoardService {
 		return boardDAO.getBoardPopList(boardDTO);
 	}
 
+	public List<BoardDTO> getBoardNewList(BoardDTO boardDTO) {
+		return boardDAO.getBoardNewList(boardDTO);
+	}
+	
+	// 무한스크롤
+	public List<BoardDTO> getLoadMoreData(BoardDTO boardDTO) {
+	    return boardDAO.getLoadMoreData(boardDTO);
+	}
 
 
 }

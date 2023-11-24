@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -38,6 +39,68 @@ public class BoardController {
 	// 사진파일경로 (서블릿에서 가져오는거임)
 	@Autowired
     private String uploadPath;
+	
+	@GetMapping("/home")
+	public String home(Model model) {
+		BoardDTO boardDTO =new BoardDTO();
+		List<BoardDTO> boardNewList = boardService.getBoardNewList(boardDTO);
+		List<BoardDTO> boardPopList = boardService.getBoardPopList(boardDTO);
+		
+		for (BoardDTO boardDTO2 : boardNewList) {
+		    updateSubmitTime(boardDTO2);
+		}
+		
+		for (BoardDTO boardDTO2 : boardPopList) {
+		    updateSubmitTime(boardDTO2);
+		}
+		
+		model.addAttribute("boardNewList", boardNewList);
+		model.addAttribute("boardPopList", boardPopList);
+		return "board/home";
+	}
+	
+//	@PostMapping("/likeUp")
+//	public ResponseEntity<String> likeUp(@RequestParam String boardNum, @RequestParam String id) {
+//	    BoardDTO boardDTO = new BoardDTO();
+//	    boardDTO.setBoardNum(boardNum);
+//	    boardDTO.setId(id);
+//
+//	    ResponseEntity<String> entity = null;
+//	    try {
+//	        boardService.likeUp(boardDTO);
+//	        entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	        entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//	    }
+//	    return entity;
+//	}
+	
+//	@GetMapping("/comments")
+//    public ResponseEntity<List<BoardDTO>> comments(@RequestParam String boardNum) {
+//        List<BoardDTO> commentList = boardService.getCommentList(boardNum);
+//        return ResponseEntity.ok(commentList);
+//    }
+	
+	// 무한스크롤
+	@PostMapping("/loadMoreData")
+	@ResponseBody
+	public List<BoardDTO> loadMoreData(@RequestParam("start") int start, @RequestParam("limit") int limit) {
+	    System.out.println(start);
+	    System.out.println(limit);
+	    
+	    BoardDTO boardDTO = new BoardDTO();
+	    boardDTO.setStart(start);
+	    boardDTO.setLimit(limit);
+	    
+	    System.out.println(boardDTO);
+	    
+	    List<BoardDTO> loadMoreData = boardService.getLoadMoreData(boardDTO);
+	    System.out.println(loadMoreData);
+//	    서버에서 클라이언트로 데이터를 반환하는 것을 의미합니다. 이 경우 클라이언트는 웹 브라우저에서 실행되는 JavaScript 코드
+//	    즉 컨트롤러에서 loadMoreData를 요청한 jsp 파일로  loadMoreData 리스트 값이 자동적으로 전송된다
+	    return loadMoreData;
+	}
 	
 	@GetMapping("/board")
 	public String board() {

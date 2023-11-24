@@ -271,5 +271,63 @@ ON b.id = m.id
       	from board
     </select>
 
+<!-- 참고로 위에 있는 getBoardList랑 코드 같음 -->
+	<select id="getBoardNewList" resultType="com.animal.domain.BoardDTO">
+		SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
+FROM board b
+LEFT JOIN (
+	SELECT boardNum, filePath
+	FROM board_file
+	WHERE (boardNum, fileNum) IN (
+		SELECT boardNum, MAX(fileNum)
+		FROM board_file
+		GROUP BY boardNum)
+) as f ON b.boardNum = f.boardNum
+LEFT JOIN (
+	SELECT boardNum, COUNT(*) as commentCnt
+	FROM comment
+	GROUP BY boardNum
+) as co ON b.boardNum = co.boardNum
+LEFT JOIN (
+	SELECT boardNum, COUNT(*) as board_likeCnt
+	FROM board_like
+	GROUP BY boardNum
+) as li ON b.boardNum = li.boardNum
+LEFT JOIN (
+	SELECT id, nickname
+	FROM member
+) as m ON b.id = m.id
+order by submitTime  DESC LIMIT 3;
+    </select>
+    
+	<!-- 무한스크롤 -->
+    <select id="getLoadMoreData" resultType="com.animal.domain.BoardDTO">
+    SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
+FROM board b
+LEFT JOIN (
+	SELECT boardNum, filePath
+	FROM board_file
+	WHERE (boardNum, fileNum) IN (
+		SELECT boardNum, MAX(fileNum)
+		FROM board_file
+		GROUP BY boardNum)
+) as f ON b.boardNum = f.boardNum
+LEFT JOIN (
+	SELECT boardNum, COUNT(*) as commentCnt
+	FROM comment
+	GROUP BY boardNum
+) as co ON b.boardNum = co.boardNum
+LEFT JOIN (
+	SELECT boardNum, COUNT(*) as board_likeCnt
+	FROM board_like
+	GROUP BY boardNum
+) as li ON b.boardNum = li.boardNum
+LEFT JOIN (
+	SELECT id, nickname
+	FROM member
+) as m ON b.id = m.id
+order by submitTime  DESC
+LIMIT #{start}, #{limit};
+</select>
 	
 </mapper>
