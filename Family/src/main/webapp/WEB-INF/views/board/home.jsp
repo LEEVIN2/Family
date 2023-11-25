@@ -10,24 +10,29 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
-<!-- style -->
-<style>
-#table-new{
-    height: 1000px;
-}
-</style>
+<!-- css -->
+<link href="${pageContext.request.contextPath}/resources/css/home.css" rel="stylesheet" type="text/css">
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
 
 <!-- body -->
 <body>
-<a href="${pageContext.request.contextPath}/board/freesearch">검색</a><br>
 
-<a id="new" class="active"> 최신</a>
-<a id="pop" class="inactive"> 인기</a><br>
+<!-- top -->
+<div class="top-container">
+	<a href="${pageContext.request.contextPath}/board/home"><img src="${pageContext.request.contextPath}/resources/img/board/logo-1.png" alt="logo-1"></a>
+	<a href="${pageContext.request.contextPath}/board/search"><img src="${pageContext.request.contextPath}/resources/img/board/검색.png" alt="검색"></a><br>
+</div>
+
+<!-- button -->
+<div class="button-container">
+<a id="new" class="active">최신</a>
+<a id="pop" class="inactive">인기</a><br>
+</div>
 
 <!-- table -->
+<div class="table-container">
 <table id="table-new">
 <c:forEach var="boardDTO" items="${boardNewList}">
 <tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}'">
@@ -100,10 +105,11 @@
 </tr>
 </c:forEach>
 </table>
+</div>
 
 <!-- bottom -->
-<a href="${pageContext.request.contextPath}/member/home">홈</a>
-<a href="${pageContext.request.contextPath}/board/home">채팅</a>
+<a href="${pageContext.request.contextPath}/board/home">홈</a>
+<a href="${pageContext.request.contextPath}/member/home">채팅</a>
 <a href="${pageContext.request.contextPath}/board/board">게시판</a>
 <a href="${pageContext.request.contextPath}/notice/notice">알림</a>
 <a href="${pageContext.request.contextPath}/mypage/mypage">마이페이지</a>
@@ -116,16 +122,29 @@
 window.onload = function() {
     document.getElementById('table-new').style.display = 'block';
     document.getElementById('table-pop').style.display = 'none';
+ 	// css 때문에 넣은 코드 2개
+    document.getElementById('new').classList.add('active');
+    document.getElementById('pop').classList.add('inactive');
 };
 
 document.getElementById('new').addEventListener('click', function() {
     document.getElementById('table-new').style.display = 'block';
     document.getElementById('table-pop').style.display = 'none';
+ 	// css 때문에 넣은 코드 4개
+    this.classList.add('active');
+    this.classList.remove('inactive');
+    document.getElementById('pop').classList.remove('active');
+    document.getElementById('pop').classList.add('inactive');
 });
 
 document.getElementById('pop').addEventListener('click', function() {
     document.getElementById('table-pop').style.display = 'block';
     document.getElementById('table-new').style.display = 'none';
+ 	// css 때문에 넣은 코드 4개
+    this.classList.add('active');
+    this.classList.remove('inactive');
+    document.getElementById('new').classList.remove('active');
+    document.getElementById('new').classList.add('inactive');
 });
 
 // 무한스크롤
@@ -170,7 +189,7 @@ function loadMoreData(start, limit) {
     		        '<td>' + submitTime + '</td>' +
     		        '<td>' + (title.length > 10 ? title.substring(0, 10) + '...' : title) + '</td>' +
     		        '<td>' + (content.length > 20 ? content.substring(0, 20) + '...' : content) + '</td>' +
-    		        '<td>' + (filePath ? '<img src="' + "file:///C:/Users/sonmi/git/Family/Family/Family/src/main/webapp" + '/resources/img/' + filePath + '" alt="Image" width="100" height="100">' : '') + '</td>' +
+    		        '<td>' + (filePath ? '<img src="' + "${pageContext.request.contextPath}" + '/resources/img/' + filePath + '" alt="Image" width="100" height="100">' : '') + '</td>' +
     		        '<td>' + viewCnt + '</td>' +
     		        '<td>' + commentCnt + '</td>' +
     		        '<td>' + board_likeCnt + '</td>' +

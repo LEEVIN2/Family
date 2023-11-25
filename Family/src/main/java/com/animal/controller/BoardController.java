@@ -59,44 +59,26 @@ public class BoardController {
 		return "board/home";
 	}
 	
-//	@PostMapping("/likeUp")
-//	public ResponseEntity<String> likeUp(@RequestParam String boardNum, @RequestParam String id) {
-//	    BoardDTO boardDTO = new BoardDTO();
-//	    boardDTO.setBoardNum(boardNum);
-//	    boardDTO.setId(id);
-//
-//	    ResponseEntity<String> entity = null;
-//	    try {
-//	        boardService.likeUp(boardDTO);
-//	        entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
-//	    } catch (Exception e) {
-//	        e.printStackTrace();
-//	        entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//	    }
-//	    return entity;
-//	}
-	
-//	@GetMapping("/comments")
-//    public ResponseEntity<List<BoardDTO>> comments(@RequestParam String boardNum) {
-//        List<BoardDTO> commentList = boardService.getCommentList(boardNum);
-//        return ResponseEntity.ok(commentList);
-//    }
-	
 	// 무한스크롤
 	@PostMapping("/loadMoreData")
 	@ResponseBody
 	public List<BoardDTO> loadMoreData(@RequestParam("start") int start, @RequestParam("limit") int limit) {
-	    System.out.println(start);
-	    System.out.println(limit);
+//	    System.out.println(start);
+//	    System.out.println(limit);
 	    
 	    BoardDTO boardDTO = new BoardDTO();
 	    boardDTO.setStart(start);
 	    boardDTO.setLimit(limit);
 	    
-	    System.out.println(boardDTO);
+//	    System.out.println(boardDTO);
 	    
 	    List<BoardDTO> loadMoreData = boardService.getLoadMoreData(boardDTO);
-	    System.out.println(loadMoreData);
+//	    System.out.println(loadMoreData);
+	    
+	    for (BoardDTO boardDTO2 : loadMoreData) {
+		    updateSubmitTime(boardDTO2);
+		}
+	    
 //	    서버에서 클라이언트로 데이터를 반환하는 것을 의미합니다. 이 경우 클라이언트는 웹 브라우저에서 실행되는 JavaScript 코드
 //	    즉 컨트롤러에서 loadMoreData를 요청한 jsp 파일로  loadMoreData 리스트 값이 자동적으로 전송된다
 	    return loadMoreData;
@@ -242,6 +224,27 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	    model.addAttribute("boardList", boardList);
 		
 		return "board/freesearch";
+	}
+	
+	@GetMapping("/search")
+	public String search(HttpServletRequest request,Model model) {
+		
+		String search = request.getParameter("search");
+		
+		BoardDTO boardDTO =new BoardDTO();
+		boardDTO.setSearch(search); // 검색어저장
+		
+		// 품목추가한 내용 뿌려주기
+	    List<BoardDTO> boardList= boardService.getSearchList(boardDTO);
+	    
+	    for (BoardDTO boardDTO2 : boardList) {
+	        updateSubmitTime(boardDTO2);
+	    }
+		
+	 // 품목추가한 내용 뿌려주기
+	    model.addAttribute("boardList", boardList);
+		
+		return "board/search";
 	}
 	
 

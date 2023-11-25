@@ -113,6 +113,10 @@ public class BoardDAO {
 	public List<BoardDTO> getLoadMoreData(BoardDTO boardDTO) {
 	    return sqlSession.selectList(namespace+".getLoadMoreData", boardDTO);
 	}
+
+	public List<BoardDTO> getSearchList(BoardDTO boardDTO) {
+		return sqlSession.selectList(namespace+".getSearchList", boardDTO);
+	}
 	
 
 	

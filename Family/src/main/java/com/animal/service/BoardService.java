@@ -128,5 +128,9 @@ public class BoardService {
 	    return boardDAO.getLoadMoreData(boardDTO);
 	}
 
+	public List<BoardDTO> getSearchList(BoardDTO boardDTO) {
+		return boardDAO.getSearchList(boardDTO);
+	}
+
 
 }

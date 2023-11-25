@@ -84,6 +84,45 @@ AND b.id != #{id}
 ORDER BY b.boardNum DESC;
 	</select>
 	
+	<select id="getSearchList" resultType="com.animal.domain.BoardDTO">
+    <if test="search == null or search == ''">
+        select *
+        from board
+        where 1 = 0
+    </if>
+    <if test="search != null and search != ''">
+        SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
+FROM board b
+LEFT JOIN (
+	SELECT boardNum, filePath
+	FROM board_file
+	WHERE (boardNum, fileNum) IN (
+		SELECT boardNum, MAX(fileNum)
+		FROM board_file
+		GROUP BY boardNum)
+) as f ON b.boardNum = f.boardNum
+LEFT JOIN (
+	SELECT boardNum, COUNT(*) as commentCnt
+	FROM comment
+	GROUP BY boardNum
+) as co ON b.boardNum = co.boardNum
+LEFT JOIN (
+	SELECT boardNum, COUNT(*) as board_likeCnt
+	FROM board_like
+	GROUP BY boardNum
+) as li ON b.boardNum = li.boardNum
+LEFT JOIN (
+	SELECT id, nickname
+	FROM member
+) as m ON b.id = m.id
+WHERE m.nickname LIKE CONCAT('%', #{search}, '%')
+OR b.title LIKE CONCAT('%', #{search}, '%')
+OR b.content LIKE CONCAT('%', #{search}, '%')
+ORDER BY b.boardNum DESC;
+    </if>
+</select>
+	
+<!-- 	이거 나중에 앞에 FR붙은 보드넘만 찾게 수정해야됨 (현재 이상태는 전체에서 찾는거임) -->
 	<select id="getFreesearchList" resultType="com.animal.domain.BoardDTO">
     <if test="search == null or search == ''">
         select *

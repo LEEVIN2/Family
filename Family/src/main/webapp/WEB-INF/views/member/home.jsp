@@ -15,8 +15,8 @@
 <a id="new" class="active"> 최신</a>
 <a id="pop" class="inactive"> 인기</a><br>
 
-<a href="${pageContext.request.contextPath}/member/home">홈</a>
-<a href="${pageContext.request.contextPath}/board/home">채팅</a>
+<a href="${pageContext.request.contextPath}/board/home">홈</a>
+<a href="${pageContext.request.contextPath}/member/home">채팅</a>
 <a href="${pageContext.request.contextPath}/board/board">게시판</a>
 <a href="${pageContext.request.contextPath}/notice/notice">알림</a>
 <a href="${pageContext.request.contextPath}/mypage/mypage">마이페이지</a>
