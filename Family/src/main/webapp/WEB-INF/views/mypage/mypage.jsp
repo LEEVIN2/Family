@@ -11,12 +11,10 @@
 
 <!-- body -->
 <body>
+<img src="${pageContext.request.contextPath}/resources/img/profile/기본프로필.png" alt="기본프로필">
 <a>${sessionScope.nickname}</a>
-<a>${sessionScope.id}</a>
+<a>${sessionScope.email}</a>
 <a href="${pageContext.request.contextPath}/mypage/profile">프로필 변경</a><br>
-닉네임 변경<br>
-이메일 변경<br>
-비밀번호 변경<br>
 
 <br>
 
@@ -29,7 +27,6 @@
 공지사항<br>
 FAQ<br>
 문의하기<br>
-
 
 </body>
 </html>

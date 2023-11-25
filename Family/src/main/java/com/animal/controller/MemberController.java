@@ -58,6 +58,7 @@ public class MemberController {
 		if(isValid) {
 			session.setAttribute("id", MemberDTO.getId());
 			session.setAttribute("nickname", DTO2.getNickname());
+			session.setAttribute("email", DTO2.getEmail());
 			return "redirect:/member/home";
 		}else {
 			response.setContentType("text/html;charset=UTF-8");
