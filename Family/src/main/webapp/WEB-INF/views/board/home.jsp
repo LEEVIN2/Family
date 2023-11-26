@@ -36,6 +36,14 @@
 <table id="table-new">
 <c:forEach var="boardDTO" items="${boardNewList}">
 <tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}'">
+<td><c:choose>
+    <c:when test="${empty boardDTO.profile}">
+        <img src="${pageContext.request.contextPath}/resources/img/profile/기본프로필.png" alt="기본프로필" width="50" height="50">
+    </c:when>
+    <c:otherwise>
+        <img src="${pageContext.request.contextPath}/resources/img/profile/${boardDTO.profile}" alt="profile" width="50" height="50">
+    </c:otherwise>
+</c:choose></td>
 <td>${boardDTO.nickname}</td>
 <td>${boardDTO.submitTime}</td>
 <td><c:choose>
@@ -73,46 +81,71 @@
 <table id="table-pop">
 <c:forEach var="boardDTO" items="${boardPopList}">
 <tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}'">
-<td>${boardDTO.nickname}</td>
-<td>${boardDTO.submitTime}</td>
-<td><c:choose>
-    <c:when test="${fn:length(boardDTO.title) > 10}">
-        ${fn:substring(boardDTO.title, 0, 10)}...
-    </c:when>
-    <c:otherwise>
-        ${boardDTO.title}
-    </c:otherwise>
-</c:choose></td>
-<td><c:choose>
-    <c:when test="${fn:length(boardDTO.content) > 20}">
-        ${fn:substring(boardDTO.content, 0, 20)}...
-    </c:when>
-    <c:otherwise>
-        ${boardDTO.content}
-    </c:otherwise>
-</c:choose></td>
-<td><c:choose>
-    <c:when test="${not empty boardDTO.filePath}">
-        <img src="${pageContext.request.contextPath}/resources/img/${boardDTO.filePath}" alt="Image" width="100" height="100">
-    </c:when>
-    <c:otherwise>
-        <!-- 빈칸 -->
-    </c:otherwise>
-</c:choose></td>
-<td>${boardDTO.viewCnt}</td>
-<td>${boardDTO.commentCnt}</td>
-<td>${boardDTO.board_likeCnt}</td>
+
+    <td class="content">
+        <div class="row1">
+        <c:choose>
+            <c:when test="${empty boardDTO.profile}">
+                <img src="${pageContext.request.contextPath}/resources/img/profile/기본프로필.png" alt="기본프로필">
+            </c:when>
+            <c:otherwise>
+                <img src="${pageContext.request.contextPath}/resources/img/profile/${boardDTO.profile}" alt="profile">
+            </c:otherwise>
+        </c:choose>
+        <span class="nickname">${boardDTO.nickname}</span>
+        <span class="submitTime">${boardDTO.submitTime}</span>
+        </div>
+
+        <div class="row2">
+        <c:choose>
+            <c:when test="${fn:length(boardDTO.title) > 10}">
+                ${fn:substring(boardDTO.title, 0, 10)}...
+            </c:when>
+            <c:otherwise>
+                ${boardDTO.title}
+            </c:otherwise>
+        </c:choose>
+        <c:choose>
+            <c:when test="${fn:length(boardDTO.content) > 20}">
+                ${fn:substring(boardDTO.content, 0, 20)}...
+            </c:when>
+            <c:otherwise>
+                ${boardDTO.content}
+            </c:otherwise>
+        </c:choose>
+        </div>
+
+        <div class="row3">
+        ${boardDTO.board_likeCnt}
+        ${boardDTO.commentCnt}
+        ${boardDTO.viewCnt}
+        </div>
+    </td>
+    
+    <td class="content-img">
+        <c:choose>
+            <c:when test="${not empty boardDTO.filePath}">
+                <img src="${pageContext.request.contextPath}/resources/img/${boardDTO.filePath}" alt="Image">
+            </c:when>
+            <c:otherwise>
+                <!-- 빈칸 -->
+            </c:otherwise>
+        </c:choose>
+    </td>
+    
 </tr>
 </c:forEach>
 </table>
 </div>
 
 <!-- bottom -->
+<div class="bottom-container">
 <a href="${pageContext.request.contextPath}/board/home">홈</a>
 <a href="${pageContext.request.contextPath}/member/home">채팅</a>
 <a href="${pageContext.request.contextPath}/board/board">게시판</a>
 <a href="${pageContext.request.contextPath}/notice/notice">알림</a>
 <a href="${pageContext.request.contextPath}/mypage/mypage">마이페이지</a>
+</div>
 
 <!-- 마이페이지로 옮기기 -->
 <%-- <a href="${pageContext.request.contextPath}/member/logout">로그아웃</a><br> --%>

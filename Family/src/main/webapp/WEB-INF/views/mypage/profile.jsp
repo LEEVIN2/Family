@@ -19,7 +19,7 @@
         <img src="${pageContext.request.contextPath}/resources/img/profile/기본프로필.png" alt="기본프로필" width="100" height="100">
     </c:when>
     <c:otherwise>
-        <img src="${pageContext.request.contextPath}/resources/img/${memberDTO.profile}" alt="profile" width="100" height="100">
+        <img src="${pageContext.request.contextPath}/resources/img/profile/${memberDTO.profile}" alt="profile" width="100" height="100">
     </c:otherwise>
 </c:choose>
 <br>
@@ -30,11 +30,12 @@ ${memberDTO.id}<br>
 ${memberDTO.nickname}<br>
 ${memberDTO.email}<br>
 
+<!-- 사진변경 클릭시 모달창 -->
 <div id="changePhotoModal" style="display: none;">
 <form id="writeForm" action="${pageContext.request.contextPath}/mypage/changePhoto" method="post"  enctype="multipart/form-data">
 사진변경 <input multiple="multiple" type="file" name="file" id="fileUpload" />
 </form>
-사진삭제<br>
+<a href="${pageContext.request.contextPath}/mypage/deletePhoto">사진삭제</a><br>
 <a id="modalClose">닫기</a>
 </div>
 

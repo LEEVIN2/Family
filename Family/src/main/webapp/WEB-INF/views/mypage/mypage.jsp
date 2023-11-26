@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -11,7 +12,14 @@
 
 <!-- body -->
 <body>
-<img src="${pageContext.request.contextPath}/resources/img/profile/기본프로필.png" alt="기본프로필">
+<c:choose>
+    <c:when test="${empty memberDTO.profile}">
+        <img src="${pageContext.request.contextPath}/resources/img/profile/기본프로필.png" alt="기본프로필" width="100" height="100">
+    </c:when>
+    <c:otherwise>
+        <img src="${pageContext.request.contextPath}/resources/img/profile/${memberDTO.profile}" alt="profile" width="100" height="100">
+    </c:otherwise>
+</c:choose>
 <a>${sessionScope.nickname}</a>
 <a>${sessionScope.email}</a>
 <a href="${pageContext.request.contextPath}/mypage/profile">프로필 변경</a><br>

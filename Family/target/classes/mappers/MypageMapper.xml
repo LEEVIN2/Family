@@ -18,4 +18,10 @@ SET profile = #{profile}
 where id = #{id};
 </update>
 
+<update id="deletePhoto">
+UPDATE member
+SET profile = NULL
+WHERE id = #{id};
+</update>
+
 </mapper>

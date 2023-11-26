@@ -18,8 +18,11 @@ public class MypageService {
 	}
 
 	public void changePhoto(MemberDTO memberDTO) {
-		System.out.println("MypageService");
 		mypageDAO.changePhoto(memberDTO);
+	}
+
+	public void deletePhoto(String id) {
+		mypageDAO.deletePhoto(id);
 	}
 
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +25,11 @@ public class MypageController {
 	@Inject
 	private MypageService mypageService;
 	
-	// 사진파일경로 (서블릿에서 가져오는거임)
-		@Autowired
-	    private String uploadPath;
-	
 	@GetMapping("/mypage")
-	public String mypage() {
+	public String mypage(HttpSession session, Model model) {
+		String id = (String) session.getAttribute("id");
+		MemberDTO memberDTO = mypageService.getMyProfile(id);
+		model.addAttribute("memberDTO", memberDTO);
 		return "mypage/mypage";
 	}
 	
@@ -44,7 +42,7 @@ public class MypageController {
 		return "mypage/profile";
 	}
 	
-	
+	//	프로필 사진 수정
 	@PostMapping("/changePhoto")
 	public String changePhoto(MultipartHttpServletRequest mtfRequest, HttpSession session) {
 		
@@ -57,6 +55,8 @@ public class MypageController {
 
 	        System.out.println("originFileName : " + originFileName);
 	        System.out.println("fileSize : " + fileSize);
+	        
+	        String uploadPath = "C:\\Users\\sonmi\\git\\Family\\Family\\Family\\src\\main\\webapp\\resources\\img\\profile";
 
 	        String safeFile = uploadPath + "\\" + originFileName;
 	        try {
@@ -75,6 +75,25 @@ public class MypageController {
 	        }
 	    }
 	    return "redirect:/mypage/profile";
+	}
+	
+	@GetMapping("/deletePhoto")
+	public String deletePhoto(HttpSession session) {
+		String id = (String) session.getAttribute("id");
+		MemberDTO memberDTO = mypageService.getMyProfile(id); // 사용자의 현재 프로필 사진 이름을 가져옵니다.
+	    String profile = memberDTO.getProfile();
+	    String uploadPath = "C:\\Users\\sonmi\\git\\Family\\Family\\Family\\src\\main\\webapp\\resources\\img\\profile";
+	    String filePath = uploadPath + "\\" + profile;
+	    File file = new File(filePath);
+	    if(file.exists()) { // 파일이 실제로 존재하는지 확인합니다.
+	        if(file.delete()) { // 파일을 삭제하고 성공 여부를 확인합니다.
+	            System.out.println("File deleted successfully");
+	        } else {
+	            System.out.println("Failed to delete the file");
+	        }
+	    }
+		mypageService.deletePhoto(id);
+		return "redirect:/mypage/profile";
 	}
 	
 }

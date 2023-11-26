@@ -19,8 +19,11 @@ public class MypageDAO {
 	}
 
 	public void changePhoto(MemberDTO memberDTO) {
-		System.out.println("MypageDAO");
 		sqlSession.update(namespace+".changePhoto", memberDTO);
+	}
+
+	public void deletePhoto(String id) {
+		sqlSession.update(namespace+".deletePhoto", id);
 	}
 
 }

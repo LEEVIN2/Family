@@ -191,7 +191,7 @@ order by boardNum desc limit #{startRow}, #{pageSize};
 	
 	<select id="getBoardHotList" resultType="com.animal.domain.BoardDTO">
 		SELECT * FROM (
-    SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
+    SELECT b.boardNum, b.id, m.nickname, m.profile, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
     FROM board b
     LEFT JOIN (
         SELECT boardNum, filePath
@@ -212,7 +212,7 @@ order by boardNum desc limit #{startRow}, #{pageSize};
         GROUP BY boardNum
     ) as li ON b.boardNum = li.boardNum
     LEFT JOIN (
-	SELECT id, nickname
+	SELECT id, nickname, profile
 	FROM member
 ) as m ON b.id = m.id
     WHERE co.commentCnt >= 3 OR li.board_likeCnt >= 3
@@ -312,7 +312,7 @@ ON b.id = m.id
 
 <!-- 참고로 위에 있는 getBoardList랑 코드 같음 -->
 	<select id="getBoardNewList" resultType="com.animal.domain.BoardDTO">
-		SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
+		SELECT b.boardNum, b.id, m.nickname, m.profile, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
 FROM board b
 LEFT JOIN (
 	SELECT boardNum, filePath
@@ -333,7 +333,7 @@ LEFT JOIN (
 	GROUP BY boardNum
 ) as li ON b.boardNum = li.boardNum
 LEFT JOIN (
-	SELECT id, nickname
+	SELECT id, nickname, profile
 	FROM member
 ) as m ON b.id = m.id
 order by submitTime  DESC LIMIT 3;
