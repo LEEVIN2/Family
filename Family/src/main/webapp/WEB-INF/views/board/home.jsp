@@ -105,6 +105,9 @@
                 ${boardDTO.title}
             </c:otherwise>
         </c:choose>
+        </div>
+        
+        <div class="row3">
         <c:choose>
             <c:when test="${fn:length(boardDTO.content) > 20}">
                 ${fn:substring(boardDTO.content, 0, 20)}...
@@ -115,10 +118,10 @@
         </c:choose>
         </div>
 
-        <div class="row3">
-        ${boardDTO.board_likeCnt}
-        ${boardDTO.commentCnt}
-        ${boardDTO.viewCnt}
+        <div class="row4">
+        <span><img src="${pageContext.request.contextPath}/resources/img/board/좋아요(누름).png" alt="기본프로필"> ${boardDTO.board_likeCnt}</span>
+        <span><img src="${pageContext.request.contextPath}/resources/img/board/댓글.png" alt="기본프로필"> ${boardDTO.commentCnt}</span>
+        <span><img src="${pageContext.request.contextPath}/resources/img/board/조회.png" alt="기본프로필"> ${boardDTO.viewCnt}</span>
         </div>
     </td>
     
@@ -152,6 +155,18 @@
 
 <!-- script -->
 <script type="text/javascript">
+
+// ${boardDTO.filePath} 값이 있는 경우와 없는 경우에 따라 다른 패딩 값을 적용
+var rows = document.querySelectorAll('#table-pop tr');
+rows.forEach(function(row) {
+    var img = row.querySelector('.content-img img');
+    if (img) {
+        row.classList.add('with-image');
+    } else {
+        row.classList.add('without-image');
+    }
+});
+
 window.onload = function() {
     document.getElementById('table-new').style.display = 'block';
     document.getElementById('table-pop').style.display = 'none';
