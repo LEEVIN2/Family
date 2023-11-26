@@ -40,7 +40,7 @@
     
     <!-- 파일 업로드 폴더 지정 -->
     <beans:bean id="uploadPath" class="java.lang.String">
-        <beans:constructor-arg value="C:\Users\sonmi\git\Family\Family_Family\src\main\webapp\resources\img"></beans:constructor-arg>
+        <beans:constructor-arg value="C:\Users\sonmi\git\Family\Family\Family\src\main\webapp\resources\img"></beans:constructor-arg>
     </beans:bean>
 	
 </beans:beans>

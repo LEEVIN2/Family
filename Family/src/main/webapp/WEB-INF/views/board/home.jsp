@@ -36,43 +36,61 @@
 <table id="table-new">
 <c:forEach var="boardDTO" items="${boardNewList}">
 <tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}'">
-<td><c:choose>
+
+<td class="content">
+<div class="row1">
+<c:choose>
     <c:when test="${empty boardDTO.profile}">
-        <img src="${pageContext.request.contextPath}/resources/img/profile/기본프로필.png" alt="기본프로필" width="50" height="50">
+        <img src="${pageContext.request.contextPath}/resources/img/profile/기본프로필.png" alt="기본프로필">
     </c:when>
     <c:otherwise>
-        <img src="${pageContext.request.contextPath}/resources/img/profile/${boardDTO.profile}" alt="profile" width="50" height="50">
+        <img src="${pageContext.request.contextPath}/resources/img/profile/${boardDTO.profile}" alt="profile">
     </c:otherwise>
-</c:choose></td>
-<td>${boardDTO.nickname}</td>
-<td>${boardDTO.submitTime}</td>
-<td><c:choose>
+</c:choose>
+	<span class="nickname">${boardDTO.nickname}</span>
+	<span class="submitTime">${boardDTO.submitTime}</span>
+</div>
+
+<div class="row2">
+<c:choose>
     <c:when test="${fn:length(boardDTO.title) > 10}">
         ${fn:substring(boardDTO.title, 0, 10)}...
     </c:when>
     <c:otherwise>
         ${boardDTO.title}
     </c:otherwise>
-</c:choose></td>
-<td><c:choose>
+</c:choose>
+</div>
+
+<div class="row3">
+<c:choose>
     <c:when test="${fn:length(boardDTO.content) > 20}">
         ${fn:substring(boardDTO.content, 0, 20)}...
     </c:when>
     <c:otherwise>
         ${boardDTO.content}
     </c:otherwise>
-</c:choose></td>
-<td><c:choose>
+</c:choose>
+</div>
+
+<div class="row4">
+		<span><img src="${pageContext.request.contextPath}/resources/img/board/좋아요(누름).png" alt="기본프로필"> ${boardDTO.board_likeCnt}</span>
+        <span><img src="${pageContext.request.contextPath}/resources/img/board/댓글.png" alt="기본프로필"> ${boardDTO.commentCnt}</span>
+        <span><img src="${pageContext.request.contextPath}/resources/img/board/조회.png" alt="기본프로필"> ${boardDTO.viewCnt}</span>
+        </div>
+</td>
+
+<td class="content-img">
+<c:choose>
     <c:when test="${not empty boardDTO.filePath}">
-        <img src="${pageContext.request.contextPath}/resources/img/${boardDTO.filePath}" alt="Image" width="100" height="100">
+        <img src="${pageContext.request.contextPath}/resources/img/${boardDTO.filePath}" alt="Image">
     </c:when>
     <c:otherwise>
         <!-- 빈칸 -->
     </c:otherwise>
-</c:choose></td>
-<td>${boardDTO.viewCnt}</td>
-<td>${boardDTO.commentCnt}</td>
-<td>${boardDTO.board_likeCnt}</td>
+</c:choose>
+</td>
+
 </tr>
 </c:forEach>
 </table>
@@ -143,11 +161,11 @@
 
 <!-- bottom -->
 <div class="bottom-container">
-<a href="${pageContext.request.contextPath}/board/home">홈</a>
-<a href="${pageContext.request.contextPath}/member/home">채팅</a>
-<a href="${pageContext.request.contextPath}/board/board">게시판</a>
-<a href="${pageContext.request.contextPath}/notice/notice">알림</a>
-<a href="${pageContext.request.contextPath}/mypage/mypage">마이페이지</a>
+<a href="${pageContext.request.contextPath}/board/home"><img src="${pageContext.request.contextPath}/resources/img/board/home.png" alt="home"></a>
+<a href="${pageContext.request.contextPath}/member/home"><img src="${pageContext.request.contextPath}/resources/img/board/chat.png" alt="chat"></a>
+<a href="${pageContext.request.contextPath}/board/board"><img src="${pageContext.request.contextPath}/resources/img/board/board.png" alt="board"></a>
+<a href="${pageContext.request.contextPath}/notice/notice"><img src="${pageContext.request.contextPath}/resources/img/board/notice.png" alt="notice"></a>
+<a href="${pageContext.request.contextPath}/mypage/mypage"><img src="${pageContext.request.contextPath}/resources/img/board/mypage.png" alt="mypage"></a>
 </div>
 
 <!-- 마이페이지로 옮기기 -->
@@ -157,7 +175,7 @@
 <script type="text/javascript">
 
 // ${boardDTO.filePath} 값이 있는 경우와 없는 경우에 따라 다른 패딩 값을 적용
-var rows = document.querySelectorAll('#table-pop tr');
+var rows = document.querySelectorAll('.table-container tr');
 rows.forEach(function(row) {
     var img = row.querySelector('.content-img img');
     if (img) {
@@ -233,18 +251,32 @@ function loadMoreData(start, limit) {
             	var board_likeCnt = loadMoreData.board_likeCnt;
             	
             	var newRow = '<tr>' +
-    		        '<td>' + nickname + '</td>' +
-    		        '<td>' + submitTime + '</td>' +
-    		        '<td>' + (title.length > 10 ? title.substring(0, 10) + '...' : title) + '</td>' +
-    		        '<td>' + (content.length > 20 ? content.substring(0, 20) + '...' : content) + '</td>' +
-    		        '<td>' + (filePath ? '<img src="' + "${pageContext.request.contextPath}" + '/resources/img/' + filePath + '" alt="Image" width="100" height="100">' : '') + '</td>' +
-    		        '<td>' + viewCnt + '</td>' +
-    		        '<td>' + commentCnt + '</td>' +
-    		        '<td>' + board_likeCnt + '</td>' +
+'<td class="content">' +
+                '<div class="row1">' +
+                    (loadMoreData.profile ? '<img src="' + "${pageContext.request.contextPath}" + '/resources/img/profile/' + loadMoreData.profile + '" alt="profile">' : '<img src="' + "${pageContext.request.contextPath}" + '/resources/img/profile/기본프로필.png" alt="기본프로필">') +
+                    '<span class="nickname">' + nickname + '</span>' +
+                    '<span class="submitTime">' + submitTime + '</span>' +
+                '</div>' +
+                '<div class="row2">' +
+                    (title.length > 10 ? title.substring(0, 10) + '...' : title) +
+                '</div>' +
+                '<div class="row3">' +
+                    (content.length > 20 ? content.substring(0, 20) + '...' : content) +
+                '</div>' +
+                '<div class="row4">' +
+                    '<span><img src="' + "${pageContext.request.contextPath}" + '/resources/img/board/좋아요(누름).png" alt="기본프로필"> ' + board_likeCnt + '</span>' +
+                    '<span><img src="' + "${pageContext.request.contextPath}" + '/resources/img/board/댓글.png" alt="기본프로필"> ' + commentCnt + '</span>' +
+                    '<span><img src="' + "${pageContext.request.contextPath}" + '/resources/img/board/조회.png" alt="기본프로필"> ' + viewCnt + '</span>' +
+                '</div>' +
+            '</td>' +
+            '<td class="content-img">' +
+                (filePath ? '<img src="' + "${pageContext.request.contextPath}" + '/resources/img/' + filePath + '" alt="Image">' : '') +
+            '</td>' +
     		    '</tr>';
                 
                 console.log("새로운 행: ", newRow);
                 $('#table-new').append(newRow);
+                $('#table-pop').append(newRow);
             });
         },
         error: function(error) {

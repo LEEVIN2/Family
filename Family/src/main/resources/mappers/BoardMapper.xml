@@ -217,7 +217,7 @@ order by boardNum desc limit #{startRow}, #{pageSize};
 ) as m ON b.id = m.id
     WHERE co.commentCnt >= 3 OR li.board_likeCnt >= 3
     ORDER BY b.submitTime DESC
-) AS result;
+) AS result limit 7;
 	</select>
 	
 	<select id="getBoardBestList" resultType="com.animal.domain.BoardDTO">
@@ -336,7 +336,7 @@ LEFT JOIN (
 	SELECT id, nickname, profile
 	FROM member
 ) as m ON b.id = m.id
-order by submitTime  DESC LIMIT 3;
+order by submitTime  DESC LIMIT 7;
     </select>
     
 	<!-- 무한스크롤 -->
