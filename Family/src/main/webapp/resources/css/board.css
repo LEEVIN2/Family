@@ -1,0 +1,80 @@
+@charset "UTF-8";
+
+/* top */
+.top-container {
+    display: flex; /* 자식 요소들을 가로로 나열합니다. 이를 통해 이미지가 한 줄에 나타나게 됩니다. */
+    justify-content: center;
+    margin-top: 1%;
+    margin-bottom: 2%
+}
+
+.top-container img {
+    max-width: 100%; /* 이미지의 최대 너비를 부모 요소의 너비로 제한합니다. 이를 통해 이미지가 화면을 벗어나지 않도록 할 수 있습니다. */
+}
+
+.top-container img[src$="logo-1.png"] {
+    width: 243px;  
+    height: 70px;
+    margin-right: 157px
+}
+
+.top-container img[src$="검색.png"] {
+    width: 78px;
+    height: 70px;
+    margin-left: 322px
+}
+
+/* mid */
+.mid-container {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mid-container img {
+	width: 6%;
+    margin-right: 1%;
+    margin-left: 1.5%;
+}
+
+.mid1-container, .mid2-container, .mid3-container, .mid4-container, .mid5-container {
+	padding: 1%;
+	margin: 0.5%;
+    border: 3px solid #dddddd;
+    border-radius: 20px;
+    width: 600px;
+    font-size: 18px
+}
+
+a {
+	display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+}
+
+/* bottom */
+.bottom-container {
+    display: flex; /* 자식 요소들을 가로로 나열합니다. 이를 통해 이미지가 한 줄에 나타나게 됩니다. */
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    transform: translateX(-8px); /* 추가된 코드 */
+}
+
+.bottom-container a {
+	display: flex; /* 추가된 코드 */
+    align-items: center; /* 추가된 코드 */
+	height: 130px;
+	background-color: white;
+	border-top: 5px solid black;
+}
+
+.bottom-container img {
+    width: 60px;
+    height: 60px;
+    margin-right: 50px;
+    margin-left: 50px;
+}
+

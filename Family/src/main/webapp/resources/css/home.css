@@ -165,6 +165,7 @@
     position: fixed;
     bottom: 0;
     width: 100%;
+    transform: translateX(-8px); /* 추가된 코드 */
 }
 
 .bottom-container a {

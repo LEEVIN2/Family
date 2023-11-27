@@ -137,9 +137,9 @@
         </div>
 
         <div class="row4">
-        <span><img src="${pageContext.request.contextPath}/resources/img/board/좋아요(누름).png" alt="기본프로필"> ${boardDTO.board_likeCnt}</span>
-        <span><img src="${pageContext.request.contextPath}/resources/img/board/댓글.png" alt="기본프로필"> ${boardDTO.commentCnt}</span>
-        <span><img src="${pageContext.request.contextPath}/resources/img/board/조회.png" alt="기본프로필"> ${boardDTO.viewCnt}</span>
+        <span><img src="${pageContext.request.contextPath}/resources/img/board/좋아요(누름).png" alt="좋아요(누름)"> ${boardDTO.board_likeCnt}</span>
+        <span><img src="${pageContext.request.contextPath}/resources/img/board/댓글.png" alt="댓글"> ${boardDTO.commentCnt}</span>
+        <span><img src="${pageContext.request.contextPath}/resources/img/board/조회.png" alt="조회"> ${boardDTO.viewCnt}</span>
         </div>
     </td>
     
@@ -241,6 +241,7 @@ function loadMoreData(start, limit) {
             	console.log("렌더링 항목의 내용: ", loadMoreData.nickname);
             	console.log("렌더링 항목의 내용: ", loadMoreData.content);
             	
+            	var boardNum = loadMoreData.boardNum;
             	var nickname = loadMoreData.nickname;
             	var submitTime = loadMoreData.submitTime;
             	var title = loadMoreData.title;
@@ -250,7 +251,7 @@ function loadMoreData(start, limit) {
             	var commentCnt = loadMoreData.commentCnt;
             	var board_likeCnt = loadMoreData.board_likeCnt;
             	
-            	var newRow = '<tr>' +
+            	var newRow = '<tr onclick="location.href=\'' + "${pageContext.request.contextPath}" + '/board/detail?boardNum=' + boardNum + '\'">' +
 '<td class="content">' +
                 '<div class="row1">' +
                     (loadMoreData.profile ? '<img src="' + "${pageContext.request.contextPath}" + '/resources/img/profile/' + loadMoreData.profile + '" alt="profile">' : '<img src="' + "${pageContext.request.contextPath}" + '/resources/img/profile/기본프로필.png" alt="기본프로필">') +
@@ -273,10 +274,21 @@ function loadMoreData(start, limit) {
                 (filePath ? '<img src="' + "${pageContext.request.contextPath}" + '/resources/img/' + filePath + '" alt="Image">' : '') +
             '</td>' +
     		    '</tr>';
-                
+    		    
                 console.log("새로운 행: ", newRow);
                 $('#table-new').append(newRow);
                 $('#table-pop').append(newRow);
+
+                // 새로 추가된 행에 대해 스타일 적용
+                var rows = document.querySelectorAll('.table-container tr');
+                rows.forEach(function(row) {
+                    var img = row.querySelector('.content-img img');
+                    if (img) {
+                        row.classList.add('with-image');
+                    } else {
+                        row.classList.add('without-image');
+                    }
+                });
             });
         },
         error: function(error) {
