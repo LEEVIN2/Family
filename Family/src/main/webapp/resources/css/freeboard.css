@@ -1,0 +1,172 @@
+@charset "UTF-8";
+
+/* top */
+.top-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1%;
+    padding-bottom: 2%;
+    border-bottom: 5px solid black;
+    max-width: 800px;
+    margin: auto;
+}
+
+.top-container img {
+    max-width: 100%; /* 이미지의 최대 너비를 부모 요소의 너비로 제한합니다. 이를 통해 이미지가 화면을 벗어나지 않도록 할 수 있습니다. */
+}
+
+.top-container img[src$="뒤로가기.png"] {
+    width: 78px;  
+    height: 70px;
+    margin-right: 237px;
+}
+
+.top-container img[src$="검색.png"] {
+    width: 78px;
+    height: 70px;
+    margin-left: 237px;
+}
+
+.top-container span {
+	display: flex;
+    justify-content: center;
+    width: 170px;
+    font-size: 30px;
+    font-weight: 700;
+}    
+
+/* table */
+.table-container {
+        display: flex;
+        justify-content: center;
+}
+
+.table-container tr {
+    display: block;
+    border-bottom: 2px solid #c7c7c7;
+    width: 800px;
+}
+
+.with-image {
+	padding-top: 5px;
+    padding-bottom: 10px;
+}
+
+.without-image {
+    padding-top: 6px;  /* 이미지가 없는 경우의 패딩 값 */
+    padding-bottom: 10px;
+}
+
+.content {
+    width: 685px;
+    padding-left: 15px;
+}
+
+.content-img {
+    width: 115px;
+    position: relative;
+    padding-right: 10px;
+}
+
+.content-img img {
+    width: 115px; /* 원하는 가로 크기 */
+    height: 115px; /* 원하는 세로 크기 */
+    object-fit: cover; /* 이미지를 채우되 비율을 유지하면서, 그 결과 이미지 일부가 잘릴 수 있음 */
+    object-position: center; /* 이미지의 위치를 중앙으로 설정 */
+    border-radius: 10px;
+    position: relative;
+    top: 3px;
+}
+
+.row1 {
+    display: flex;
+    align-items: center;
+}
+
+.row1 img {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    top: 5px;
+}
+
+.row1 .nickname {
+    font-size: 20px;
+    color: black;
+    margin-left: 15px;
+}
+
+.row1 .submitTime {
+    font-size: 15px;
+    color: #c7c7c7;
+    margin-left: 15px;
+}
+
+.row1 .HOT {
+    font-size: 15px;
+    color: red;
+    margin-left: 15px;
+    font-weight: bold;
+}
+
+.row2 {
+    display: flex;
+    align-items: center;
+    margin-left: 65px;
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.row3 {
+    display: flex;
+    align-items: center;
+    margin-left: 65px;
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.row4 {
+    display: flex;
+    align-items: center;
+    margin-left: 65px;
+    font-size: 18px;
+}
+
+.row4 span {
+	display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.row4 img {
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+}
+
+/* bottom */
+.bottom-container {
+    display: flex; /* 자식 요소들을 가로로 나열합니다. 이를 통해 이미지가 한 줄에 나타나게 됩니다. */
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    transform: translateX(-8px); /* 추가된 코드 */
+}
+
+.bottom-container a {
+	display: flex; /* 추가된 코드 */
+    align-items: center; /* 추가된 코드 */
+	height: 130px;
+	background-color: white;
+	border-top: 5px solid black;
+}
+
+.bottom-container img {
+    width: 60px;
+    height: 60px;
+    margin-right: 50px;
+    margin-left: 50px;
+}
+

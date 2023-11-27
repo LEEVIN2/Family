@@ -297,8 +297,6 @@ function loadMoreData(start, limit) {
     });
 }
 
-
-
 </script>
 </body>
 </html>

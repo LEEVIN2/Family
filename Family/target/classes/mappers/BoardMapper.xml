@@ -162,7 +162,7 @@ ORDER BY b.boardNum DESC;
 </select>
 	
 	<select id="getBoardList" resultType="com.animal.domain.BoardDTO">
-		SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
+		SELECT b.boardNum, b.id, m.nickname, m.profile, b.submitTime, b.title, b.content, f.filePath, b.viewCnt, co.commentCnt, li.board_likeCnt
 FROM board b
 LEFT JOIN (
 	SELECT boardNum, filePath
@@ -183,10 +183,10 @@ LEFT JOIN (
 	GROUP BY boardNum
 ) as li ON b.boardNum = li.boardNum
 LEFT JOIN (
-	SELECT id, nickname
+	SELECT id, nickname, profile
 	FROM member
 ) as m ON b.id = m.id
-order by boardNum desc limit #{startRow}, #{pageSize};
+order by boardNum desc;
 	</select>
 	
 	<select id="getBoardHotList" resultType="com.animal.domain.BoardDTO">
