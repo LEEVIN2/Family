@@ -111,7 +111,7 @@
 <%--  </c:if> --%>
 
 
-<tbody>
+<tbody id="tbody-new">
 <c:forEach var="boardDTO" items="${boardList}">
 <tr onclick="location.href='${pageContext.request.contextPath}/board/detail?boardNum=${boardDTO.boardNum}'">
 
@@ -174,7 +174,10 @@
 </table>
 </div>
 
-<input type="button" value="글쓰기" onclick="location.href='${pageContext.request.contextPath}/board/write'"><br>
+<!-- button -->
+<div class="button-container">
+<input type="button" value="+ 글쓰기" onclick="writePost()"><br>
+</div>
 
 <!-- bottom -->
 <div class="bottom-container">
@@ -192,6 +195,14 @@
 
 <!-- script -->
 <script type="text/javascript">
+function writePost() {
+    if("${sessionScope.id}" === "") {
+        alert("로그인 후 이용 가능합니다.");
+    } else {
+        location.href='${pageContext.request.contextPath}/board/write';
+    }
+}
+
 // ${boardDTO.filePath} 값이 있는 경우와 없는 경우에 따라 다른 패딩 값을 적용
 var rows = document.querySelectorAll('.table-container tr');
 rows.forEach(function(row) {
@@ -239,7 +250,7 @@ function loadMoreData(start, limit) {
             	var filePath = loadMoreData.filePath;
             	var viewCnt = loadMoreData.viewCnt;
             	var commentCnt = loadMoreData.commentCnt;
-            	var board_likeCnt = loadMoreData.board_likeCnt;
+            	var board_likeCnt = loadMoreData.board_likeCnt; 
             	
             	var newRow = '<tr onclick="location.href=\'' + "${pageContext.request.contextPath}" + '/board/detail?boardNum=' + boardNum + '\'">' +
 '<td class="content">' +
@@ -266,8 +277,7 @@ function loadMoreData(start, limit) {
     		    '</tr>';
     		    
                 console.log("새로운 행: ", newRow);
-                $('#table-new').append(newRow);
-                $('#table-pop').append(newRow);
+                $('#tbody-new').append(newRow);
 
                 // 새로 추가된 행에 대해 스타일 적용
                 var rows = document.querySelectorAll('.table-container tr');

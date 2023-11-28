@@ -186,7 +186,7 @@ LEFT JOIN (
 	SELECT id, nickname, profile
 	FROM member
 ) as m ON b.id = m.id
-order by boardNum desc;
+order by boardNum desc limit 7;
 	</select>
 	
 	<select id="getBoardHotList" resultType="com.animal.domain.BoardDTO">

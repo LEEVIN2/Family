@@ -150,7 +150,7 @@ ${sessionScope.id}
 <tr><td>닉네임</td>		<td>${boardDTO.nickname}</td></tr>
 <tr><td>시간</td>			<td>${boardDTO.submitTime}</td></tr>
 <tr><td>제목</td>			<td>${boardDTO.title}</td></tr>
-<tr><td>내용</td>			<td>${boardDTO.content}</td></tr>
+<tr><td>내용</td> <td id="tableContent">${boardDTO.content}</td></tr>
 <tr><td>조회수</td>			<td>${boardDTO.viewCnt}</td></tr>
 <tr><td>댓글수</td>			<td>${count}</td></tr>
 <%-- <c:forEach var="filePath" items="${filePaths}"> --%>
@@ -218,6 +218,14 @@ document.getElementById('commentForm').addEventListener('submit', function(event
 	  xhr.send(formData);
 	});
 
+
+// textarea에서 줄바꿈을 해서 3줄로 작성하면 아래의 코드에서 내용을 보이게 할때도 3줄로 보이게 할 수 있어?
+//사용자가 입력한 내용을 가져옵니다.
+// 줄바꿈을 <br> 태그로 변환합니다.
+// 변환된 내용을 다시 textarea에 설정합니다.
+var content = document.getElementById('tableContent').innerHTML;
+content = content.replace(/\n/g, '<br>');
+document.getElementById('tableContent').innerHTML = content;
 </script>
 
 

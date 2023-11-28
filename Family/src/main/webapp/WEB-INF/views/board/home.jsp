@@ -168,9 +168,6 @@
 <a href="${pageContext.request.contextPath}/mypage/mypage"><img src="${pageContext.request.contextPath}/resources/img/board/mypage.png" alt="mypage"></a>
 </div>
 
-<!-- 마이페이지로 옮기기 -->
-<%-- <a href="${pageContext.request.contextPath}/member/logout">로그아웃</a><br> --%>
-
 <!-- script -->
 <script type="text/javascript">
 

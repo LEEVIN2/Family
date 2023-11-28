@@ -36,5 +36,7 @@
 FAQ<br>
 문의하기<br>
 
+<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a><br>
+
 </body>
 </html>

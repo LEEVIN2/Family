@@ -6,7 +6,7 @@
     justify-content: center;
     align-items: center;
     padding-top: 1%;
-    padding-bottom: 2%;
+    padding-bottom: 25px;
     border-bottom: 5px solid black;
     max-width: 800px;
     margin: auto;
@@ -145,19 +145,47 @@
     margin-right: 5px;
 }
 
+/* button */
+.button-container {
+	display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 150px;  /* bottom-container의 높이에 따라 조정하세요 */
+    width: 100%;
+    transform: translateX(300px);
+}
+
+.button-container input[type="button"] {
+    width: 150px;
+    height: 70px;
+    border: none;
+    background-color: #f10700;
+    color: white;
+    border-radius: 50px;
+    font-size: 25px;
+    cursor: pointer;  /* 마우스 커서를 포인터로 변경합니다 */
+}
+
 /* bottom */
+body {
+    /* bottom-container와 button-container의 높이만큼의 패딩을 추가합니다. */
+    padding-bottom: 125px;  /* bottom-container의 높이에 따라 조정하세요 */
+    /* 내용이 길어질 경우 스크롤이 가능하도록 합니다. */
+    overflow: auto;
+}
+
 .bottom-container {
     display: flex; /* 자식 요소들을 가로로 나열합니다. 이를 통해 이미지가 한 줄에 나타나게 됩니다. */
     justify-content: center;
     position: fixed;
     bottom: 0;
     width: 100%;
-    transform: translateX(-8px); /* 추가된 코드 */
+    transform: translateX(-8px);
 }
 
 .bottom-container a {
-	display: flex; /* 추가된 코드 */
-    align-items: center; /* 추가된 코드 */
+	display: flex;
+    align-items: center;
 	height: 130px;
 	background-color: white;
 	border-top: 5px solid black;
