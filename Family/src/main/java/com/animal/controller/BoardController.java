@@ -376,11 +376,11 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	        System.out.println("fileSize : " + fileSize);
 
 	        String safeFile = uploadPath + "\\" + originFileName;
+            System.out.println(safeFile);
 	        try {
 	            mf.transferTo(new File(safeFile));
 	            String filePath = originFileName;
 	            boardService.addFilePath(boardNum, filePath); // 파일 경로 추가
-	            System.out.println(originFileName);
 //	            boardDTO.setFilePath(originFileName); // 파일 경로 설정
 //	            System.out.println(boardDTO.getFilePath());
 	        } catch (IllegalStateException e) {

@@ -158,7 +158,7 @@ ${sessionScope.id}
 <%-- </c:forEach> --%>
 <c:forEach var="filePath" items="${filePaths}">
     <c:if test="${not empty filePath}">
-        <tr><td></td>	<td><img src="${pageContext.request.contextPath}/resources/img/${filePath}" alt="Image" width="100" height="100"></td></tr>
+        <tr><td></td>	<td><img src="${pageContext.request.contextPath}/resources/img/upload/${filePath}" alt="Image" width="100" height="100"></td></tr>
     </c:if>
 </c:forEach>
 </table>

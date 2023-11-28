@@ -83,7 +83,7 @@
 <td class="content-img">
 <c:choose>
     <c:when test="${not empty boardDTO.filePath}">
-        <img src="${pageContext.request.contextPath}/resources/img/${boardDTO.filePath}" alt="Image">
+        <img src="${pageContext.request.contextPath}/resources/img/upload/${boardDTO.filePath}" alt="Image">
     </c:when>
     <c:otherwise>
         <!-- 빈칸 -->
@@ -146,7 +146,7 @@
     <td class="content-img">
         <c:choose>
             <c:when test="${not empty boardDTO.filePath}">
-                <img src="${pageContext.request.contextPath}/resources/img/${boardDTO.filePath}" alt="Image">
+                <img src="${pageContext.request.contextPath}/resources/img/upload/${boardDTO.filePath}" alt="Image">
             </c:when>
             <c:otherwise>
                 <!-- 빈칸 -->
@@ -268,7 +268,7 @@ function loadMoreData(start, limit) {
                 '</div>' +
             '</td>' +
             '<td class="content-img">' +
-                (filePath ? '<img src="' + "${pageContext.request.contextPath}" + '/resources/img/' + filePath + '" alt="Image">' : '') +
+                (filePath ? '<img src="' + "${pageContext.request.contextPath}" + '/resources/img/upload/' + filePath + '" alt="Image">' : '') +
             '</td>' +
     		    '</tr>';
     		    

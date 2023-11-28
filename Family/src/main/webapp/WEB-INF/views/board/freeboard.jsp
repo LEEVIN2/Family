@@ -77,16 +77,21 @@
 </c:choose>
 </div>
 
+<!-- <div class="row3"> -->
+<%-- <c:choose> --%>
+<%--     <c:when test="${fn:length(boardDTO.content) > 20}"> --%>
+<%--         ${fn:substring(boardDTO.content, 0, 20)}... --%>
+<%--     </c:when> --%>
+<%--     <c:otherwise> --%>
+<%--         ${boardDTO.content} --%>
+<%--     </c:otherwise> --%>
+<%-- </c:choose> --%>
+<!-- </div> -->
+
 <div class="row3">
-<c:choose>
-    <c:when test="${fn:length(boardDTO.content) > 20}">
-        ${fn:substring(boardDTO.content, 0, 20)}...
-    </c:when>
-    <c:otherwise>
-        ${boardDTO.content}
-    </c:otherwise>
-</c:choose>
+<span class="tableContent">${boardDTO.content}</span>
 </div>
+
 
 <div class="row4">
 		<span><img src="${pageContext.request.contextPath}/resources/img/board/좋아요(누름).png" alt="기본프로필"> ${boardDTO.board_likeCnt}</span>
@@ -98,7 +103,7 @@
 <td class="content-img">
 <c:choose>
     <c:when test="${not empty boardDTO.filePath}">
-        <img src="${pageContext.request.contextPath}/resources/img/${boardDTO.filePath}" alt="Image">
+        <img src="${pageContext.request.contextPath}/resources/img/upload/${boardDTO.filePath}" alt="Image">
     </c:when>
     <c:otherwise>
         <!-- 빈칸 -->
@@ -141,14 +146,7 @@
 </div>
 
 <div class="row3">
-<c:choose>
-    <c:when test="${fn:length(boardDTO.content) > 20}">
-        ${fn:substring(boardDTO.content, 0, 20)}...
-    </c:when>
-    <c:otherwise>
-        ${boardDTO.content}
-    </c:otherwise>
-</c:choose>
+<span class="tableContent">${boardDTO.content}</span>
 </div>
 
 <div class="row4">
@@ -161,7 +159,7 @@
 <td class="content-img">
 <c:choose>
     <c:when test="${not empty boardDTO.filePath}">
-        <img src="${pageContext.request.contextPath}/resources/img/${boardDTO.filePath}" alt="Image">
+        <img src="${pageContext.request.contextPath}/resources/img/upload/${boardDTO.filePath}" alt="Image">
     </c:when>
     <c:otherwise>
         <!-- 빈칸 -->
@@ -263,7 +261,7 @@ function loadMoreData(start, limit) {
                     (title.length > 10 ? title.substring(0, 10) + '...' : title) +
                 '</div>' +
                 '<div class="row3">' +
-                    (content.length > 20 ? content.substring(0, 20) + '...' : content) +
+                	'<span class="tableContent">' + content + '</span>' +
                 '</div>' +
                 '<div class="row4">' +
                     '<span><img src="' + "${pageContext.request.contextPath}" + '/resources/img/board/좋아요(누름).png" alt="기본프로필"> ' + board_likeCnt + '</span>' +
@@ -272,7 +270,7 @@ function loadMoreData(start, limit) {
                 '</div>' +
             '</td>' +
             '<td class="content-img">' +
-                (filePath ? '<img src="' + "${pageContext.request.contextPath}" + '/resources/img/' + filePath + '" alt="Image">' : '') +
+                (filePath ? '<img src="' + "${pageContext.request.contextPath}" + '/resources/img/upload/' + filePath + '" alt="Image">' : '') +
             '</td>' +
     		    '</tr>';
     		    
@@ -296,6 +294,22 @@ function loadMoreData(start, limit) {
         }
     });
 }
+
+// 줄바꿈
+window.onload = function() {
+    var contents = document.querySelectorAll('.tableContent');
+    contents.forEach(function(content) {
+        var text = content.innerHTML;
+        text = text.replace(/\n/g, '<br>');
+        content.innerHTML = text;
+        
+        var splitContent = content.innerHTML.split('<br>');
+        if (splitContent.length > 2) {
+            content.innerHTML = splitContent[0] + '<br>' + splitContent[1];
+        }
+    });
+}
+
 </script>
 </body>
 </html>
