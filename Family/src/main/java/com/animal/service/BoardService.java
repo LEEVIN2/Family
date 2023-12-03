@@ -132,5 +132,9 @@ public class BoardService {
 		return boardDAO.getSearchList(boardDTO);
 	}
 
+	public void deleteBoard(BoardDTO boardDTO) {
+		boardDAO.deleteBoard(boardDTO);
+	}
+
 
 }

@@ -117,6 +117,10 @@ public class BoardDAO {
 	public List<BoardDTO> getSearchList(BoardDTO boardDTO) {
 		return sqlSession.selectList(namespace+".getSearchList", boardDTO);
 	}
+
+	public void deleteBoard(BoardDTO boardDTO) {
+		sqlSession.delete(namespace+".deleteBoard", boardDTO);
+	}
 	
 
 	

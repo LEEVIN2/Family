@@ -397,5 +397,18 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	    boardService.writePro2(boardDTO2);
 	    return "redirect:/board/detail?boardNum=" + boardDTO2.getBoardNum();
 	}
+	
+	@GetMapping("/deleteBoard")
+	public String deleteBoard(HttpServletRequest request) {
+		String boardNum = request.getParameter("boardNum");
+		String id = request.getParameter("id");
+
+		BoardDTO boardDTO = new BoardDTO();
+	    boardDTO.setBoardNum(boardNum);
+	    boardDTO.setId(id);
+	    
+		boardService.deleteBoard(boardDTO);
+		return "redirect:/board/freeboard";
+	}
 		
 }

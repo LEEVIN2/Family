@@ -368,5 +368,10 @@ LEFT JOIN (
 order by submitTime  DESC
 LIMIT #{start}, #{limit};
 </select>
+
+<delete id="deleteBoard">
+delete from board
+where boardNum = #{boardNum} and id = #{id};
+</delete>
 	
 </mapper>

@@ -124,6 +124,18 @@ window.onload = loadComments;
 <c:set var="prevPage" value="${header['referer']}" scope="session"/>
 <a href="${sessionScope.prevPage}">뒤로가기</a><br>
 
+<c:choose>
+    <c:when test="${boardDTO.boardNum.startsWith('FR')}">
+        자유게시판
+    </c:when>
+    <c:otherwise>
+       모든 게시판
+    </c:otherwise>
+</c:choose>
+
+
+<a id="seeMore">더보기</a><br>
+
 <!-- 조회수 -->
 <c:set var="count" value="0" scope="page" />
 <c:forEach var="boardDTO2" items="${commentList}">
@@ -144,6 +156,15 @@ ${sessionScope.id}
 </button>
 
 <table>
+<c:choose>
+    <c:when test="${boardDTO.boardNum.startsWith('FR')}">
+        <tr><td>게시판 종류</td> <td>자유게시판</td></tr>
+    </c:when>
+    <c:otherwise>
+        <tr><td>게시판 종류</td> <td>모든 게시판</td></tr>
+    </c:otherwise>
+</c:choose>
+
 <tr><td>나의 좋아요</td>		<td>${board_like}</td></tr>
 <tr><td>전체 좋아요</td>		<td>${board_likeCnt}</td></tr>
 <tr><td>글번호</td>		<td>${boardDTO.boardNum}</td></tr>
@@ -153,9 +174,6 @@ ${sessionScope.id}
 <tr><td>내용</td> <td id="tableContent">${boardDTO.content}</td></tr>
 <tr><td>조회수</td>			<td>${boardDTO.viewCnt}</td></tr>
 <tr><td>댓글수</td>			<td>${count}</td></tr>
-<%-- <c:forEach var="filePath" items="${filePaths}"> --%>
-<%-- <tr><td></td>			<td><img src="${pageContext.request.contextPath}/resources/img/${filePath}" alt="Image" width="100" height="100"></td></tr> --%>
-<%-- </c:forEach> --%>
 <c:forEach var="filePath" items="${filePaths}">
     <c:if test="${not empty filePath}">
         <tr><td></td>	<td><img src="${pageContext.request.contextPath}/resources/img/upload/${filePath}" alt="Image" width="100" height="100"></td></tr>
@@ -196,7 +214,49 @@ ${sessionScope.id}
 <input type="submit" value="작성">
 </form>
 
+<!-- 사진변경 클릭시 모달창 -->
+<div id="seeMoreModal" style="display: none;">
+
+<%--     <a href="${pageContext.request.contextPath}/board/deleteBoard">게시글 삭제</a><br> --%>
+
+
+<c:if test="${sessionScope.id != null && sessionScope.id == boardDTO.id}">
+<form id="writeForm" action="${pageContext.request.contextPath}/board/deleteBoard" method="get" >
+<a id="deletePost">게시글 삭제</a>
+<input type="hidden" name="boardNum" value="${boardDTO.boardNum}">
+<input type="hidden" name="id" value="${sessionScope.id}">
+</form>
+</c:if>
+
+<c:if test="${sessionScope.id != null && sessionScope.id != boardDTO.id}">
+<a>신고하기</a><br>
+<a>채팅하기</a><br>
+</c:if>
+<a id="modalClose">닫기</a>
+</div>
+
+<!-- script -->
 <script>
+document.getElementById('deletePost').addEventListener('click', function() {
+    document.getElementById('writeForm').submit();
+});
+
+//사진변경, 사진변경 모달창, 모달창 닫기 변수에 저장
+var seeMore = document.getElementById("seeMore");
+var seeMoreModal = document.getElementById("seeMoreModal");
+var modalClose = document.getElementById("modalClose");
+
+// 사진변경 버튼을 클릭하면 사진삭제 모달창이 나타나도록 이벤트 리스너를 추가합니다
+seeMore.addEventListener("click", function() {
+	seeMoreModal.style.display = "block";
+});
+
+//닫기 버튼을 클릭하면 사진변경 모달창이 사라지도록 이벤트 리스너를 추가합니다
+modalClose.addEventListener("click", function() {
+	seeMoreModal.style.display = "none";
+});
+
+
 document.getElementById('commentForm').addEventListener('submit', function(event) {
 	  event.preventDefault();
 
@@ -207,9 +267,13 @@ document.getElementById('commentForm').addEventListener('submit', function(event
 	  xhr.onreadystatechange = function() {
 	    if (xhr.readyState === 4 && xhr.status === 200) {
 	      // 서버의 응답을 받아서 댓글을 페이지에 추가
-	      var newComment = document.createElement('p');
-	      newComment.textContent = formData.get('nickname') + " / " + formData.get('content') + " / 방금전" ;
-	      document.getElementById('commentArea').appendChild(newComment);
+// 	      var newComment = document.createElement('p');
+// 	      newComment.textContent = formData.get('nickname') + " / " + formData.get('content') + " / 방금전" ;
+// 	      document.getElementById('commentArea').appendChild(newComment);
+
+var newComment = document.createElement('table');
+      newComment.innerHTML = '<div class="row1">' + formData.get('nickname') + ', 방금전' + '</div><div class="row2">' + formData.get('content') + '</div>';
+      document.getElementById('commentArea').appendChild(newComment);
 
 	      // 댓글 작성 후 입력 필드를 비움
 	      document.getElementById('commentForm').reset();
