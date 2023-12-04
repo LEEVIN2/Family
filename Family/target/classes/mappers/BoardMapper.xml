@@ -263,12 +263,6 @@ ORDER BY
         ELSE replyNum
     END,
     submitTime;
-<!-- 	SELECT c.commentNum, c.boardNum, c.id, m.nickname, c.content, c.submitTime, c.replyNum -->
-<!-- FROM comment c -->
-<!-- LEFT JOIN member m -->
-<!-- ON c.id = m.id -->
-<!-- WHERE c.boardNum = #{boardNum} -->
-<!-- order by boardNum desc; -->
 	</select>
 	
 	 <select id="getDetail" resultType="com.animal.domain.BoardDTO">

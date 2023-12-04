@@ -79,17 +79,6 @@ $(document).ready(function() {
     });
 });
 
-
-// 댓글쓸때 닉네임값 있는지 확인
-function checkLogin() {
-    var id = document.getElementsByName('id')[0].value;
-    if (!id) {
-        alert('로그인이 필요합니다!');
-        return false;
-    }
-    return true;
-}
-
 // 클릭한 요소를 저장할 전역 변수
 var clickedElement;
 
@@ -101,23 +90,50 @@ function loadComments() {
     if (xhr.readyState === 4 && xhr.status === 200) {
       // 서버의 응답을 받아서 댓글을 페이지에 추가
       var commentList = JSON.parse(xhr.responseText);
+      
       commentList.forEach(function(comment) {
-    	  var newComment = document.createElement('tr');
-          newComment.innerHTML = '<div class="row1">' + comment.nickname + '  ' + comment.submitTime + '</div>' +
-                                						  '<div class="row2">' + comment.content + comment.commentNum + '</div>' +
-                                						  '<div class="row3" onclick="focusCommentInput(this, \'' + comment.nickname + '\', \'' + comment.commentNum + '\')">답글달기</div>';
-        document.getElementById('commentArea').appendChild(newComment);
-      });
-    }
-  };
-  xhr.send();
-}
+    	    var newComment = document.createElement('tr');
+    	    newComment.innerHTML = '<div class="row1">' + comment.nickname + '  ' + comment.submitTime + '</div>' +
+    	   													'<div class="row2" data-reply-num="' + comment.replyNum + '">' + comment.content + comment.commentNum + '</div>';
+    	    // replyNum 값이 빈 문자열이 아닌 경우에만 '답글달기'를 추가
+    	   	if (comment.replyNum === '') {
+    	   	newComment.innerHTML += '<div class="row3" onclick="focusCommentInput(this, \'' + comment.nickname + '\', \'' + comment.commentNum + '\', \'' + comment.replyNum + '\')">답글달기</div>';
+    	   	}
+    	    
+//     	    newComment.innerHTML = '<div class="row1">' + comment.nickname + '  ' + comment.submitTime + '</div>' +
+//     	   													'<div class="row2" data-reply-num="' + comment.replyNum + '">' + comment.content + comment.commentNum + '</div>' +
+//     	   													'<div class="row3" onclick="focusCommentInput(this, \'' + comment.nickname + '\', \'' + comment.commentNum + '\', \'' + comment.replyNum + '\')">답글달기</div>';
+    	                         
+    	    document.getElementById('commentArea').appendChild(newComment);
+    	    
+//     	    댓글 목록을 순회하면서 각 댓글의 commentNum이 다른 댓글의 replyNum과 일치하는 경우가 있는지 확인하고, 일치하는 경우가 있으면 해당 댓글의 “답글달기” 텍스트를 "답글보기"로 변경하는 코드
+    	    var hasReplies = commentList.some(function(otherComment) {
+    	        return otherComment.replyNum === comment.commentNum;
+    	      });
+
+    	      // If this comment has replies, change the text to "답글보기"
+    	      if (hasReplies) {
+    	        newComment.querySelector('.row3').textContent = '답글보기';
+    	      }
+    	      
+    	   // Initially hide all comments
+    	        newComment.style.display = 'none';
+    	   
+    	     // Show comments with no replies
+    	        if (comment.replyNum === '') {
+    	          newComment.style.display = '';
+    	        }
+    	      });
+    	    }
+    	  };
+    	  xhr.send();
+    	}
 
 //페이지 로드 시 댓글을 가져옴
 window.onload = loadComments;
 
 //답글달기 클릭 시 댓글 입력창으로 포커스 이동 및 placeholder 설정
-function focusCommentInput(element, nickname, commentNum) {
+function focusCommentInput(element, nickname, commentNum, replyNum) {
 	// //클릭한 요소를 전역 변수에 저장
 	clickedElement = element;
   var commentInput = document.querySelector('input[name="content"]');
@@ -134,8 +150,44 @@ function focusCommentInput(element, nickname, commentNum) {
   
 //replyNum 입력 필드에 comment.commentNum 설정
   document.querySelector('input[name="replyNum"]').value = commentNum;
+  
+  
+//답글보기를 클릭했을 때 해당 댓글에 대한 모든 답글을 보여주는 코드
+	if (element.textContent === '답글보기') {
+		var allComments = document.querySelectorAll('#commentArea > tr');
+		allComments.forEach(function(comment) {
+			
+			var parentCommentNum = commentNum;
+			var childReplyNum = comment.querySelector('.row2').dataset.replyNum;
+			
+			if (parentCommentNum === childReplyNum || childReplyNum === '') {
+				comment.style.display = '';
+			} else {
+				comment.style.display = 'none';
+			}
+		});
+		// 답글보기를 답글닫기로 변경
+		element.textContent = '답글닫기';
+	} else if (element.textContent === '답글닫기') {
+		// 답글닫기를 클릭하면 모든 댓글을 다시 표시
+		var allComments = document.querySelectorAll('#commentArea > tr');
+		allComments.forEach(function(comment) {
+			var childReplyNum = comment.querySelector('.row2').dataset.replyNum;
+			
+			if (childReplyNum === '') {
+				comment.style.display = '';
+			} else {
+				comment.style.display = 'none';
+			}
+		});
+		// 답글닫기를 답글보기로 변경
+		element.textContent = '답글보기';
+		// 포커스 해제, placeholder 초기화, 입력 필드 초기화
+		commentInput.blur();
+		commentInput.placeholder = "댓글을 입력해주세요";
+		document.querySelector('input[name="replyNum"]').value = "";
+	}
 }
-
 
 
 </script>
@@ -208,26 +260,6 @@ ${sessionScope.id}
 
 <hr>
 
-<!-- table -->
-<!-- <table> -->
-<%-- <c:forEach var="boardDTO2" items="${commentList}"> --%>
-<%--   <c:if test="${boardDTO2.boardNum eq boardDTO.boardNum}"> --%>
-<%--     <tr><td>글번호</td>		<td>${boardDTO2.boardNum}</td></tr> --%>
-<%--     <tr><td>닉네임</td>		<td>${boardDTO2.nickname}</td></tr> --%>
-<%--     <tr><td>내용</td>			<td>${boardDTO2.content}</td></tr> --%>
-<%--     <tr><td>시간</td>			<td>${boardDTO2.submitTime}</td></tr> --%>
-<%--   </c:if> --%>
-<%-- </c:forEach> --%>
-<!-- </table> -->
-
-<!-- form (댓글)-->
-<%-- <form action="${pageContext.request.contextPath}/board/writePro2" method="post" onsubmit="return checkLogin();"> --%>
-<!-- 댓글		<input type="text" name="content" required>  -->
-<%-- <input type="hidden" name="id" value="${sessionScope.id}"> --%>
-<%-- <input type="hidden" name="boardNum" value="${boardDTO.boardNum}"> --%>
-<!-- <input type="submit" value="작성"> -->
-<!-- </form> -->
-
 <!-- 댓글을 표시할 영역 -->
 <table id="commentArea"></table>
 
@@ -240,7 +272,7 @@ ${sessionScope.id}
 <input type="submit" value="작성">
 </form>
 
-<!-- 사진변경 클릭시 모달창 -->
+<!-- 더보기 모달창 -->
 <div id="seeMoreModal" style="display: none;">
 <c:if test="${sessionScope.id != null && sessionScope.id == boardDTO.id}">
 <form id="writeForm" action="${pageContext.request.contextPath}/board/deleteBoard" method="get" >
@@ -250,7 +282,8 @@ ${sessionScope.id}
 </form>
 </c:if>
 
-<c:if test="${sessionScope.id != null && sessionScope.id != boardDTO.id}">
+<c:if test="${sessionScope.id != boardDTO.id}">
+<!-- sessionScope.id != null인 경우 선택시 로그인이 필요한 기능이라고 띄우기 -->
 <a>신고하기</a><br>
 <a>채팅하기</a><br>
 </c:if>
@@ -259,28 +292,42 @@ ${sessionScope.id}
 
 <!-- script -->
 <script>
-document.getElementById('deletePost').addEventListener('click', function() {
-    document.getElementById('writeForm').submit();
-});
+window.onload = function() {
+    var deletePost = document.getElementById('deletePost');
+    if(deletePost) {
+        deletePost.addEventListener('click', function() {
+            document.getElementById('writeForm').submit();
+        });
+    }
 
-//사진변경, 사진변경 모달창, 모달창 닫기 변수에 저장
-var seeMore = document.getElementById("seeMore");
-var seeMoreModal = document.getElementById("seeMoreModal");
-var modalClose = document.getElementById("modalClose");
+    var seeMore = document.getElementById("seeMore");
+    var seeMoreModal = document.getElementById("seeMoreModal");
+    var modalClose = document.getElementById("modalClose");
 
-// 사진변경 버튼을 클릭하면 사진삭제 모달창이 나타나도록 이벤트 리스너를 추가합니다
-seeMore.addEventListener("click", function() {
-	seeMoreModal.style.display = "block";
-});
+    seeMore.addEventListener("click", function() {
+        seeMoreModal.style.display = "block";
+    });
 
-//닫기 버튼을 클릭하면 사진변경 모달창이 사라지도록 이벤트 리스너를 추가합니다
-modalClose.addEventListener("click", function() {
-	seeMoreModal.style.display = "none";
-});
+    modalClose.addEventListener("click", function() {
+        seeMoreModal.style.display = "none";
+    });
+
+    // 페이지 로드 시 댓글을 가져오는 함수 호출
+    loadComments();
+}
 
 
 document.getElementById('commentForm').addEventListener('submit', function(event) {
-	  event.preventDefault();
+	var id = document.getElementsByName('id')[0].value;
+    console.log(id === null ? "null" : id === "" ? "빈 문자열" : "undefined");
+    if (!id || id === "") {
+        alert('로그인이 필요합니다!');
+//         자바스크립트에서 이벤트의 기본 동작을 취소하는 데 사용되는 메서드
+        event.preventDefault();
+        return false;
+    }
+
+    event.preventDefault();
 
 	  var formData = new FormData(this);
 
@@ -292,10 +339,11 @@ document.getElementById('commentForm').addEventListener('submit', function(event
 		var newComment = document.createElement('tr');
      	newComment.innerHTML = '<div class="row1">' + formData.get('nickname') + '  방금' + '</div>' +
                             							'<div class="row2">' + formData.get('content') + '</div>' +
-                            							'<div class="row3">답글달기</div>';
+                            							'<div class="row3"></div>';
                             							
      // 댓글 작성 후 입력 필드를 비움
         document.getElementById('commentForm').reset();
+        commentForm.querySelector('input[name="content"]').placeholder = "댓글을 입력하세요";
 
         // 답글을 해당 tr의 바로 아래에 추가하거나 페이지의 맨 아래에 추가
         var commentArea = document.getElementById('commentArea');
@@ -312,16 +360,6 @@ document.getElementById('commentForm').addEventListener('submit', function(event
   });
                             							
 
-//       document.getElementById('commentArea').appendChild(newComment);
-
-// 	      // 댓글 작성 후 입력 필드를 비움
-// 	      document.getElementById('commentForm').reset();
-// 	    }
-// 	  };
-// 	  xhr.send(formData);
-// 	});
-
-
 // textarea에서 줄바꿈을 해서 3줄로 작성하면 아래의 코드에서 내용을 보이게 할때도 3줄로 보이게 할 수 있어?
 //사용자가 입력한 내용을 가져옵니다.
 // 줄바꿈을 <br> 태그로 변환합니다.
@@ -329,6 +367,8 @@ document.getElementById('commentForm').addEventListener('submit', function(event
 var content = document.getElementById('tableContent').innerHTML;
 content = content.replace(/\n/g, '<br>');
 document.getElementById('tableContent').innerHTML = content;
+
+
 </script>
 
 
