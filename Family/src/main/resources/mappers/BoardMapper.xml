@@ -12,8 +12,8 @@
 	</insert>
 	
 	<insert id="writePro2">
-		insert into comment(boardNum,id,content,submitTime)
-		values(#{boardNum},#{id},#{content},#{submitTime})
+		insert into comment(commentNum,boardNum,id,content,submitTime,replyNum)
+		values(#{commentNum},#{boardNum},#{id},#{content},#{submitTime},#{replyNum})
 	</insert>
 	
 	<insert id="addFilePath">
@@ -252,12 +252,23 @@ order by boardNum desc limit 7;
 	</select>
 	
 	<select id="getCommentList" resultType="com.animal.domain.BoardDTO">
-	SELECT c.boardNum, c.id, m.nickname, c.content, c.submitTime
+	SELECT c.commentNum, c.boardNum, c.id, m.nickname, c.content, c.submitTime, c.replyNum
 FROM comment c
 LEFT JOIN member m
 ON c.id = m.id
-WHERE c.boardNum = #{boardNum}
-order by boardNum desc;
+WHERE c.boardNum = "FR231128214030"
+ORDER BY 
+    CASE 
+        WHEN replyNum = '' THEN commentNum
+        ELSE replyNum
+    END,
+    submitTime;
+<!-- 	SELECT c.commentNum, c.boardNum, c.id, m.nickname, c.content, c.submitTime, c.replyNum -->
+<!-- FROM comment c -->
+<!-- LEFT JOIN member m -->
+<!-- ON c.id = m.id -->
+<!-- WHERE c.boardNum = #{boardNum} -->
+<!-- order by boardNum desc; -->
 	</select>
 	
 	 <select id="getDetail" resultType="com.animal.domain.BoardDTO">

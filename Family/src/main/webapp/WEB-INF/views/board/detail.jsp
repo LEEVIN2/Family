@@ -90,6 +90,8 @@ function checkLogin() {
     return true;
 }
 
+// 클릭한 요소를 저장할 전역 변수
+var clickedElement;
 
 //페이지 로드 시 댓글을 가져오는 함수
 function loadComments() {
@@ -100,8 +102,10 @@ function loadComments() {
       // 서버의 응답을 받아서 댓글을 페이지에 추가
       var commentList = JSON.parse(xhr.responseText);
       commentList.forEach(function(comment) {
-        var newComment = document.createElement('p');
-        newComment.textContent = comment.nickname + " / " + comment.content + " / " + comment.submitTime;
+    	  var newComment = document.createElement('tr');
+          newComment.innerHTML = '<div class="row1">' + comment.nickname + '  ' + comment.submitTime + '</div>' +
+                                						  '<div class="row2">' + comment.content + comment.commentNum + '</div>' +
+                                						  '<div class="row3" onclick="focusCommentInput(this, \'' + comment.nickname + '\', \'' + comment.commentNum + '\')">답글달기</div>';
         document.getElementById('commentArea').appendChild(newComment);
       });
     }
@@ -109,8 +113,29 @@ function loadComments() {
   xhr.send();
 }
 
-// 페이지 로드 시 댓글을 가져옴
+//페이지 로드 시 댓글을 가져옴
 window.onload = loadComments;
+
+//답글달기 클릭 시 댓글 입력창으로 포커스 이동 및 placeholder 설정
+function focusCommentInput(element, nickname, commentNum) {
+	// //클릭한 요소를 전역 변수에 저장
+	clickedElement = element;
+  var commentInput = document.querySelector('input[name="content"]');
+  commentInput.focus();
+  commentInput.placeholder = nickname + "에게 답글달기";
+  
+  // 클릭한 tr의 배경색을 회색으로 변경
+  element.parentElement.style.backgroundColor = 'gray';
+  
+  // 댓글을 전송하면 원래의 배경색으로 복원
+  commentInput.onblur = function() {
+    element.parentElement.style.backgroundColor = '';
+  };
+  
+//replyNum 입력 필드에 comment.commentNum 설정
+  document.querySelector('input[name="replyNum"]').value = commentNum;
+}
+
 
 
 </script>
@@ -211,15 +236,12 @@ ${sessionScope.id}
 <input type="hidden" name="id" value="${sessionScope.id}">
 <input type="hidden" name="nickname" value="${sessionScope.nickname}">
 <input type="hidden" name="boardNum" value="${boardDTO.boardNum}">
+<input type="text" name="replyNum" value="">
 <input type="submit" value="작성">
 </form>
 
 <!-- 사진변경 클릭시 모달창 -->
 <div id="seeMoreModal" style="display: none;">
-
-<%--     <a href="${pageContext.request.contextPath}/board/deleteBoard">게시글 삭제</a><br> --%>
-
-
 <c:if test="${sessionScope.id != null && sessionScope.id == boardDTO.id}">
 <form id="writeForm" action="${pageContext.request.contextPath}/board/deleteBoard" method="get" >
 <a id="deletePost">게시글 삭제</a>
@@ -266,21 +288,38 @@ document.getElementById('commentForm').addEventListener('submit', function(event
 	  xhr.open(this.method, this.action);
 	  xhr.onreadystatechange = function() {
 	    if (xhr.readyState === 4 && xhr.status === 200) {
-	      // 서버의 응답을 받아서 댓글을 페이지에 추가
-// 	      var newComment = document.createElement('p');
-// 	      newComment.textContent = formData.get('nickname') + " / " + formData.get('content') + " / 방금전" ;
-// 	      document.getElementById('commentArea').appendChild(newComment);
+	     // 서버의 응답을 받아서 댓글을 페이지에 추가
+		var newComment = document.createElement('tr');
+     	newComment.innerHTML = '<div class="row1">' + formData.get('nickname') + '  방금' + '</div>' +
+                            							'<div class="row2">' + formData.get('content') + '</div>' +
+                            							'<div class="row3">답글달기</div>';
+                            							
+     // 댓글 작성 후 입력 필드를 비움
+        document.getElementById('commentForm').reset();
 
-var newComment = document.createElement('table');
-      newComment.innerHTML = '<div class="row1">' + formData.get('nickname') + ', 방금전' + '</div><div class="row2">' + formData.get('content') + '</div>';
-      document.getElementById('commentArea').appendChild(newComment);
+        // 답글을 해당 tr의 바로 아래에 추가하거나 페이지의 맨 아래에 추가
+        var commentArea = document.getElementById('commentArea');
+        if (clickedElement) {
+          var nextSibling = clickedElement.parentElement.nextSibling;
+          commentArea.insertBefore(newComment, nextSibling);
+          clickedElement = null; // Reset clickedElement after use
+        } else {
+          commentArea.appendChild(newComment);
+        }
+      }
+    };
+    xhr.send(formData);
+  });
+                            							
 
-	      // 댓글 작성 후 입력 필드를 비움
-	      document.getElementById('commentForm').reset();
-	    }
-	  };
-	  xhr.send(formData);
-	});
+//       document.getElementById('commentArea').appendChild(newComment);
+
+// 	      // 댓글 작성 후 입력 필드를 비움
+// 	      document.getElementById('commentForm').reset();
+// 	    }
+// 	  };
+// 	  xhr.send(formData);
+// 	});
 
 
 // textarea에서 줄바꿈을 해서 3줄로 작성하면 아래의 코드에서 내용을 보이게 할때도 3줄로 보이게 할 수 있어?

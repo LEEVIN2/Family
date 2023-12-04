@@ -307,6 +307,11 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	@GetMapping("/comments")
     public ResponseEntity<List<BoardDTO>> comments(@RequestParam String boardNum) {
         List<BoardDTO> commentList = boardService.getCommentList(boardNum);
+        
+        for (BoardDTO boardDTO2 : commentList) {
+	        updateSubmitTime(boardDTO2);
+	    }
+        
         return ResponseEntity.ok(commentList);
     }
 	
@@ -394,6 +399,14 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	
 	@PostMapping("/writePro2")
 	public String writePro2(BoardDTO boardDTO2) {
+		// boardNum 자동생성
+		// = FR + yyMMddHHmmss
+		Date now = new Date();
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss");
+	    String formattedDate = dateFormat.format(now);
+	    String commentNum = "FR" + formattedDate;
+	    boardDTO2.setCommentNum(commentNum);
+	    
 	    boardService.writePro2(boardDTO2);
 	    return "redirect:/board/detail?boardNum=" + boardDTO2.getBoardNum();
 	}

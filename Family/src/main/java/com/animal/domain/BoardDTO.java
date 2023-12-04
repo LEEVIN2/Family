@@ -12,6 +12,8 @@ import lombok.ToString;
 public class BoardDTO {
 	
 	private String boardNum;
+	private String commentNum;
+	private String replyNum;
 	private String title;
 	private String content;
 	private String id;
