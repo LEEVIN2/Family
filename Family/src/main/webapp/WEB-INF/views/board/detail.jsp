@@ -86,24 +86,22 @@ var clickedElement;
 function loadComments() {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', '${pageContext.request.contextPath}/board/comments?boardNum=${boardDTO.boardNum}');
+  console.log('Request URL: ' + xhr.responseURL);
   xhr.onreadystatechange = function() {
+	  console.log('readyState: ' + xhr.readyState);
+	  console.log('status: ' + xhr.status);
     if (xhr.readyState === 4 && xhr.status === 200) {
       // 서버의 응답을 받아서 댓글을 페이지에 추가
       var commentList = JSON.parse(xhr.responseText);
-      
-      commentList.forEach(function(comment) {
-    	    var newComment = document.createElement('tr');
-    	    newComment.innerHTML = '<div class="row1">' + comment.nickname + '  ' + comment.submitTime + '</div>' +
-    	   													'<div class="row2" data-reply-num="' + comment.replyNum + '">' + comment.content + comment.commentNum + '</div>';
-    	    // replyNum 값이 빈 문자열이 아닌 경우에만 '답글달기'를 추가
-    	   	if (comment.replyNum === '') {
-    	   	newComment.innerHTML += '<div class="row3" onclick="focusCommentInput(this, \'' + comment.nickname + '\', \'' + comment.commentNum + '\', \'' + comment.replyNum + '\')">답글달기</div>';
-    	   	}
-    	    
-//     	    newComment.innerHTML = '<div class="row1">' + comment.nickname + '  ' + comment.submitTime + '</div>' +
-//     	   													'<div class="row2" data-reply-num="' + comment.replyNum + '">' + comment.content + comment.commentNum + '</div>' +
-//     	   													'<div class="row3" onclick="focusCommentInput(this, \'' + comment.nickname + '\', \'' + comment.commentNum + '\', \'' + comment.replyNum + '\')">답글달기</div>';
-    	                         
+      console.log('Response text: ' + xhr.responseText);
+
+commentList.forEach(function(comment) {
+    var newComment = document.createElement('tr');
+    newComment.innerHTML = '<td><div class="row1">' + comment.nickname + '  ' + comment.submitTime + '</div>' +
+                          						    '<div class="row2" data-reply-num="' + comment.replyNum + '">' + comment.content + comment.commentNum + '</div>' +
+                          						 	'<div class="row3" onclick="focusCommentInput(this, \'' + comment.nickname + '\', \'' + comment.commentNum + '\', \'' + comment.replyNum + '\')">답글달기</div></td>';
+//     newComment.innerHTML += '<td><button class="more-button" onclick="event.stopPropagation();">삭제</button></td>';
+
     	    document.getElementById('commentArea').appendChild(newComment);
     	    
 //     	    댓글 목록을 순회하면서 각 댓글의 commentNum이 다른 댓글의 replyNum과 일치하는 경우가 있는지 확인하고, 일치하는 경우가 있으면 해당 댓글의 “답글달기” 텍스트를 "답글보기"로 변경하는 코드
@@ -125,7 +123,7 @@ function loadComments() {
     	        }
     	      });
     	    }
-    	  };
+    	  }
     	  xhr.send();
     	}
 
@@ -188,7 +186,6 @@ function focusCommentInput(element, nickname, commentNum, replyNum) {
 		document.querySelector('input[name="replyNum"]').value = "";
 	}
 }
-
 
 </script>
 </head>

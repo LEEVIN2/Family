@@ -59,7 +59,7 @@ public class MemberController {
 			session.setAttribute("id", MemberDTO.getId());
 			session.setAttribute("nickname", DTO2.getNickname());
 			session.setAttribute("email", DTO2.getEmail());
-			return "redirect:/member/home";
+			return "redirect:/board/home";
 		}else {
 			response.setContentType("text/html;charset=UTF-8");
 			 PrintWriter out;
@@ -296,7 +296,7 @@ public class MemberController {
 			model.addAttribute("result", apiResult);
 			}
 		     
-			return "member/home";
+			return "board/home";
 		}
 		
 		//로그아웃
@@ -346,7 +346,7 @@ public class MemberController {
 			HashMap<String, Object> userInfo = memberService.getUserInfo(access_Token);
 			session.setAttribute("id", userInfo.get("email"));
 			session.setAttribute("nickname", userInfo.get("nickname"));
-			return "member/home";
+			return "board/home";
 	    	}
 
 }

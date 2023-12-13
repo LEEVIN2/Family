@@ -256,7 +256,7 @@ order by boardNum desc limit 7;
 FROM comment c
 LEFT JOIN member m
 ON c.id = m.id
-WHERE c.boardNum = "FR231128214030"
+WHERE c.boardNum = #{boardNum}
 ORDER BY 
     CASE 
         WHEN replyNum = '' THEN commentNum

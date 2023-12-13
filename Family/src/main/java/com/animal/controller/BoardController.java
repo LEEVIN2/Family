@@ -306,12 +306,13 @@ for (BoardDTO boardDTO2 : boardHotList) {
 	
 	@GetMapping("/comments")
     public ResponseEntity<List<BoardDTO>> comments(@RequestParam String boardNum) {
+		System.out.println("여기가지 도착");
         List<BoardDTO> commentList = boardService.getCommentList(boardNum);
         
         for (BoardDTO boardDTO2 : commentList) {
 	        updateSubmitTime(boardDTO2);
 	    }
-        
+        System.out.println(commentList);
         return ResponseEntity.ok(commentList);
     }
 	

@@ -34,6 +34,7 @@ public class BoardDAO {
 	}
 	
 	public List<BoardDTO> getCommentList(String boardNum) {
+		System.out.println("여기까지 도착쿠");
 		return sqlSession.selectList(namespace+".getCommentList", boardNum);
 	}
 	
