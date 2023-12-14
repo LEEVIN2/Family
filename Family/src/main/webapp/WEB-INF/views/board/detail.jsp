@@ -102,10 +102,14 @@ function loadComments() {
 
 commentList.forEach(function(comment) {
     var newComment = document.createElement('tr');
-    newComment.innerHTML = '<td><div class="row1">' + comment.nickname + '  ' + comment.submitTime + '</div>' +
+    var profileImage = comment.profile ? '${pageContext.request.contextPath}/resources/img/profile/' + comment.profile : '${pageContext.request.contextPath}/resources/img/profile/기본프로필.png';
+    
+    newComment.innerHTML = '<td><div class="row1"><img src="' + profileImage + '" alt="profile"><span class="nickname">' + comment.nickname + '</span>  <span class="submitTime">' + comment.submitTime + '</span></div>' +
                           						    '<div class="row2" data-reply-num="' + comment.replyNum + '">' + comment.content + '</div>' +
                           						 	'<div class="row3" onclick="focusCommentInput(this, \'' + comment.nickname + '\', \'' + comment.commentNum + '\', \'' + comment.replyNum + '\')">답글달기</div></td>';
-//     newComment.innerHTML += '<td><button class="more-button" onclick="event.stopPropagation();">삭제</button></td>';
+													
+                          						 	// 나중에 살릴 기능
+                          						 	// newComment.innerHTML += '<td><button class="more-button" onclick="event.stopPropagation();">삭제</button></td>';
 
     	    document.getElementById('commentArea').appendChild(newComment);
     	    
@@ -144,7 +148,9 @@ function focusCommentInput(element, nickname, commentNum, replyNum) {
   commentInput.placeholder = nickname + "에게 답글달기";
   
   // 클릭한 tr의 배경색을 회색으로 변경
-  element.parentElement.style.backgroundColor = 'gray';
+//   element.parentElement.style.backgroundColor = 'gray';
+// element.parentElement.parentElement.style.backgroundColor = '#c7c7c7';
+element.parentElement.parentElement.style.backgroundColor = '#2196f317';
   
   // 댓글을 전송하면 원래의 배경색으로 복원
   commentInput.onblur = function() {

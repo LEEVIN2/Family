@@ -81,7 +81,7 @@
     display: flex;
     align-items: center;
     margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .row1 img {
@@ -165,14 +165,6 @@
     width: 800px;
 }
 
-#commentArea .row1 {
-    color: #333; /* 글자색 */
-}
-
-#commentArea .row2 {
-    color: #333; /* 글자색 */
-}
-
 /* 댓글 */
 #commentForm {
     display: flex;
@@ -213,7 +205,7 @@ body {
     justify-content: center;
     position: fixed;
     bottom: 0;
-    width: 100%;
+    width: 100.4%;
     transform: translateX(-8px);
 }
 

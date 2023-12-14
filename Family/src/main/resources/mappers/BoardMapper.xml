@@ -252,7 +252,7 @@ order by boardNum desc limit 7;
 	</select>
 	
 	<select id="getCommentList" resultType="com.animal.domain.BoardDTO">
-	SELECT c.commentNum, c.boardNum, c.id, m.nickname, c.content, c.submitTime, c.replyNum
+	SELECT c.commentNum, c.boardNum, c.id, m.nickname, c.content, c.submitTime, c.replyNum, m.profile
 FROM comment c
 LEFT JOIN member m
 ON c.id = m.id
