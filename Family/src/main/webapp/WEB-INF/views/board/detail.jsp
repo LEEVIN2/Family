@@ -17,7 +17,8 @@
 var board_like = ${board_like}; // 전역 변수로 선언
 
 $(document).ready(function() {
-    $("button").click(function() {
+	$("#like_image").click(function() {
+//     $("button").click(function() {
         
         var boardNum = '${boardDTO.boardNum}';
         var id = "${sessionScope.id}";
@@ -44,6 +45,7 @@ $(document).ready(function() {
                     $("td:contains('나의 좋아요')").next().text(myLike);
                     $("button").text('좋아요취소');
                     board_like = 1; // 좋아요를 눌렀으므로 board_like 값을 1로 설정
+                    $("#like_image img").attr("src", "${pageContext.request.contextPath}/resources/img/board/좋아요(누름).png");
                 },
                 error: function() {
                     console.log(board_like);
@@ -69,6 +71,7 @@ $(document).ready(function() {
                     $("td:contains('나의 좋아요')").next().text(myLike);
                     $("button").text('좋아요');
                     board_like = 0; // 좋아요를 취소했으므로 board_like 값을 0으로 설정
+                    $("#like_image img").attr("src", "${pageContext.request.contextPath}/resources/img/board/좋아요.png");
                 },
                 error: function() {
                     console.log(board_like);
@@ -100,7 +103,7 @@ function loadComments() {
 commentList.forEach(function(comment) {
     var newComment = document.createElement('tr');
     newComment.innerHTML = '<td><div class="row1">' + comment.nickname + '  ' + comment.submitTime + '</div>' +
-                          						    '<div class="row2" data-reply-num="' + comment.replyNum + '">' + comment.content + comment.commentNum + '</div>' +
+                          						    '<div class="row2" data-reply-num="' + comment.replyNum + '">' + comment.content + '</div>' +
                           						 	'<div class="row3" onclick="focusCommentInput(this, \'' + comment.nickname + '\', \'' + comment.commentNum + '\', \'' + comment.replyNum + '\')">답글달기</div></td>';
 //     newComment.innerHTML += '<td><button class="more-button" onclick="event.stopPropagation();">삭제</button></td>';
 
@@ -239,14 +242,14 @@ function focusCommentInput(element, nickname, commentNum, replyNum) {
         <img src="${pageContext.request.contextPath}/resources/img/profile/${boardDTO.profile}" alt="profile">
     </c:otherwise>
 </c:choose>
-<c:choose>
-    <c:when test="${boardDTO.boardNum.startsWith('FR')}">
-        자유게시판
-    </c:when>
-    <c:otherwise>
-        모든 게시판
-    </c:otherwise>
-</c:choose>
+<%-- <c:choose> --%>
+<%--     <c:when test="${boardDTO.boardNum.startsWith('FR')}"> --%>
+<!--         자유게시판 -->
+<%--     </c:when> --%>
+<%--     <c:otherwise> --%>
+<!--         모든 게시판 -->
+<%--     </c:otherwise> --%>
+<%-- </c:choose> --%>
 	<span class="nickname">${boardDTO.nickname}</span>
 	<span class="submitTime">${boardDTO.submitTime}</span>
 </div>
@@ -254,44 +257,45 @@ function focusCommentInput(element, nickname, commentNum, replyNum) {
 <div class="row2">${boardDTO.title}</div>
 <div class="row3" id="tableContent">${boardDTO.content}</div>
 
-<div class="row4">
-		<span><img src="${pageContext.request.contextPath}/resources/img/board/${board_like == 0 ? '좋아요' : '좋아요(누름)'}.png" alt="기본프로필"> ${board_likeCnt}</span>
-		 <span><img src="${pageContext.request.contextPath}/resources/img/board/댓글.png" alt="기본프로필"> ${boardDTO.commentCnt}</span>
-        <span><img src="${pageContext.request.contextPath}/resources/img/board/조회.png" alt="기본프로필"> ${boardDTO.viewCnt}</span>
-</div>
-</td>
 
-<td class="content-img">
+<div class="content-img">
 <c:forEach var="filePath" items="${filePaths}">
     <c:if test="${not empty filePath}">
         <img src="${pageContext.request.contextPath}/resources/img/upload/${filePath}" alt="Image" width="100" height="100">
     </c:if>
 </c:forEach>
-</td>
+</div>
 
+<div class="row4">
+		<span id="like_image"><img src="${pageContext.request.contextPath}/resources/img/board/${board_like == 0 ? '좋아요' : '좋아요(누름)'}.png" alt="기본프로필"> ${board_likeCnt}</span>
+		<span id="middle"><img src="${pageContext.request.contextPath}/resources/img/board/댓글.png" alt="기본프로필"> ${boardDTO.commentCnt}</span>
+        <span><img src="${pageContext.request.contextPath}/resources/img/board/조회.png" alt="기본프로필"> ${boardDTO.viewCnt}</span>
+</div>
+
+</td>
 </tr>
 </table>
 </div>
 
 
 <!-- 좋아요 버튼 -->
-<button type="button" id="like_button">
-    <c:choose>
-        <c:when test='${board_like == 0}'>좋아요</c:when>
-        <c:otherwise>좋아요취소</c:otherwise>
-    </c:choose>
-</button>
+<!-- <button type="button" id="like_button"> -->
+<%--     <c:choose> --%>
+<%--         <c:when test='${board_like == 0}'>좋아요</c:when> --%>
+<%--         <c:otherwise>좋아요취소</c:otherwise> --%>
+<%--     </c:choose> --%>
+<!-- </button> -->
 
 
 <!-- 댓글을 표시할 영역 -->
 <table id="commentArea"></table>
 
 <form id="commentForm" action="${pageContext.request.contextPath}/board/writePro2" method="post">
-댓글		<input type="text" name="content" required> 
+<input type="text" name="content" id="comment-box" placeholder="댓글을 입력하세요" required> 
 <input type="hidden" name="id" value="${sessionScope.id}">
 <input type="hidden" name="nickname" value="${sessionScope.nickname}">
 <input type="hidden" name="boardNum" value="${boardDTO.boardNum}">
-<input type="text" name="replyNum" value="">
+<input type="hidden" name="replyNum" value="">
 <input type="submit" value="작성">
 </form>
 

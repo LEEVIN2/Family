@@ -66,28 +66,22 @@
 
 .content {
     width: 685px;
-    padding-left: 15px;
 }
 
-/* .content-img { */
-/*     width: 115px; */
-/*     position: relative; */
-/*     padding-right: 10px; */
-/* } */
+.content-img {
+}
 
-/* .content-img img { */
-/*     width: 115px; 원하는 가로 크기 */
-/*     height: 115px; 원하는 세로 크기 */
-/*     object-fit: cover; 이미지를 채우되 비율을 유지하면서, 그 결과 이미지 일부가 잘릴 수 있음 */
-/*     object-position: center; 이미지의 위치를 중앙으로 설정 */
-/*     border-radius: 10px; */
-/*     position: relative; */
-/*     top: 3px; */
-/* } */
+.content-img img {
+	width: 800px;
+    height: 800px;
+    border-radius: 10px;
+}
 
 .row1 {
     display: flex;
     align-items: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
 .row1 img {
@@ -109,46 +103,101 @@
     margin-left: 15px;
 }
 
-.row1 .HOT {
-    font-size: 15px;
-    color: red;
-    margin-left: 15px;
-    font-weight: bold;
-}
-
 .row2 {
     display: flex;
     align-items: center;
-    margin-left: 65px;
     margin-bottom: 5px;
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .row3 {
     display: flex;
     align-items: center;
-    margin-left: 65px;
-    margin-bottom: 5px;
+    margin-bottom: 20px;
     font-size: 18px;
 }
 
 .row4 {
     display: flex;
     align-items: center;
-    margin-left: 65px;
+    justify-content: center;
+    width: 800px;
+    height: 35px;
     font-size: 18px;
+    border: 2.5px solid #c7c7c7;
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .row4 span {
 	display: flex;
-    align-items: center;
-    margin-right: 20px;
+	align-items: center;
+	height: 35px;
+    padding-right: 110px;
+    padding-left: 110px;
+}
+
+#middle {
+	border-left: 2.5px solid #c7c7c7;
+	border-right: 2.5px solid #c7c7c7;
 }
 
 .row4 img {
     width: 25px;
     height: 25px;
     margin-right: 5px;
+}
+
+/* 댓글 테이블 */
+
+#commentArea {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 90px;
+}
+
+#commentArea tr {
+    display: block;
+    border-bottom: 2px solid #c7c7c7;
+    width: 800px;
+}
+
+#commentArea .row1 {
+    color: #333; /* 글자색 */
+}
+
+#commentArea .row2 {
+    color: #333; /* 글자색 */
+}
+
+/* 댓글 */
+#commentForm {
+    display: flex;
+    position: fixed;
+    bottom: 150px;
+    width: 100%;
+    justify-content: center;
+}
+
+#comment-box {
+    width: 725px;
+    height: 50px;
+    padding-left: 20px;
+    border: 2.5px solid #c7c7c7;
+    border-radius: 50px;
+    font-size: 17px;
+}
+
+input[type="submit"] {
+    border: none; /* 테두리 제거 */
+    background: none;
+    color: #12a4ff;
+    font-size: 18px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 /* bottom */
