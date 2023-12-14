@@ -266,11 +266,12 @@ ORDER BY
 	</select>
 	
 	 <select id="getDetail" resultType="com.animal.domain.BoardDTO">
-    SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, b.viewCnt
+SELECT b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, b.viewCnt, COUNT(c.commentNum) as commentCnt
 FROM board b
-LEFT JOIN member m
-ON b.id = m.id
-    WHERE b.boardNum = #{boardNum};
+LEFT JOIN member m ON b.id = m.id
+LEFT JOIN comment c ON b.boardNum = c.boardNum
+WHERE b.boardNum = #{boardNum}
+GROUP BY b.boardNum, b.id, m.nickname, b.submitTime, b.title, b.content, b.viewCnt;
 </select>
 
 <!-- 좋아요 눌럿는지 안눌럿는지 -->

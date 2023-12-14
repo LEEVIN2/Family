@@ -9,6 +9,8 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
+<!-- css -->
+<link href="${pageContext.request.contextPath}/resources/css/detail.css" rel="stylesheet" type="text/css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 
@@ -194,21 +196,24 @@ function focusCommentInput(element, nickname, commentNum, replyNum) {
 <!-- body -->
 <body>
 
-<!-- 뒤로가기 로직 -->
-<c:set var="prevPage" value="${header['referer']}" scope="session"/>
-<a href="${sessionScope.prevPage}">뒤로가기</a><br>
+<!-- top -->
+<div class="top-container">
+	<!-- 뒤로가기 -->
+	<c:set var="prevPage" value="${header['referer']}" scope="session"/>
+	<a href="${sessionScope.prevPage}"><img src="${pageContext.request.contextPath}/resources/img/board/뒤로가기.png" alt="뒤로가기"></a>
+	<!-- 자유게시판 -->
+	<c:choose>
+		<c:when test="${boardDTO.boardNum.startsWith('FR')}">
+        	<span>자유게시판</span>
+    	</c:when>
+    	<c:otherwise>
+       		<span>모든게시판</span>
+    	</c:otherwise>
+	</c:choose>
+	<!-- 더보기 -->
+	<a id="seeMore"><img src="${pageContext.request.contextPath}/resources/img/board/더보기.png" alt="더보기"></a><br>
+</div>
 
-<c:choose>
-    <c:when test="${boardDTO.boardNum.startsWith('FR')}">
-        자유게시판
-    </c:when>
-    <c:otherwise>
-       모든 게시판
-    </c:otherwise>
-</c:choose>
-
-
-<a id="seeMore">더보기</a><br>
 
 <!-- 조회수 -->
 <c:set var="count" value="0" scope="page" />
@@ -218,44 +223,65 @@ function focusCommentInput(element, nickname, commentNum, replyNum) {
   </c:if>
 </c:forEach>
 
-${sessionScope.id}
 
 <!-- table -->
+<div class="table-container">
+<table>
+<tr>
 
-<button type="button"  style="width: 100px; height: 50px; text-align: center;">
+<td class="content">
+<div class="row1">
+<c:choose>
+    <c:when test="${empty boardDTO.profile}">
+        <img src="${pageContext.request.contextPath}/resources/img/profile/기본프로필.png" alt="기본프로필">
+    </c:when>
+    <c:otherwise>
+        <img src="${pageContext.request.contextPath}/resources/img/profile/${boardDTO.profile}" alt="profile">
+    </c:otherwise>
+</c:choose>
+<c:choose>
+    <c:when test="${boardDTO.boardNum.startsWith('FR')}">
+        자유게시판
+    </c:when>
+    <c:otherwise>
+        모든 게시판
+    </c:otherwise>
+</c:choose>
+	<span class="nickname">${boardDTO.nickname}</span>
+	<span class="submitTime">${boardDTO.submitTime}</span>
+</div>
+
+<div class="row2">${boardDTO.title}</div>
+<div class="row3" id="tableContent">${boardDTO.content}</div>
+
+<div class="row4">
+		<span><img src="${pageContext.request.contextPath}/resources/img/board/${board_like == 0 ? '좋아요' : '좋아요(누름)'}.png" alt="기본프로필"> ${board_likeCnt}</span>
+		 <span><img src="${pageContext.request.contextPath}/resources/img/board/댓글.png" alt="기본프로필"> ${boardDTO.commentCnt}</span>
+        <span><img src="${pageContext.request.contextPath}/resources/img/board/조회.png" alt="기본프로필"> ${boardDTO.viewCnt}</span>
+</div>
+</td>
+
+<td class="content-img">
+<c:forEach var="filePath" items="${filePaths}">
+    <c:if test="${not empty filePath}">
+        <img src="${pageContext.request.contextPath}/resources/img/upload/${filePath}" alt="Image" width="100" height="100">
+    </c:if>
+</c:forEach>
+</td>
+
+</tr>
+</table>
+</div>
+
+
+<!-- 좋아요 버튼 -->
+<button type="button" id="like_button">
     <c:choose>
         <c:when test='${board_like == 0}'>좋아요</c:when>
         <c:otherwise>좋아요취소</c:otherwise>
     </c:choose>
 </button>
 
-<table>
-<c:choose>
-    <c:when test="${boardDTO.boardNum.startsWith('FR')}">
-        <tr><td>게시판 종류</td> <td>자유게시판</td></tr>
-    </c:when>
-    <c:otherwise>
-        <tr><td>게시판 종류</td> <td>모든 게시판</td></tr>
-    </c:otherwise>
-</c:choose>
-
-<tr><td>나의 좋아요</td>		<td>${board_like}</td></tr>
-<tr><td>전체 좋아요</td>		<td>${board_likeCnt}</td></tr>
-<tr><td>글번호</td>		<td>${boardDTO.boardNum}</td></tr>
-<tr><td>닉네임</td>		<td>${boardDTO.nickname}</td></tr>
-<tr><td>시간</td>			<td>${boardDTO.submitTime}</td></tr>
-<tr><td>제목</td>			<td>${boardDTO.title}</td></tr>
-<tr><td>내용</td> <td id="tableContent">${boardDTO.content}</td></tr>
-<tr><td>조회수</td>			<td>${boardDTO.viewCnt}</td></tr>
-<tr><td>댓글수</td>			<td>${count}</td></tr>
-<c:forEach var="filePath" items="${filePaths}">
-    <c:if test="${not empty filePath}">
-        <tr><td></td>	<td><img src="${pageContext.request.contextPath}/resources/img/upload/${filePath}" alt="Image" width="100" height="100"></td></tr>
-    </c:if>
-</c:forEach>
-</table>
-
-<hr>
 
 <!-- 댓글을 표시할 영역 -->
 <table id="commentArea"></table>
@@ -286,6 +312,16 @@ ${sessionScope.id}
 </c:if>
 <a id="modalClose">닫기</a>
 </div>
+
+<!-- bottom -->
+<div class="bottom-container">
+<a href="${pageContext.request.contextPath}/board/home"><img src="${pageContext.request.contextPath}/resources/img/board/home.png" alt="home"></a>
+<a href="${pageContext.request.contextPath}/member/home"><img src="${pageContext.request.contextPath}/resources/img/board/chat.png" alt="chat"></a>
+<a href="${pageContext.request.contextPath}/board/board"><img src="${pageContext.request.contextPath}/resources/img/board/board.png" alt="board"></a>
+<a href="${pageContext.request.contextPath}/notice/notice"><img src="${pageContext.request.contextPath}/resources/img/board/notice.png" alt="notice"></a>
+<a href="${pageContext.request.contextPath}/mypage/mypage"><img src="${pageContext.request.contextPath}/resources/img/board/mypage.png" alt="mypage"></a>
+</div>
+
 
 <!-- script -->
 <script>

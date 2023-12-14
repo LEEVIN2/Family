@@ -53,8 +53,8 @@
 
 <div class="row2">
 <c:choose>
-    <c:when test="${fn:length(boardDTO.title) > 10}">
-        ${fn:substring(boardDTO.title, 0, 10)}...
+    <c:when test="${fn:length(boardDTO.title) > 40}">
+        ${fn:substring(boardDTO.title, 0, 40)}...
     </c:when>
     <c:otherwise>
         ${boardDTO.title}
@@ -64,8 +64,8 @@
 
 <div class="row3">
 <c:choose>
-    <c:when test="${fn:length(boardDTO.content) > 20}">
-        ${fn:substring(boardDTO.content, 0, 20)}...
+    <c:when test="${fn:length(boardDTO.content) > 40}">
+        ${fn:substring(boardDTO.content, 0, 40)}...
     </c:when>
     <c:otherwise>
         ${boardDTO.content}
@@ -116,8 +116,8 @@
 
         <div class="row2">
         <c:choose>
-            <c:when test="${fn:length(boardDTO.title) > 10}">
-                ${fn:substring(boardDTO.title, 0, 10)}...
+            <c:when test="${fn:length(boardDTO.title) > 40}">
+                ${fn:substring(boardDTO.title, 0, 40)}...
             </c:when>
             <c:otherwise>
                 ${boardDTO.title}
@@ -127,8 +127,8 @@
         
         <div class="row3">
         <c:choose>
-            <c:when test="${fn:length(boardDTO.content) > 20}">
-                ${fn:substring(boardDTO.content, 0, 20)}...
+            <c:when test="${fn:length(boardDTO.content) > 40}">
+                ${fn:substring(boardDTO.content, 0, 40)}...
             </c:when>
             <c:otherwise>
                 ${boardDTO.content}

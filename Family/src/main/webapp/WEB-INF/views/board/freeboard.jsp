@@ -77,17 +77,6 @@
 </c:choose>
 </div>
 
-<!-- <div class="row3"> -->
-<%-- <c:choose> --%>
-<%--     <c:when test="${fn:length(boardDTO.content) > 20}"> --%>
-<%--         ${fn:substring(boardDTO.content, 0, 20)}... --%>
-<%--     </c:when> --%>
-<%--     <c:otherwise> --%>
-<%--         ${boardDTO.content} --%>
-<%--     </c:otherwise> --%>
-<%-- </c:choose> --%>
-<!-- </div> -->
-
 <div class="row3">
 <span class="tableContent">${boardDTO.content}</span>
 </div>
@@ -113,7 +102,6 @@
 </tr>
 </c:forEach>
  </tbody>
-<%--  </c:if> --%>
 
 
 <tbody id="tbody-new">
